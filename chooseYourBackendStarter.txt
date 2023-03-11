@@ -1,0 +1,21 @@
+//Entire process
+Nodejs server serves, Choose your language
+TypeScript
+Assigns you an id
+Choose your database
+MySQL
+
+Then, the server  sends the new index.html, and routes you to it
+
+database console:
+-get all users
+-sends get to /db or something, with data object(info the user entered)
+-this sends a request to the db server 
+-server queries the db
+-returns to main servers
+-returns to user
+-(also updates the users and the databases expiration to after another hour.)
+
+-then the front end displays the data
+
+

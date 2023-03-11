@@ -1,0 +1,151 @@
+CHOOSE YOUR BACKEND
+Servers/runtimes
+-Node/Express
+-Python/flask
+-Ruby/rails
+-?Java/
+
+	Cloud?
+	-AWS
+	-Azure
+
+	Load Balancer?
+	Nginx/apache
+
+Protocol
+-rest, Graphql
+
+Security/Encryption??
+-for the data in the dbs??
+
+Cache
+-redis, memcached
+
+Databases(Dockerized)
+-Mongodb, Postgres, MySQL
+
+
+
+User selects all these options, then it spins up all of these containers,  it then has a link to connect GET to the new backend.  It will deliver the front end files, then they are in the world.
+(each type of server already has the front end files on deck), and more of them can be spun up
+There can be a live display of the dockerized cache, it will show everything currently in the cache(like 10-20 items.)  mabye with redis you can change the storing policy with a button.
+You can interact with the db
+-add new user(for now just user, later maybe object, transactions etc)
+-search
+-update
+-delete
+another screen will show the request.  ie get/post etc, and the body...
+security - you can store passwords in plain text/rsa?/bcrypt/bcrypt with salt....
+each db request will go to the cache first, then to the db if not there, and update the cache based on its policy.
+Analysis tool
+-analyzed db size, speed of read and write, etc etc.
+
+(also a report bug tool)
+
+
+
+Starting
+Build a node/express backend
+-serve the files(shitty temp html shit)
+Have a seperate server that spins up docker containers of dbs.
+-start with mongo or mysql
+-This server will connect to another server with a db of current active users.  Each user will be asigned a code when they start.  The code will connect them to a certain db docker container.  So there will have to be some sort of load balancer that points to the docker instances...
+They store their code in a cookie or in local storage...With an expiration date, that expires...
+If they sumbit a request and their code is not found, it will error and ask if they want a new session.
+So each request will include their code...
+(this would be really easy on lambda, otherwise I'd have to have firstly a process that spins up new ec2 instances, and secondly a system of keeping track of each server and each container on those servers)...
+
+
+
+
+
+-I WOULD HAVE NO WAY OF KNOWING WHICH DOCKER IMAGE TO ACCESS OR HOW IF IT'S RUN OUT OF MY CONTROL.  LIKE WITH SERVERLESS STUFF.
+The entire point of this is to demostrate my mastery over backend, serverside control.  And serverless is specifically for giving up control.
+
+I should manage everything on ec2 or possibly, but probably not, ecs.
+And on ec2 they should NOT be amazon linux!
+
+The only way any of this will work is if I can heavily compartmentalize database and cache instances..........
+
+
+
+
+
+
+Language/framework
+
+
+
+
+
+
+
+
+
+
+-check if db operations can be concurrent.  Do they queue automatically?
+-understand graphql
+-how to determine the protocol in the front end.  json or graphql etc.
+-understand dynamic urls better
+-server failover.  how it works, how to set up
+-dynamic load balancing.  nginx or totally make my own thing.
+
+
+
+
+
+
+
+Code for db operations
+
+function insert(id, data) {
+	sql
+	"begin"
+	"use database id"
+	"insert into tbl ......"
+
+
+code to send that request
+
+fetch("/db/mysql/serverNum", {
+	body: {id, data}
+).then((res) => {
+	//send back to frontend
+
+
+
+
+
+
+
+//Entire process
+Nodejs server serves, Choose your language
+TypeScript / Python
+Assigns you an id
+Send to the same or the python server
+Choose your database
+MongoDB, MySQL, Postgres
+Choose your cache
+Redis/Memcached
+Choose your protocol/format
+quic, https, json, graphql....
+
+Then, the server or a cdn sends the new index.html, and routes you to it
+It has the 3d world and everything...
+meanwhile a db partition is created, and a cache container
+
+database console:
+-get all users
+-sends get to /db or something, with data object(info the user entered)
+-this sends a request to the db master
+-somehow it figures out which server it's on
+-sends the request to that server
+-server queries the db
+-returns to db master
+-returns to main servers
+-returns to user
+-(also updates the users and the databases expiration to after another hour.)
+
+-then the front end displays the data("I'll need some dynamic texture system if I'm using three")
+
+
