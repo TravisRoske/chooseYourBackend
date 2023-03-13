@@ -32,11 +32,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAll = void 0;
+exports.deleteRecords = exports.update = exports.create = exports.get = void 0;
 const mysql = __importStar(require("mysql2"));
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
-function getAll(req, res) {
+const newTableString = 'CREATE TABLE IF NOT EXISTS tbl ( id int not null auto_increment, firstName text, lastName text, username text, password text, primary key (id) );';
+///////////
+function get(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const userID = req.params.id;
         const objectID = req.query.objectID;
@@ -47,55 +49,47 @@ function getAll(req, res) {
             password: process.env.mysqlPassword
         };
         const connection = mysql.createConnection(options);
-        let data = [];
-        //I probably need to put all this in a transaction!!!
         yield connection.connect((err) => {
             if (err)
                 throw err;
             console.log("MySQL db connected");
         });
+        //warning prepared statements DO NOT work here
+        connection.query(`CREATE DATABASE IF NOT EXISTS ${userID}`, (error) => {
+            if (error)
+                console.log(error);
+        });
+        //warning prepared statements DO NOT work here
+        connection.query(`USE ${userID}`, (error) => {
+            if (error)
+                console.log(error);
+        });
+        connection.query(newTableString, (error) => {
+            if (error)
+                console.log(error);
+        });
         if (objectID) {
-            connection.query(`BEGIN TRY
-                BEGIN TRANSACTION
-                    CREATE DATABASE IF NOT EXISTS ${userID};
-                    USE ${userID};
-                    CREATE TABLE IF NOT EXISTS tbl ( id int not null, name text, primary key (id));
-                    SELECT * FROM tbl WHERE id = ${objectID};
-                COMMIT TRANSACTION
-            END TRY
-            BEGIN CATCH
-                ROLLBACK
-            END CATCH`, (error, results, fields) => {
-                console.log("RES", results);
-                // data = reformat(data)
+            connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID], (error, results, fields) => {
+                // data = reformat(results)
+                if (error) {
+                    console.log(error);
+                    res.sendStatus(400);
+                    return;
+                }
                 res.json(results);
             });
         }
         else {
-            connection.query(`BEGIN
-                CREATE DATABASE IF NOT EXISTS ${userID}
-                USE ${userID}
-                CREATE TABLE IF NOT EXISTS tbl ( id int not null, name text, primary key (id))
-                SELECT * FROM tbl
-            END
-            ROLLBACK`, (error, results, fields) => {
+            connection.query('SELECT * FROM tbl;', (error, results, fields) => {
                 // data = reformat(data)
+                if (error) {
+                    console.log(error);
+                    res.sendStatus(400);
+                    return;
+                }
                 res.json(results);
             });
         }
-        // connection.query(`CREATE DATABASE IF NOT EXISTS ${userID};`)
-        // connection.query(`USE ${userID};`)
-        // connection.query(`CREATE TABLE IF NOT EXISTS tbl ( id int not null, name text, primary key (id));`)
-        //     connection.query(`SELECT * FROM tbl WHERE id = ${objectID};`, (error, results, fields) => {
-        //         // data = reformat(results)
-        //         res.json(results)
-        //     })
-        // } else {
-        //     connection.query('SELECT * FROM tbl;', (error, results, fields) => {
-        //         // data = reformat(data)
-        //         res.json(results)
-        //     })
-        // }
         yield connection.end((err) => {
             if (err)
                 throw err;
@@ -103,4 +97,184 @@ function getAll(req, res) {
         });
     });
 }
-exports.getAll = getAll;
+exports.get = get;
+function create(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const userID = req.params.id;
+        const dataObject = req.body; ///////
+        const options = {
+            host: process.env.mysqlUrl,
+            port: Number(process.env.mysqlPort),
+            user: process.env.mysqluser,
+            password: process.env.mysqlPassword
+        };
+        const connection = mysql.createConnection(options);
+        yield connection.connect((err) => {
+            if (err)
+                throw err;
+            console.log("MySQL db connected");
+        });
+        //warning prepared statements DO NOT work here
+        connection.query(`CREATE DATABASE IF NOT EXISTS ${userID}`, (error) => {
+            if (error)
+                console.log(error);
+        });
+        //warning prepared statements DO NOT work here
+        connection.query(`USE ${userID}`, (error) => {
+            if (error)
+                console.log(error);
+        });
+        connection.query(newTableString, (error) => {
+            if (error)
+                console.log(error);
+        });
+        //change all strings to dynamically change with the schema...
+        let queryFields = '';
+        let queryInserts = '';
+        let queryValues = [];
+        for (const [key, value] of Object.entries(dataObject)) {
+            queryFields += key + ", ";
+            queryInserts += "?, ";
+            queryValues.push(value);
+        }
+        queryFields = queryFields.slice(0, -2);
+        queryInserts = queryInserts.slice(0, -2);
+        const queryString = `INSERT INTO tbl (${queryFields}) VALUES (${queryInserts})`;
+        console.log(queryString, queryValues);
+        connection.execute(queryString, queryValues, (error, results, fields) => {
+            // data = reformat(results)
+            if (error) {
+                console.log(error);
+                res.sendStatus(400);
+                return;
+            }
+            res.json(results);
+        });
+        yield connection.end((err) => {
+            if (err)
+                throw err;
+            console.log("MySQL connection closed");
+        });
+    });
+}
+exports.create = create;
+function update(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const userID = req.params.id;
+        const objectID = req.query.objectID;
+        const options = {
+            host: process.env.mysqlUrl,
+            port: Number(process.env.mysqlPort),
+            user: process.env.mysqluser,
+            password: process.env.mysqlPassword
+        };
+        const connection = mysql.createConnection(options);
+        yield connection.connect((err) => {
+            if (err)
+                throw err;
+            console.log("MySQL db connected");
+        });
+        //warning prepared statements DO NOT work here
+        connection.query(`CREATE DATABASE IF NOT EXISTS ${userID}`, (error) => {
+            if (error)
+                console.log(error);
+        });
+        //warning prepared statements DO NOT work here
+        connection.query(`USE ${userID}`, (error) => {
+            if (error)
+                console.log(error);
+        });
+        connection.query(newTableString, (error) => {
+            if (error)
+                console.log(error);
+        });
+        if (objectID) {
+            connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID], (error, results, fields) => {
+                // data = reformat(results)
+                if (error) {
+                    console.log(error);
+                    res.sendStatus(400);
+                    return;
+                }
+                res.json(results);
+            });
+        }
+        else {
+            connection.query('SELECT * FROM tbl;', (error, results, fields) => {
+                // data = reformat(data)
+                if (error) {
+                    console.log(error);
+                    res.sendStatus(400);
+                    return;
+                }
+                res.json(results);
+            });
+        }
+        yield connection.end((err) => {
+            if (err)
+                throw err;
+            console.log("MySQL connection closed");
+        });
+    });
+}
+exports.update = update;
+function deleteRecords(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const userID = req.params.id;
+        const objectID = req.query.objectID;
+        const options = {
+            host: process.env.mysqlUrl,
+            port: Number(process.env.mysqlPort),
+            user: process.env.mysqluser,
+            password: process.env.mysqlPassword
+        };
+        const connection = mysql.createConnection(options);
+        yield connection.connect((err) => {
+            if (err)
+                throw err;
+            console.log("MySQL db connected");
+        });
+        //warning prepared statements DO NOT work here
+        connection.query(`CREATE DATABASE IF NOT EXISTS ${userID}`, (error) => {
+            if (error)
+                console.log(error);
+        });
+        //warning prepared statements DO NOT work here
+        connection.query(`USE ${userID}`, (error) => {
+            if (error)
+                console.log(error);
+        });
+        connection.query(newTableString, (error) => {
+            if (error)
+                console.log(error);
+        });
+        if (objectID) {
+            connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID], (error, results, fields) => {
+                // data = reformat(results)
+                if (error) {
+                    console.log(error);
+                    res.sendStatus(400);
+                    return;
+                }
+                res.json(results);
+            });
+        }
+        else {
+            connection.query('SELECT * FROM tbl;', (error, results, fields) => {
+                // data = reformat(data)
+                if (error) {
+                    console.log(error);
+                    res.sendStatus(400);
+                    return;
+                }
+                res.json(results);
+            });
+        }
+        yield connection.end((err) => {
+            if (err)
+                throw err;
+            console.log("MySQL connection closed");
+        });
+    });
+}
+exports.deleteRecords = deleteRecords;

@@ -1,15 +1,14 @@
-
 import express from 'express'
 export const mySQLRouter = express.Router();
 
-import { getAll } from './mySQLController.js'
+import { get, create, update, deleteRecords } from './mySQLController.js'
 
 // REQUEST FORMAT -  ${url}/ts/mysql/${userID}?objectID=${objectID}
 mySQLRouter.route('/:id')
-    .get(getAll)
-    .post()
-    .put()
-    .delete()
+    .get(get)
+    .post(create)
+    .put(update)
+    .delete(deleteRecords)
 
-mySQLRouter.route('/:search')
-    .get()
+// mySQLRouter.route('/:search')
+//     .get(search)

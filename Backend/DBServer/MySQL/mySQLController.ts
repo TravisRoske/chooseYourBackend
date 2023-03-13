@@ -3,7 +3,20 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 
-export async function getAll(req: any, res: any) { ///////////any should maybe change
+// import ObjectSchema from './ObjectSchema.js'
+interface ObjectSchema {
+    firstName ?: string,
+    lastName ?: string,
+    userName: string,
+    password : string,
+}
+
+
+const newTableString = 'CREATE TABLE IF NOT EXISTS tbl ( id int not null auto_increment, firstName text, lastName text, username text, password text, primary key (id) );'
+///////////
+
+
+export async function get(req: any, res: any) { ///////////any should maybe change
 
     const userID : number = req.params.id
     const objectID : string = req.query.objectID
@@ -16,110 +29,237 @@ export async function getAll(req: any, res: any) { ///////////any should maybe c
     }
     const connection = mysql.createConnection(options);
 
-    let data: object = []
 
-
-    //I probably need to put all this in a transaction!!!
     await connection.connect((err) => {
         if(err) throw err;
         console.log("MySQL db connected")
     });
 
+    //warning prepared statements DO NOT work here
+    connection.query(`CREATE DATABASE IF NOT EXISTS ${userID}`, (error) => {
+        if(error) console.log(error)
+    })
+
+    //warning prepared statements DO NOT work here
+    connection.query(`USE ${userID}`, (error) => {
+        if(error) console.log(error)
+    })
+
+    connection.query(newTableString, (error) => {
+        if(error) console.log(error)
+    })
+
     if(objectID){
-        connection.query(
-            `BEGIN TRY
-                BEGIN TRANSACTION
-                    CREATE DATABASE IF NOT EXISTS ${userID};
-                    USE ${userID};
-                    CREATE TABLE IF NOT EXISTS tbl ( id int not null, name text, primary key (id));
-                    SELECT * FROM tbl WHERE id = ${objectID};
-                COMMIT TRANSACTION
-            END TRY
-            BEGIN CATCH
-                ROLLBACK
-            END CATCH`
-        , (error, results, fields) => {
-            console.log("RES", results)
-            // data = reformat(data)
+        connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID], (error, results, fields) => {
+            // data = reformat(results)
+            if(error) {
+                console.log(error)
+                res.sendStatus(400)
+                return
+            }
             res.json(results)
         })
     } else {
-        connection.query(
-            `BEGIN
-                CREATE DATABASE IF NOT EXISTS ${userID}
-                USE ${userID}
-                CREATE TABLE IF NOT EXISTS tbl ( id int not null, name text, primary key (id))
-                SELECT * FROM tbl
-            END
-            ROLLBACK`
-        , (error, results, fields) => {
+        connection.query('SELECT * FROM tbl;', (error, results, fields) => {
             // data = reformat(data)
+            if(error) {
+                console.log(error)
+                res.sendStatus(400)
+                return
+            }
             res.json(results)
         })
     }
-
-
-    // connection.query(`CREATE DATABASE IF NOT EXISTS ${userID};`)
-
-    // connection.query(`USE ${userID};`)
-
-    // connection.query(`CREATE TABLE IF NOT EXISTS tbl ( id int not null, name text, primary key (id));`)
-
-
-    //     connection.query(`SELECT * FROM tbl WHERE id = ${objectID};`, (error, results, fields) => {
-    //         // data = reformat(results)
-    //         res.json(results)
-    //     })
-    // } else {
-    //     connection.query('SELECT * FROM tbl;', (error, results, fields) => {
-    //         // data = reformat(data)
-    //         res.json(results)
-    //     })
-    // }
 
     await connection.end((err) => {
         if(err) throw err;
         console.log("MySQL connection closed")
     });
+}
 
 
+export async function create(req: any, res: any) { ///////////any should maybe change
+
+    const userID : number = req.params.id
+    const dataObject : ObjectSchema = req.body;///////
+
+    const options = {
+        host     :  process.env.mysqlUrl,
+        port     :  Number(process.env.mysqlPort),
+        user     :  process.env.mysqluser,
+        password :  process.env.mysqlPassword
+    }
+    const connection = mysql.createConnection(options);
+
+    await connection.connect((err) => {
+        if(err) throw err;
+        console.log("MySQL db connected")
+    });
+
+    //warning prepared statements DO NOT work here
+    connection.query(`CREATE DATABASE IF NOT EXISTS ${userID}`, (error) => {
+        if(error) console.log(error)
+    })
+
+    //warning prepared statements DO NOT work here
+    connection.query(`USE ${userID}`, (error) => {
+        if(error) console.log(error)
+    })
+
+    connection.query(newTableString, (error) => {
+        if(error) console.log(error)
+    })
+
+    //change all strings to dynamically change with the schema...
+    let queryFields = ''
+    let queryInserts = ''
+    let queryValues = []
+    for(const [key, value] of Object.entries(dataObject)) {
+        queryFields += key + ", "
+        queryInserts += "?, "
+        queryValues.push( value )
+    }
+    queryFields = queryFields.slice(0, -2)
+    queryInserts = queryInserts.slice(0, -2)
+    const queryString = `INSERT INTO tbl (${queryFields}) VALUES (${queryInserts})`
+    console.log(queryString, queryValues)
 
 
-    connection
-	.query("BEGIN")
-	.then((res) => {
-		// next, insert some data into the pets table
-		return client.query(
-			"INSERT INTO pets (name, species) VALUES ($1, $2), ($3, $4)",
-			["Fido", "dog", "Albert", "cat"]
-		)
-	})
-	.then((res) => {
-		// next, insert some data into the food table
-		return client.query(
-			"INSERT INTO food (name, quantity) VALUES ($1, $2), ($3, $4)",
-			["Dog Biscuit", 3, "Cat Food", 5]
-		)
-	})
-	.then((res) => {
-		// once that's done, run the commit statement to
-		// complete the transaction
-		return client.query("commit")
-	})
-	.then((res) => {
-		// if the transaction completes successfully
-		// log a confirmation statement
-		console.log("transaction completed")
-	})
-	.catch((err) => {
-		// incase there are any errors encountered
-		// rollback the transaction
-		console.error("error while querying:", err)
-		return client.query("rollback")
-	})
-	.catch((err) => {
-		// incase there is an error when rolling back, log it
-		console.error("error while rolling back transaction:", err)
-	})
+    connection.execute(queryString, queryValues
+    , (error, results, fields) => {
+        // data = reformat(results)
+        if(error) {
+            console.log(error)
+            res.sendStatus(400)
+            return
+        }
+        res.json(results)
+    })
 
+    await connection.end((err) => {
+        if(err) throw err;
+        console.log("MySQL connection closed")
+    });
+}
+
+
+export async function update(req: any, res: any) { ///////////any should maybe change
+
+    const userID : number = req.params.id
+    const objectID : string = req.query.objectID
+
+    const options = {
+        host     :  process.env.mysqlUrl,
+        port     :  Number(process.env.mysqlPort),
+        user     :  process.env.mysqluser,
+        password :  process.env.mysqlPassword
+    }
+    const connection = mysql.createConnection(options);
+
+    await connection.connect((err) => {
+        if(err) throw err;
+        console.log("MySQL db connected")
+    });
+
+    //warning prepared statements DO NOT work here
+    connection.query(`CREATE DATABASE IF NOT EXISTS ${userID}`, (error) => {
+        if(error) console.log(error)
+    })
+
+    //warning prepared statements DO NOT work here
+    connection.query(`USE ${userID}`, (error) => {
+        if(error) console.log(error)
+    })
+
+    connection.query(newTableString, (error) => {
+        if(error) console.log(error)
+    })
+
+    if(objectID){
+        connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID], (error, results, fields) => {
+            // data = reformat(results)
+            if(error) {
+                console.log(error)
+                res.sendStatus(400)
+                return
+            }
+            res.json(results)
+        })
+    } else {
+        connection.query('SELECT * FROM tbl;', (error, results, fields) => {
+            // data = reformat(data)
+            if(error) {
+                console.log(error)
+                res.sendStatus(400)
+                return
+            }
+            res.json(results)
+        })
+    }
+
+    await connection.end((err) => {
+        if(err) throw err;
+        console.log("MySQL connection closed")
+    });
+}
+
+
+export async function deleteRecords(req: any, res: any) { ///////////any should maybe change
+
+    const userID : number = req.params.id
+    const objectID : string = req.query.objectID
+
+    const options = {
+        host     :  process.env.mysqlUrl,
+        port     :  Number(process.env.mysqlPort),
+        user     :  process.env.mysqluser,
+        password :  process.env.mysqlPassword
+    }
+    const connection = mysql.createConnection(options);
+
+    await connection.connect((err) => {
+        if(err) throw err;
+        console.log("MySQL db connected")
+    });
+
+    //warning prepared statements DO NOT work here
+    connection.query(`CREATE DATABASE IF NOT EXISTS ${userID}`, (error) => {
+        if(error) console.log(error)
+    })
+
+    //warning prepared statements DO NOT work here
+    connection.query(`USE ${userID}`, (error) => {
+        if(error) console.log(error)
+    })
+
+    connection.query(newTableString, (error) => {
+        if(error) console.log(error)
+    })
+
+    if(objectID){
+        connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID], (error, results, fields) => {
+            // data = reformat(results)
+            if(error) {
+                console.log(error)
+                res.sendStatus(400)
+                return
+            }
+            res.json(results)
+        })
+    } else {
+        connection.query('SELECT * FROM tbl;', (error, results, fields) => {
+            // data = reformat(data)
+            if(error) {
+                console.log(error)
+                res.sendStatus(400)
+                return
+            }
+            res.json(results)
+        })
+    }
+
+    await connection.end((err) => {
+        if(err) throw err;
+        console.log("MySQL connection closed")
+    });
 }
