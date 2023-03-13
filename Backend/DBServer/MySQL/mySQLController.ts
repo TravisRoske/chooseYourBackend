@@ -11,28 +11,17 @@ interface ObjectSchema {
     password : string,
 }
 
-const schemaObj : ObjectSchema =  {
-    firstName : '',
-    lastName : '',
-    userName: '',
-    password : ''
-}
-
-
-const newTableString = 'CREATE TABLE IF NOT EXISTS tbl ( id int not null auto_increment, firstName text, lastName text, username text, password text, primary key (id) );'
-///////////
-
-
-
-
-
 
 //this will be called if it's a new user or their token has expired(which will give them a new token)
 //maybe this should save a timestamp to know when to delete the database
 export async function makeTable(req: any, res: any) {
 
     const userID : number = req.params.id
-    const objectID : string = req.query.objectID
+    if(!userID){
+        return res.status(401).send({
+            message: `Response doesn't contain the proper information`
+         });
+    }
 
     const options = {
         host     :  process.env.mysqlUrl,
@@ -57,7 +46,8 @@ export async function makeTable(req: any, res: any) {
         if(error) console.log(error)
     })
 
-    connection.query(newTableString, (error) => {
+    connection.query('CREATE TABLE IF NOT EXISTS tbl ( id int not null auto_increment, firstName text, lastName text, username text, password text, primary key (id) );'
+    , (error) => {
         if(error) console.log(error)
     })
 
@@ -73,6 +63,11 @@ export async function get(req: any, res: any) { ///////////any should maybe chan
 
     const userID : number = req.params.id
     const objectID : string = req.query.objectID
+    if(!userID){
+        return res.status(401).send({
+            message: `Response doesn't contain the proper information`
+         });
+    }
 
     const options = {
         host     :  process.env.mysqlUrl,
@@ -120,6 +115,11 @@ export async function create(req: any, res: any) { ///////////any should maybe c
 
     const userID : number = req.params.id
     const dataObject : ObjectSchema = req.body;///////
+    if(!userID || !dataObject ){
+        return res.status(401).send({
+            message: `Response doesn't contain the proper information`
+         });
+    }
 
     const options = {
         host     :  process.env.mysqlUrl,
@@ -171,6 +171,11 @@ export async function update(req: any, res: any) { ///////////any should maybe c
 
     const userID : number = req.params.id
     const objectID : string = req.query.objectID
+    if(!userID || !objectID){
+        return res.status(401).send({
+            message: `Response doesn't contain the proper information`
+         });
+    }
 
     const options = {
         host     :  process.env.mysqlUrl,
@@ -185,27 +190,10 @@ export async function update(req: any, res: any) { ///////////any should maybe c
         console.log("MySQL db connected")
     });
 
-    if(objectID){
-        connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID], (error, results, fields) => {
-            // data = reformat(results)
-            if(error) {
-                console.log(error)
-                res.sendStatus(400)
-                return
-            }
-            res.json(results)
-        })
-    } else {
-        connection.query('SELECT * FROM tbl;', (error, results, fields) => {
-            // data = reformat(data)
-            if(error) {
-                console.log(error)
-                res.sendStatus(400)
-                return
-            }
-            res.json(results)
-        })
-    }
+    
+
+
+    
 
     await connection.end((err) => {
         if(err) throw err;
@@ -218,6 +206,11 @@ export async function deleteRecords(req: any, res: any) { ///////////any should 
 
     const userID : number = req.params.id
     const objectID : string = req.query.objectID
+    if(!userID || !objectID){
+        return res.status(401).send({
+            message: `Response doesn't contain the proper information`
+         });
+    }
 
     const options = {
         host     :  process.env.mysqlUrl,
@@ -232,27 +225,9 @@ export async function deleteRecords(req: any, res: any) { ///////////any should 
         console.log("MySQL db connected")
     });
 
-    if(objectID){
-        connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID], (error, results, fields) => {
-            // data = reformat(results)
-            if(error) {
-                console.log(error)
-                res.sendStatus(400)
-                return
-            }
-            res.json(results)
-        })
-    } else {
-        connection.query('SELECT * FROM tbl;', (error, results, fields) => {
-            // data = reformat(data)
-            if(error) {
-                console.log(error)
-                res.sendStatus(400)
-                return
-            }
-            res.json(results)
-        })
-    }
+
+
+
 
     await connection.end((err) => {
         if(err) throw err;
