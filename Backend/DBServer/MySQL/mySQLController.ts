@@ -11,12 +11,25 @@ interface ObjectSchema {
     password : string,
 }
 
+const schemaObj : ObjectSchema =  {
+    firstName : '',
+    lastName : '',
+    userName: '',
+    password : ''
+}
+
 
 const newTableString = 'CREATE TABLE IF NOT EXISTS tbl ( id int not null auto_increment, firstName text, lastName text, username text, password text, primary key (id) );'
 ///////////
 
 
-export async function get(req: any, res: any) { ///////////any should maybe change
+
+
+
+
+//this will be called if it's a new user or their token has expired(which will give them a new token)
+//maybe this should save a timestamp to know when to delete the database
+export async function makeTable(req: any, res: any) {
 
     const userID : number = req.params.id
     const objectID : string = req.query.objectID
@@ -28,7 +41,6 @@ export async function get(req: any, res: any) { ///////////any should maybe chan
         password :  process.env.mysqlPassword
     }
     const connection = mysql.createConnection(options);
-
 
     await connection.connect((err) => {
         if(err) throw err;
@@ -48,6 +60,32 @@ export async function get(req: any, res: any) { ///////////any should maybe chan
     connection.query(newTableString, (error) => {
         if(error) console.log(error)
     })
+
+    await connection.end((err) => {
+        if(err) throw err;
+        console.log("MySQL connection closed")
+    });
+
+}
+
+
+export async function get(req: any, res: any) { ///////////any should maybe change
+
+    const userID : number = req.params.id
+    const objectID : string = req.query.objectID
+
+    const options = {
+        host     :  process.env.mysqlUrl,
+        port     :  Number(process.env.mysqlPort),
+        user     :  process.env.mysqluser,
+        password :  process.env.mysqlPassword
+    }
+    const connection = mysql.createConnection(options);
+
+    await connection.connect((err) => {
+        if(err) throw err;
+        console.log("MySQL db connected")
+    });
 
     if(objectID){
         connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID], (error, results, fields) => {
@@ -95,20 +133,6 @@ export async function create(req: any, res: any) { ///////////any should maybe c
         if(err) throw err;
         console.log("MySQL db connected")
     });
-
-    //warning prepared statements DO NOT work here
-    connection.query(`CREATE DATABASE IF NOT EXISTS ${userID}`, (error) => {
-        if(error) console.log(error)
-    })
-
-    //warning prepared statements DO NOT work here
-    connection.query(`USE ${userID}`, (error) => {
-        if(error) console.log(error)
-    })
-
-    connection.query(newTableString, (error) => {
-        if(error) console.log(error)
-    })
 
     //change all strings to dynamically change with the schema...
     let queryFields = ''
@@ -161,20 +185,6 @@ export async function update(req: any, res: any) { ///////////any should maybe c
         console.log("MySQL db connected")
     });
 
-    //warning prepared statements DO NOT work here
-    connection.query(`CREATE DATABASE IF NOT EXISTS ${userID}`, (error) => {
-        if(error) console.log(error)
-    })
-
-    //warning prepared statements DO NOT work here
-    connection.query(`USE ${userID}`, (error) => {
-        if(error) console.log(error)
-    })
-
-    connection.query(newTableString, (error) => {
-        if(error) console.log(error)
-    })
-
     if(objectID){
         connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID], (error, results, fields) => {
             // data = reformat(results)
@@ -221,20 +231,6 @@ export async function deleteRecords(req: any, res: any) { ///////////any should 
         if(err) throw err;
         console.log("MySQL db connected")
     });
-
-    //warning prepared statements DO NOT work here
-    connection.query(`CREATE DATABASE IF NOT EXISTS ${userID}`, (error) => {
-        if(error) console.log(error)
-    })
-
-    //warning prepared statements DO NOT work here
-    connection.query(`USE ${userID}`, (error) => {
-        if(error) console.log(error)
-    })
-
-    connection.query(newTableString, (error) => {
-        if(error) console.log(error)
-    })
 
     if(objectID){
         connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID], (error, results, fields) => {
