@@ -1,4 +1,4 @@
-import * as mysql from 'mysql2'
+import * as mysql from 'mysql2/promise'
 import * as dotenv from 'dotenv'
 dotenv.config()
 
@@ -12,123 +12,80 @@ interface ObjectSchema {
 }
 
 
-//idk if some of this should await/async
 //this function could also save a timestamp to know when to delete the db
-function initConnection(userID : string) : mysql.Connection {
+async function initConnection(userID : string) {
     const options = {
         host     :  process.env.mysqlUrl,
         port     :  Number(process.env.mysqlPort),
         user     :  process.env.mysqluser,
         password :  process.env.mysqlPassword,
     }
-    const connection = mysql.createConnection(options);
-    
-    connection.connect((err) => {
-        if(err) throw err;
-        console.log("MySQL db connected")
-    });
-    
-    try {
-        //warning prepared statements DO NOT work here
-        connection.query(`USE ${userID}`, (error) => {
-            if(error) console.log(error)
-        })
-    } catch {
-            //warning prepared statements DO NOT work here
-        connection.query(`CREATE DATABASE IF NOT EXISTS ${userID}`, (error) => {
-            if(error) console.log(error)
-        })
+    const connection = await mysql.createConnection(options);
 
-        connection.query('CREATE TABLE IF NOT EXISTS tbl ( id int not null auto_increment, firstName text, lastName text, username text, password text, primary key (id) );'
-        , (error) => {
-            if(error) console.log(error)
-        })
+    let res : any = false
 
-        //warning prepared statements DO NOT work here
-        connection.query(`USE ${userID}`, (error) => {
-            if(error) console.log(error)
-        })
+    const [ rows ] = await connection.execute(`SHOW DATABASES LIKE '${userID}';`)
+
+    console.log("rows", rows, typeof(rows), rows.toString())
+
+    if(!rows.toString()) { //this was the only way I could find to see if the query found a database
+
+        //warning prepared statements DO NOT work here???
+        await connection.execute(`CREATE DATABASE IF NOT EXISTS ${userID}`)
+
+        await connection.query(`USE ${userID}`)
+
+        await connection.execute(
+            `CREATE TABLE IF NOT EXISTS tbl 
+            ( id int not null auto_increment, 
+                firstName text, lastName text, 
+                username text, password text, 
+                primary key (id) );'
+            )`
+        )
+    } else {
+        await connection.query(`USE ${userID}`)
     }
-    connection.end((err) => {
-        if(err) throw err;
-        console.log("MySQL connection closed")
-    });
-
+ 
     return connection;
 }
 
 
-export async function get(req: any, res: any) { ///////////any should maybe change
+export async function get(req: any, res: any) {
 
     const userID : string = req.params.id
     const objectID : string = req.query.objectID
     if(!userID){
         return res.status(401).send({
-            message: `Response doesn't contain the proper information`
-         });
+            message: `Request doesn't contain the proper information`
+        });
     }
-    const connection = initConnection(userID)
-
-    await connection.connect((err) => {
-        if(err) throw err;
-        console.log("MySQL db connected")
-    });
-
-    //warning prepared statements DO NOT work here
-    connection.query(`USE ${userID}`, (error) => {
-        if(error) console.log(error)
-    })
+    const connection = await initConnection(userID)
 
     if(objectID){
-        connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID], (error, results, fields) => {
-            // data = reformat(results)
-            if(error) {
-                console.log(error)
-                res.sendStatus(400)
-                return
-            }
-            res.json(results)
-        })
+        const [ rows ] = await connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID])
+        res.json(rows)
     } else {
-        connection.query('SELECT * FROM tbl;', (error, results, fields) => {
-            // data = reformat(data)
-            if(error) {
-                console.log(error)
-                res.sendStatus(400)
-                return
-            }
-            res.json(results)
-        })
+        const [ rows ] = await connection.execute('SELECT * FROM tbl;')
+        res.json(rows)
     }
 
-    await connection.end((err) => {
-        if(err) throw err;
-        console.log("MySQL connection closed")
-    });
+    await connection.end()
 }
 
 
-export async function create(req: any, res: any) { ///////////any should maybe change
+export async function create(req: any, res: any) {
 
     const userID : string = req.params.id
     const dataObject : ObjectSchema = req.body;///////
     if(!userID || !dataObject ){
         return res.status(401).send({
-            message: `Response doesn't contain the proper information`
-         });
+            message: `Request doesn't contain the proper information`
+        });
     }
 
-    const connection = initConnection(userID)
+    const connection = await initConnection(userID)
 
-    await connection.connect((err) => {
-        if(err) throw err;
-        console.log("MySQL db connected")
-    });
-
-    //warning prepared statements DO NOT work here
-    connection.query(`USE ${userID}`, (error) => {
-        if(error) console.log(error)
-    })
 
     //change all strings to dynamically change with the schema...
     let queryFields = ''
@@ -143,48 +100,26 @@ export async function create(req: any, res: any) { ///////////any should maybe c
     queryInserts = queryInserts.slice(0, -2)
     const queryString = `INSERT INTO tbl (${queryFields}) VALUES (${queryInserts})`
 
+    const [ rows ] = await connection.execute(queryString, queryValues)
+    res.json(rows)
 
-    connection.execute(queryString, queryValues
-    , (error, results, fields) => {
-        // data = reformat(results)
-        if(error) {
-            console.log(error)
-            res.sendStatus(400)
-            return
-        }
-        res.json(results)
-    })
-
-    await connection.end((err) => {
-        if(err) throw err;
-        console.log("MySQL connection closed")
-    });
+    await connection.end()
 }
 
 
-export async function update(req: any, res: any) { ///////////any should maybe change
+export async function update(req: any, res: any) {
 
     const userID : string = req.params.id
     const objectID : string = req.query.objectID
-    const dataObject : ObjectSchema = req.body;///////
+    const dataObject : ObjectSchema = req.body;
     if(!userID || !objectID || !dataObject){
         return res.status(401).send({
-            message: `Response doesn't contain the proper information`
+            message: `Request doesn't contain the proper information`
          });
     }
 
-    const connection = initConnection(userID)
-
-    await connection.connect((err) => {
-        if(err) throw err;
-        console.log("MySQL db connected")
-    });
-
-    //warning prepared statements DO NOT work here
-    connection.query(`USE ${userID}`, (error) => {
-        if(error) console.log(error)
-    })
-    
+    const connection = await initConnection(userID)
+   
     //change all strings to dynamically change with the schema...
     let queryFields = ''
     let queryValues = []
@@ -199,61 +134,27 @@ export async function update(req: any, res: any) { ///////////any should maybe c
         SET ${queryFields}
         WHERE id = ?`
 
+    const [ rows ] = await connection.execute(queryString, [...queryValues, objectID])
 
-    connection.execute(queryString, [...queryValues, objectID]
-    , (error, results, fields) => {
-        // data = reformat(results)
-        if(error) {
-            console.log(error)
-            res.sendStatus(400)
-            return
-        }
-        res.json(results)
-    })
+    res.json(rows)
 
-
-    await connection.end((err) => {
-        if(err) throw err;
-        console.log("MySQL connection closed")
-    });
+    await connection.end()
 }
 
 
-export async function deleteRecords(req: any, res: any) { ///////////any should maybe change
+export async function deleteRecords(req: any, res: any) {
 
     const userID : string = req.params.id
     const objectID : string = req.query.objectID
     if(!userID || !objectID){
         return res.status(401).send({
-            message: `Response doesn't contain the proper information`
+            message: `Request doesn't contain the proper information`
          });
     }
 
-    const connection = initConnection(userID)
+    const connection = await initConnection(userID)
 
-    await connection.connect((err) => {
-        if(err) throw err;
-        console.log("MySQL db connected")
-    });
+    await connection.execute('DELETE FROM tbl WHERE id = ?', [ objectID ])
 
-    //warning prepared statements DO NOT work here
-    connection.query(`USE ${userID}`, (error) => {
-        if(error) console.log(error)
-    })
-
-    connection.execute('DELETE FROM tbl WHERE id = ?', [ objectID ]
-    , (error, results, fields) => {
-        // data = reformat(results)
-        if(error) {
-            console.log(error)
-            res.sendStatus(400)
-            return
-        }
-        res.json(results)
-    })
-
-    await connection.end((err) => {
-        if(err) throw err;
-        console.log("MySQL connection closed")
-    });
+    await connection.end()
 }
