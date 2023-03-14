@@ -146,7 +146,6 @@ export async function create(req: any, res: any) { ///////////any should maybe c
     queryFields = queryFields.slice(0, -2)
     queryInserts = queryInserts.slice(0, -2)
     const queryString = `INSERT INTO tbl (${queryFields}) VALUES (${queryInserts})`
-    console.log(queryString, queryValues)
 
 
     connection.execute(queryString, queryValues
@@ -171,7 +170,8 @@ export async function update(req: any, res: any) { ///////////any should maybe c
 
     const userID : number = req.params.id
     const objectID : string = req.query.objectID
-    if(!userID || !objectID){
+    const dataObject : ObjectSchema = req.body;///////
+    if(!userID || !objectID || !dataObject){
         return res.status(401).send({
             message: `Response doesn't contain the proper information`
          });
@@ -191,10 +191,33 @@ export async function update(req: any, res: any) { ///////////any should maybe c
     });
 
     
+    //change all strings to dynamically change with the schema...
+    let queryFields = ''
+    let queryValues = []
+    for(const [key, value] of Object.entries(dataObject)) {
+        if(value){
+            queryFields += key + " = ?, "
+            queryValues.push( value )
+        }
+    }
+    queryFields = queryFields.slice(0, -2)
+    const queryString = `UPDATE tbl 
+        SET ${queryFields}
+        WHERE id = ?`
 
+
+    connection.execute(queryString, [...queryValues, objectID]
+    , (error, results, fields) => {
+        // data = reformat(results)
+        if(error) {
+            console.log(error)
+            res.sendStatus(400)
+            return
+        }
+        res.json(results)
+    })
 
     
-
     await connection.end((err) => {
         if(err) throw err;
         console.log("MySQL connection closed")
