@@ -2,15 +2,7 @@ import * as mysql from 'mysql2/promise'
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-
-// import ObjectSchema from './ObjectSchema.js'
-interface ObjectSchema {
-    firstName ?: string,
-    lastName ?: string,
-    userName: string,
-    password : string,
-}
-
+import ObjectSchema from './ObjectSchema.js'
 
 //this function could also save a timestamp to know when to delete the db
 async function initConnection(userID : string) {
@@ -26,22 +18,16 @@ async function initConnection(userID : string) {
 
     const [ rows ] = await connection.execute(`SHOW DATABASES LIKE '${userID}';`)
 
-    console.log("rows", rows, typeof(rows), rows.toString())
-
     if(!rows.toString()) { //this was the only way I could find to see if the query found a database
 
-        //warning prepared statements DO NOT work here???
+        //warning prepared statements DO NOT work here!!!!!!!!!!!!//////////////
         await connection.execute(`CREATE DATABASE IF NOT EXISTS ${userID}`)
 
+        //warning prepared statements DO NOT work here!!!!!!!//////////////
         await connection.query(`USE ${userID}`)
 
         await connection.execute(
-            `CREATE TABLE IF NOT EXISTS tbl 
-            ( id int not null auto_increment, 
-                firstName text, lastName text, 
-                username text, password text, 
-                primary key (id) );'
-            )`
+            `CREATE TABLE IF NOT EXISTS tbl ( id int not null auto_increment, firstName text, lastName text, username text, password text, primary key (id) );`
         )
     } else {
         await connection.query(`USE ${userID}`)
@@ -157,4 +143,6 @@ export async function deleteRecords(req: any, res: any) {
     await connection.execute('DELETE FROM tbl WHERE id = ?', [ objectID ])
 
     await connection.end()
+
+    return res.sendStatus(200)
 }
