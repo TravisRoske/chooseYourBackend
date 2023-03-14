@@ -1,7 +1,11 @@
 import express from 'express'
 import { mySQLRouter } from './MySQL/mySQLRouter.js'
+const cors = require('cors');
 
 const app = express();
+
+//I'll have to change this later because this just allows everything
+app.use(cors());
 
 app.use(express.json())
 
@@ -14,6 +18,6 @@ app.use("/ts/mysql", mySQLRouter)
 //app.use("/ts/mongo", mongoRouter)
 
 
-app.listen(8080, () => {
+app.listen(8081, () => {
     console.log("App listening")
 })

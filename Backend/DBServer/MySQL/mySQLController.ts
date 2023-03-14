@@ -64,6 +64,7 @@ export async function create(req: any, res: any) {
 
     const userID : string = req.params.id
     const dataObject : ObjectSchema = req.body;///////
+
     if(!userID || !dataObject ){
         return res.status(401).send({
             message: `Request doesn't contain the proper information`
@@ -140,9 +141,10 @@ export async function deleteRecords(req: any, res: any) {
 
     const connection = await initConnection(userID)
 
-    await connection.execute('DELETE FROM tbl WHERE id = ?', [ objectID ])
+    const [ rows ] = await connection.execute('DELETE FROM tbl WHERE id = ?', [ objectID ])
+
+    res.json(rows)
+    // return res.sendStatus(200)
 
     await connection.end()
-
-    return res.sendStatus(200)
 }

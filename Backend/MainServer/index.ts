@@ -13,6 +13,10 @@ app.get("/ts", (req, res) => {
     res.sendFile('chooseDatabase.html', { root: __dirname + "../../../../Public/2d" })
 })
 
+app.get("/ts/mysql", (req, res) => {
+    res.sendFile('testConsole.html', { root: __dirname + "../../../../Public/2d" })
+})
+
 //endpoints
 //ts/
 //ts/mongo

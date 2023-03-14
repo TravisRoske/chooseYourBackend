@@ -49,8 +49,9 @@ function initConnection(userID) {
         let res = false;
         const [rows] = yield connection.execute(`SHOW DATABASES LIKE '${userID}';`);
         if (!rows.toString()) { //this was the only way I could find to see if the query found a database
-            //warning prepared statements DO NOT work here???
-            yield connection.execute(`CREATE DATABASE IF NOT EXISTS ?`, [userID]);
+            //warning prepared statements DO NOT work here!!!!!!!!!!!!//////////////
+            yield connection.execute(`CREATE DATABASE IF NOT EXISTS ${userID}`);
+            //warning prepared statements DO NOT work here!!!!!!!//////////////
             yield connection.query(`USE ${userID}`);
             yield connection.execute(`CREATE TABLE IF NOT EXISTS tbl ( id int not null auto_increment, firstName text, lastName text, username text, password text, primary key (id) );`);
         }
@@ -150,9 +151,10 @@ function deleteRecords(req, res) {
             });
         }
         const connection = yield initConnection(userID);
-        yield connection.execute('DELETE FROM tbl WHERE id = ?', [objectID]);
+        const [rows] = yield connection.execute('DELETE FROM tbl WHERE id = ?', [objectID]);
+        res.json(rows);
+        // return res.sendStatus(200)
         yield connection.end();
-        return res.sendStatus(200);
     });
 }
 exports.deleteRecords = deleteRecords;
