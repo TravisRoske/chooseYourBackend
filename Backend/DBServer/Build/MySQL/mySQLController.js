@@ -32,16 +32,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteRecords = exports.update = exports.create = exports.get = void 0;
+exports.deleteRecords = exports.update = exports.create = exports.get = exports.makeTable = void 0;
 const mysql = __importStar(require("mysql2"));
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
-const newTableString = 'CREATE TABLE IF NOT EXISTS tbl ( id int not null auto_increment, firstName text, lastName text, username text, password text, primary key (id) );';
-///////////
-function get(req, res) {
+function initConnection(userID) {
+    const options = {
+        host: process.env.mysqlUrl,
+        port: Number(process.env.mysqlPort),
+        user: process.env.mysqluser,
+        password: process.env.mysqlPassword,
+        database: userID
+    };
+    const connection = mysql.createConnection(options);
+    return connection;
+}
+//this will be called if it's a new user or their token has expired(which will give them a new token)
+//maybe this should save a timestamp to know when to delete the database
+function makeTable(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const userID = req.params.id;
-        const objectID = req.query.objectID;
+        if (!userID) {
+            return res.status(401).send({
+                message: `Response doesn't contain the proper information`
+            });
+        }
         const options = {
             host: process.env.mysqlUrl,
             port: Number(process.env.mysqlPort),
@@ -64,7 +79,35 @@ function get(req, res) {
             if (error)
                 console.log(error);
         });
-        connection.query(newTableString, (error) => {
+        connection.query('CREATE TABLE IF NOT EXISTS tbl ( id int not null auto_increment, firstName text, lastName text, username text, password text, primary key (id) );', (error) => {
+            if (error)
+                console.log(error);
+        });
+        yield connection.end((err) => {
+            if (err)
+                throw err;
+            console.log("MySQL connection closed");
+        });
+    });
+}
+exports.makeTable = makeTable;
+function get(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const userID = req.params.id;
+        const objectID = req.query.objectID;
+        if (!userID) {
+            return res.status(401).send({
+                message: `Response doesn't contain the proper information`
+            });
+        }
+        const connection = initConnection(userID);
+        yield connection.connect((err) => {
+            if (err)
+                throw err;
+            console.log("MySQL db connected");
+        });
+        //warning prepared statements DO NOT work here
+        connection.query(`USE ${userID}`, (error) => {
             if (error)
                 console.log(error);
         });
@@ -102,6 +145,11 @@ function create(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const userID = req.params.id;
         const dataObject = req.body; ///////
+        if (!userID || !dataObject) {
+            return res.status(401).send({
+                message: `Response doesn't contain the proper information`
+            });
+        }
         const options = {
             host: process.env.mysqlUrl,
             port: Number(process.env.mysqlPort),
@@ -115,16 +163,7 @@ function create(req, res) {
             console.log("MySQL db connected");
         });
         //warning prepared statements DO NOT work here
-        connection.query(`CREATE DATABASE IF NOT EXISTS ${userID}`, (error) => {
-            if (error)
-                console.log(error);
-        });
-        //warning prepared statements DO NOT work here
         connection.query(`USE ${userID}`, (error) => {
-            if (error)
-                console.log(error);
-        });
-        connection.query(newTableString, (error) => {
             if (error)
                 console.log(error);
         });
@@ -140,7 +179,6 @@ function create(req, res) {
         queryFields = queryFields.slice(0, -2);
         queryInserts = queryInserts.slice(0, -2);
         const queryString = `INSERT INTO tbl (${queryFields}) VALUES (${queryInserts})`;
-        console.log(queryString, queryValues);
         connection.execute(queryString, queryValues, (error, results, fields) => {
             // data = reformat(results)
             if (error) {
@@ -162,6 +200,12 @@ function update(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const userID = req.params.id;
         const objectID = req.query.objectID;
+        const dataObject = req.body; ///////
+        if (!userID || !objectID || !dataObject) {
+            return res.status(401).send({
+                message: `Response doesn't contain the proper information`
+            });
+        }
         const options = {
             host: process.env.mysqlUrl,
             port: Number(process.env.mysqlPort),
@@ -175,41 +219,32 @@ function update(req, res) {
             console.log("MySQL db connected");
         });
         //warning prepared statements DO NOT work here
-        connection.query(`CREATE DATABASE IF NOT EXISTS ${userID}`, (error) => {
-            if (error)
-                console.log(error);
-        });
-        //warning prepared statements DO NOT work here
         connection.query(`USE ${userID}`, (error) => {
             if (error)
                 console.log(error);
         });
-        connection.query(newTableString, (error) => {
-            if (error)
+        //change all strings to dynamically change with the schema...
+        let queryFields = '';
+        let queryValues = [];
+        for (const [key, value] of Object.entries(dataObject)) {
+            if (value) {
+                queryFields += key + " = ?, ";
+                queryValues.push(value);
+            }
+        }
+        queryFields = queryFields.slice(0, -2);
+        const queryString = `UPDATE tbl 
+        SET ${queryFields}
+        WHERE id = ?`;
+        connection.execute(queryString, [...queryValues, objectID], (error, results, fields) => {
+            // data = reformat(results)
+            if (error) {
                 console.log(error);
+                res.sendStatus(400);
+                return;
+            }
+            res.json(results);
         });
-        if (objectID) {
-            connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID], (error, results, fields) => {
-                // data = reformat(results)
-                if (error) {
-                    console.log(error);
-                    res.sendStatus(400);
-                    return;
-                }
-                res.json(results);
-            });
-        }
-        else {
-            connection.query('SELECT * FROM tbl;', (error, results, fields) => {
-                // data = reformat(data)
-                if (error) {
-                    console.log(error);
-                    res.sendStatus(400);
-                    return;
-                }
-                res.json(results);
-            });
-        }
         yield connection.end((err) => {
             if (err)
                 throw err;
@@ -222,54 +257,31 @@ function deleteRecords(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const userID = req.params.id;
         const objectID = req.query.objectID;
-        const options = {
-            host: process.env.mysqlUrl,
-            port: Number(process.env.mysqlPort),
-            user: process.env.mysqluser,
-            password: process.env.mysqlPassword
-        };
-        const connection = mysql.createConnection(options);
+        if (!userID || !objectID) {
+            return res.status(401).send({
+                message: `Response doesn't contain the proper information`
+            });
+        }
+        const connection = initConnection(userID);
         yield connection.connect((err) => {
             if (err)
                 throw err;
             console.log("MySQL db connected");
         });
         //warning prepared statements DO NOT work here
-        connection.query(`CREATE DATABASE IF NOT EXISTS ${userID}`, (error) => {
-            if (error)
-                console.log(error);
-        });
-        //warning prepared statements DO NOT work here
         connection.query(`USE ${userID}`, (error) => {
             if (error)
                 console.log(error);
         });
-        connection.query(newTableString, (error) => {
-            if (error)
+        connection.execute('DELETE FROM tbl WHERE id = ?', [objectID], (error, results, fields) => {
+            // data = reformat(results)
+            if (error) {
                 console.log(error);
+                res.sendStatus(400);
+                return;
+            }
+            res.json(results);
         });
-        if (objectID) {
-            connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID], (error, results, fields) => {
-                // data = reformat(results)
-                if (error) {
-                    console.log(error);
-                    res.sendStatus(400);
-                    return;
-                }
-                res.json(results);
-            });
-        }
-        else {
-            connection.query('SELECT * FROM tbl;', (error, results, fields) => {
-                // data = reformat(data)
-                if (error) {
-                    console.log(error);
-                    res.sendStatus(400);
-                    return;
-                }
-                res.json(results);
-            });
-        }
         yield connection.end((err) => {
             if (err)
                 throw err;
