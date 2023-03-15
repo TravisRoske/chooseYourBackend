@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>MySQL Form</title>
+    <title>MySQL Test Rest</title>
   </head>
   <body>
     <form>
@@ -85,7 +85,7 @@
             if(idInput){
                 idString = '?objectID=' + idInput
             }
-            
+
             fetch(url + userID + idString, {
                 method: 'PUT',
                 headers: {

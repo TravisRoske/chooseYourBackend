@@ -7,13 +7,14 @@ const app = express();
 //I'll have to change this later because this just allows everything
 app.use(cors());
 
+
 app.use(express.json())
 
 
 //this uses the mysql file as a middleware
 app.use("/ts/mysql", mySQLRouter)
 
-//app.use("/ts/postgres", postgresRouter)
+app.use("/ts/postgres", postgresRouter)
 
 //app.use("/ts/mongo", mongoRouter)
 

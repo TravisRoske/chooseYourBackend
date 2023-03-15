@@ -1,13 +1,15 @@
-import * as mysql from 'mysql2/promise'
+import * as Client from 'pg'
+const client = new Client()
+
+ 
+// const res = await client.query('SELECT $1::text as message', ['Hello world!'])
+// console.log(res.rows[0].message) // Hello world!
+
+
 import * as dotenv from 'dotenv'
 dotenv.config()
 
 import ObjectSchema from './ObjectSchema.js'
-
-
-//note I may need to unprepare the prepared statements
-//I may also need to find a way to make and use databases with prepared statements or somehting else safe
-
 
 //this function could also save a timestamp to know when to delete the db
 async function initConnection(userID : string) {
@@ -17,28 +19,28 @@ async function initConnection(userID : string) {
         user     :  process.env.mysqluser,
         password :  process.env.mysqlPassword,
     }
-    const connection = await mysql.createConnection(options);
+    await client.connect()
 
     let res : any = false
 
-    const [ rows ] = await connection.execute(`SHOW DATABASES LIKE '${userID}';`)
+    const [ rows ] = await client.execute(`SHOW DATABASES LIKE '${userID}';`)
 
     if(!rows.toString()) { //this was the only way I could find to see if the query found a database
 
         //warning prepared statements DO NOT work here!!!!!!!!!!!!//////////////
-        await connection.execute(`CREATE DATABASE IF NOT EXISTS ${userID}`)
+        await client.execute(`CREATE DATABASE IF NOT EXISTS ${userID}`)
 
         //warning prepared statements DO NOT work here!!!!!!!//////////////
-        await connection.query(`USE ${userID}`)
+        await client.query(`USE ${userID}`)
 
-        await connection.execute(
+        await client.execute(
             `CREATE TABLE IF NOT EXISTS tbl ( id int not null auto_increment, firstName text, lastName text, username text, password text, primary key (id) );`
         )
     } else {
-        await connection.query(`USE ${userID}`)
+        await client.query(`USE ${userID}`)
     }
  
-    return connection;
+    return client;
 }
 
 
@@ -51,17 +53,17 @@ export async function get(req: any, res: any) {
             message: `Request doesn't contain the proper information`
         });
     }
-    const connection = await initConnection(userID)
+    const client = await initConnection(userID)
 
     if(objectID){
-        const [ rows ] = await connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID])
+        const [ rows ] = await client.execute('SELECT * FROM tbl WHERE id = ?;', [objectID])
         res.json(rows)
     } else {
-        const [ rows ] = await connection.execute('SELECT * FROM tbl;')
+        const [ rows ] = await client.execute('SELECT * FROM tbl;')
         res.json(rows)
     }
 
-    await connection.end()
+    await client.end()
 }
 
 
@@ -76,7 +78,7 @@ export async function create(req: any, res: any) {
         });
     }
 
-    const connection = await initConnection(userID)
+    const client = await initConnection(userID)
 
 
     //change all strings to dynamically change with the schema...
@@ -92,10 +94,10 @@ export async function create(req: any, res: any) {
     queryInserts = queryInserts.slice(0, -2)
     const queryString = `INSERT INTO tbl (${queryFields}) VALUES (${queryInserts})`
 
-    const [ rows ] = await connection.execute(queryString, queryValues)
+    const [ rows ] = await client.execute(queryString, queryValues)
     res.json(rows)
 
-    await connection.end()
+    await client.end()
 }
 
 
@@ -110,7 +112,7 @@ export async function update(req: any, res: any) {
          });
     }
 
-    const connection = await initConnection(userID)
+    const client = await initConnection(userID)
    
     //change all strings to dynamically change with the schema...
     let queryFields = ''
@@ -126,7 +128,7 @@ export async function update(req: any, res: any) {
         SET ${queryFields}
         WHERE id = ?`
 
-    const [ rows ] = await connection.execute(queryString, [...queryValues, objectID])
+    const [ rows ] = await client.execute(queryString, [...queryValues, objectID])
 
     res.json(rows)
 
@@ -144,12 +146,12 @@ export async function deleteRecords(req: any, res: any) {
          });
     }
 
-    const connection = await initConnection(userID)
+    const client = await initConnection(userID)
 
-    const [ rows ] = await connection.execute('DELETE FROM tbl WHERE id = ?', [ objectID ])
+    const [ rows ] = await client.execute('DELETE FROM tbl WHERE id = ?', [ objectID ])
 
     res.json(rows)
     // return res.sendStatus(200)
 
-    await connection.end()
+    await client.end()
 }

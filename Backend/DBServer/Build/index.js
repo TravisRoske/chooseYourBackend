@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express_1.default.json());
 //this uses the mysql file as a middleware
 app.use("/ts/mysql", mySQLRouter_js_1.mySQLRouter);
-//app.use("/ts/postgres", postgresRouter)
+app.use("/ts/postgres", postgresRouter);
 //app.use("/ts/mongo", mongoRouter)
 app.listen(8081, () => {
     console.log("App listening");
