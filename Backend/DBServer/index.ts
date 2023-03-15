@@ -1,5 +1,6 @@
 import express from 'express'
 import { mySQLRouter } from './MySQL/mySQLRouter.js'
+import { postgresRouter } from './Postgres/postgresRouter.js';
 const cors = require('cors');
 
 const app = express();

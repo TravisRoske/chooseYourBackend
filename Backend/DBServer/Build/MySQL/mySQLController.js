@@ -36,6 +36,8 @@ exports.deleteRecords = exports.update = exports.create = exports.get = void 0;
 const mysql = __importStar(require("mysql2/promise"));
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
+//note I may need to unprepare the prepared statements
+//I may also need to find a way to make and use databases with prepared statements or somehting else safe
 //this function could also save a timestamp to know when to delete the db
 function initConnection(userID) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -46,7 +48,6 @@ function initConnection(userID) {
             password: process.env.mysqlPassword,
         };
         const connection = yield mysql.createConnection(options);
-        let res = false;
         const [rows] = yield connection.execute(`SHOW DATABASES LIKE '${userID}';`);
         if (!rows.toString()) { //this was the only way I could find to see if the query found a database
             //warning prepared statements DO NOT work here!!!!!!!!!!!!//////////////

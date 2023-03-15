@@ -19,8 +19,6 @@ async function initConnection(userID : string) {
     }
     const connection = await mysql.createConnection(options);
 
-    let res : any = false
-
     const [ rows ] = await connection.execute(`SHOW DATABASES LIKE '${userID}';`)
 
     if(!rows.toString()) { //this was the only way I could find to see if the query found a database
