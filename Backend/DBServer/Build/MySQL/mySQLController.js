@@ -77,7 +77,7 @@ function get(req, res) {
             res.json(rows);
         }
         else {
-            const [rows] = yield connection.execute('SELECT * FROM tbl;');
+            const [rows] = yield connection.execute('SELECT * FROM tbl ORDER BY id;');
             res.json(rows);
         }
         yield connection.end();

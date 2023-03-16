@@ -1,6 +1,8 @@
 import express from 'express'
 import path from 'path'
 
+const port = 8080;///////
+
 const app = express();
 
 app.use(express.json());
@@ -17,6 +19,10 @@ app.get("/ts/mysql", (req, res) => {
     res.sendFile('testConsole.html', { root: __dirname + "../../../../Public/2d" })
 })
 
+app.get("/ts/postgres", (req, res) => {
+    res.sendFile('testConsole.html', { root: __dirname + "../../../../Public/2d" })
+})
+
 //endpoints
 //ts/
 //ts/mongo
@@ -24,6 +30,6 @@ app.get("/ts/mysql", (req, res) => {
 //ts/mysql
 
 
-app.listen(8080, () => {
-    console.log("App listening")
+app.listen(port, () => {
+    console.log(`Main Server Listening on port ${port}`)
 })

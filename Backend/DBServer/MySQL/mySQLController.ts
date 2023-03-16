@@ -55,7 +55,7 @@ export async function get(req: any, res: any) {
         const [ rows ] = await connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID])
         res.json(rows)
     } else {
-        const [ rows ] = await connection.execute('SELECT * FROM tbl;')
+        const [ rows ] = await connection.execute('SELECT * FROM tbl ORDER BY id;')
         res.json(rows)
     }
 

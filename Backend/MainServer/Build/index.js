@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const port = 8080; ///////
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.get("/", (req, res) => {
@@ -15,11 +16,14 @@ app.get("/ts", (req, res) => {
 app.get("/ts/mysql", (req, res) => {
     res.sendFile('testConsole.html', { root: __dirname + "../../../../Public/2d" });
 });
+app.get("/ts/postgres", (req, res) => {
+    res.sendFile('testConsole.html', { root: __dirname + "../../../../Public/2d" });
+});
 //endpoints
 //ts/
 //ts/mongo
 //ts/postgres
 //ts/mysql
-app.listen(8080, () => {
-    console.log("App listening");
+app.listen(port, () => {
+    console.log(`Main Server Listening on port ${port}`);
 });
