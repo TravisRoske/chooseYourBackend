@@ -59,25 +59,6 @@ So each request will include their code...
 
 
 
--I WOULD HAVE NO WAY OF KNOWING WHICH DOCKER IMAGE TO ACCESS OR HOW IF IT'S RUN OUT OF MY CONTROL.  LIKE WITH SERVERLESS STUFF.
-The entire point of this is to demostrate my mastery over backend, serverside control.  And serverless is specifically for giving up control.
-
-I should manage everything on ec2 or possibly, but probably not, ecs.
-And on ec2 they should NOT be amazon linux!
-
-The only way any of this will work is if I can heavily compartmentalize database and cache instances..........
-
-
-
-
-
-
-Language/framework
-
-
-
-
-
 
 
 
@@ -89,28 +70,6 @@ Language/framework
 -understand dynamic urls better
 -server failover.  how it works, how to set up
 -dynamic load balancing.  nginx or totally make my own thing.
-
-
-
-
-
-
-
-Code for db operations
-
-function insert(id, data) {
-	sql
-	"begin"
-	"use database id"
-	"insert into tbl ......"
-
-
-code to send that request
-
-fetch("/db/mysql/serverNum", {
-	body: {id, data}
-).then((res) => {
-	//send back to frontend
 
 
 
@@ -134,18 +93,26 @@ Then, the server or a cdn sends the new index.html, and routes you to it
 It has the 3d world and everything...
 meanwhile a db partition is created, and a cache container
 
-database console:
--get all users
--sends get to /db or something, with data object(info the user entered)
--this sends a request to the db master
--somehow it figures out which server it's on
--sends the request to that server
--server queries the db
--returns to db master
--returns to main servers
--returns to user
--(also updates the users and the databases expiration to after another hour.)
-
--then the front end displays the data("I'll need some dynamic texture system if I'm using three")
 
 
+
+
+
+how to deal with userID====
+-saved in local storage with timeout
+-frontend sends the userid with time in the body of every request
+-also the userid in the url of some requests
+-backend verifies url and body userid match
+-checks if timer is timed out.
+-if timed out, make new user id???? or send the same????
+-db creation/using is already handled
+-db master will search for userid and check which server it's on then route everything to that server
+	-if it's not found, just route it to the first low-load server available
+-db master will every minute or so check through the list of all id and their timeouts
+	-save a list of all expired ids
+	-then send a request to their servers to delete the partition of each expired userID
+-so db master will have a database or a txt file with
+	-userID, timeout, db serverIP
+
+
+-sends back save local storage with userid and timer(or the frontend does this???)

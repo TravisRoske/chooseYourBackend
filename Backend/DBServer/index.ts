@@ -12,6 +12,9 @@ app.use(cors());
 app.use(express.json())
 
 
+//maybe a middleware to assign id/check id time/delete local id
+
+
 //this uses the mysql file as a middleware
 app.use("/ts/mysql", mySQLRouter)
 
