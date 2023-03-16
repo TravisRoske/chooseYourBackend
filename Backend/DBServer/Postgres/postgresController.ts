@@ -18,6 +18,7 @@ async function initConnection(userID : string) {
 
     try {
         await client.connect()
+        
         //check if tbl exists
         await client.query('SELECT * FROM tbl;')
     } catch {

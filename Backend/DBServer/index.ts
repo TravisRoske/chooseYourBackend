@@ -21,5 +21,5 @@ app.use("/ts/postgres", postgresRouter)
 
 
 app.listen(8081, () => {
-    console.log("App listening")
+    console.log("Database Server listening on port 8081")
 })

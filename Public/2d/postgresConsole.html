@@ -5,8 +5,12 @@
     <title>MySQL Test Rest</title>
   </head>
   <body>
+    <h1>Postgres</h1>
     <form>
-      <label for="id">ID:</label>
+        <label for="userID">User ID (temp) :</label>
+        <input type="text" id="userID" name="userID"><br><br>
+
+      <label for="id">Object ID:</label>
       <input type="text" id="id" name="id"><br><br>
 
       <label for="firstName">First Name:</label>
@@ -28,12 +32,16 @@
     </form>
 
     <script>
-        // const url = "http://localhost:8081/ts/mysql/";
         const url = "http://localhost:8081/ts/postgres/";
 
-        let userID = 'test123'
+        //get rid of all this and get the userID from local storage, or make a new one.
+        function getUserID() {
+            return document.querySelector('#userID').value;
+        }
 
         async function getRecord() {
+            const userID = getUserID()////////
+
             const idInput = document.querySelector('#id').value;
             let idString = ''
             if(idInput){
@@ -51,6 +59,9 @@
         }
 
         async function createRecord() {
+            const userID = getUserID()////////
+
+
             const firstNameInput = document.querySelector('#firstName').value;
             const lastNameInput = document.querySelector('#lastName').value;
             const usernameInput = document.querySelector('#username').value;
@@ -78,6 +89,9 @@
         }
 
         async function updateRecord() {
+            const userID = getUserID()////////
+
+
             const firstNameInput = document.querySelector('#firstName').value;
             const lastNameInput = document.querySelector('#lastName').value;
             const usernameInput = document.querySelector('#username').value;
@@ -109,6 +123,9 @@
         }
 
         async function deleteRecord() {
+            const userID = getUserID()////////
+
+
             const idInput = document.querySelector('#id').value;
             let idString = ''
             if(idInput){

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>MySQL Test Rest</title>
+  </head>
+  <body>
+    <h1>MySQL</h1>
+    <form>
+        <label for="userID">User ID (temp) :</label>
+        <input type="text" id="userID" name="userID"><br><br>
+
+      <label for="id">Object ID:</label>
+      <input type="text" id="id" name="id"><br><br>
+
+      <label for="firstName">First Name:</label>
+      <input type="text" id="firstName" name="firstName"><br><br>
+
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" name="lastName"><br><br>
+
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username"><br><br>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password"><br><br>
+
+      <button type="button" onclick="getRecord()">Get Record</button>
+      <button type="button" onclick="createRecord()">Create Record</button>
+      <button type="button" onclick="updateRecord()">Update Record</button>
+      <button type="button" onclick="deleteRecord()">Delete Record</button>
+    </form>
+
+    <script>
+        const url = "http://localhost:8081/ts/mysql/";
+
+        //get rid of all this and get the userID from local storage, or make a new one.
+        function getUserID() {
+            return document.querySelector('#userID').value;
+        }
+
+        async function getRecord() {
+            const userID = getUserID()////////
+
+            const idInput = document.querySelector('#id').value;
+            let idString = ''
+            if(idInput){
+                idString = '?objectID=' + idInput
+            }
+            fetch(url + userID + idString, {
+                method: 'GET'
+            })
+            .then((response) => {
+                return response.json()
+            })
+            .then((result) => {
+                console.log(result)
+            })
+        }
+
+        async function createRecord() {
+            const userID = getUserID()////////
+
+
+            const firstNameInput = document.querySelector('#firstName').value;
+            const lastNameInput = document.querySelector('#lastName').value;
+            const usernameInput = document.querySelector('#username').value;
+            const passwordInput = document.querySelector('#password').value;
+            console.log("VALS", firstNameInput, lastNameInput, usernameInput, passwordInput)
+
+            fetch(url + userID, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body : JSON.stringify({
+                    "firstName": firstNameInput, 
+                    "lastName":  lastNameInput, 
+                    "userName":  usernameInput,
+                    "password":  passwordInput
+                })
+            })
+            .then((response) => {
+                return response.json()
+            })
+            .then((result) => {
+                console.log(result)
+            })
+        }
+
+        async function updateRecord() {
+            const userID = getUserID()////////
+
+
+            const firstNameInput = document.querySelector('#firstName').value;
+            const lastNameInput = document.querySelector('#lastName').value;
+            const usernameInput = document.querySelector('#username').value;
+            const passwordInput = document.querySelector('#password').value;
+            const idInput = document.querySelector('#id').value;
+            let idString = ''
+            if(idInput){
+                idString = '?objectID=' + idInput
+            }
+
+            fetch(url + userID + idString, {
+                method: 'PUT',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body : JSON.stringify({
+                    "firstName": firstNameInput, 
+                    "lastName":  lastNameInput, 
+                    "userName":  usernameInput,
+                    "password":  passwordInput
+                })
+            })
+            .then((response) => {
+                return response.json()
+            })
+            .then((result) => {
+                console.log(result)
+            })
+        }
+
+        async function deleteRecord() {
+            const userID = getUserID()////////
+
+
+            const idInput = document.querySelector('#id').value;
+            let idString = ''
+            if(idInput){
+                idString = '?objectID=' + idInput
+            }
+            fetch(url + userID + idString, {
+                method: 'DELETE'
+            })
+            .then((response) => {
+                return response.json()
+            })
+            .then((result) => {
+                console.log(result)
+            })
+        }
+    </script>
+  </body>
+</html>
