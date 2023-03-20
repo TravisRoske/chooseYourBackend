@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleUserID = void 0;
+const uuid_1 = require("uuid");
 function handleUserID(req, res, next) {
     //check if there is a userId
     if (req.params.id) {
@@ -8,6 +9,7 @@ function handleUserID(req, res, next) {
     }
     //if not, assign a random one....
     //check if userID is valid(starting with numbers will crash the db)
+    console.log((0, uuid_1.v4)());
     //check if userid exists in list of active dbs
     //(if it's new AND it exists, that's weird, maybe assign new userID)
     //if it exists, update it's timestamp to now, and get it's server id to route to....

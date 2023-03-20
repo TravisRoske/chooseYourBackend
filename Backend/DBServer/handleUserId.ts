@@ -1,4 +1,4 @@
-
+import {v4 as uuidv4} from 'uuid';
 
 export function handleUserID(req: any, res: any, next: any){
     //check if there is a userId
@@ -8,6 +8,7 @@ export function handleUserID(req: any, res: any, next: any){
         //if not, assign a random one....
 
     //check if userID is valid(starting with numbers will crash the db)
+    console.log(uuidv4())
 
 
     //check if userid exists in list of active dbs
