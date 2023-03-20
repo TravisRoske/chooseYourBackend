@@ -1,4 +1,5 @@
 import express from 'express'
+import handleUserId from './handleUserID.js'
 import { mySQLRouter } from './MySQL/mySQLRouter.js'
 import { postgresRouter } from './Postgres/postgresRouter.js';
 const cors = require('cors');
@@ -13,7 +14,7 @@ app.use(express.json())
 
 
 //maybe a middleware to assign id/check id time/delete local id
-
+app.use(handleUserId)
 
 //this uses the mysql file as a middleware
 app.use("/ts/mysql", mySQLRouter)

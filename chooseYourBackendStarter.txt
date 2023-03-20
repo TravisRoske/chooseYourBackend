@@ -19,3 +19,19 @@ database console:
 -then the front end displays the data
 
 
+
+ToDo:
+-Build the userID system(frontend saves to localstorage)
+    -backend assigns, sends back to user...?
+    -frontend saves, then sends it all future times
+    -backend checks the timer, deletes it if timed out, and assigns new one
+-Build the dababase timeout and deletion system
+    -all usernames and timestamps saved in a small database(with the name of the server they are on)
+    -check them every minute or so, find all expired ones
+    -send each of these to a delete function on their respective servers
+    -db servers delete the db
+
+-Build a shitty basic front end
+-Get this all going on a single ec2 instance for now.(with containers on it or ecs or lambda)
+-Set up nginx, and other stuff like logging, server process and restart, static ec2 ip address, etc
+-Go live
