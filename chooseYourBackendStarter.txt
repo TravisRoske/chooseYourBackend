@@ -22,6 +22,8 @@ database console:
 
 ToDo:
 -Build the userID system(frontend saves to localstorage)
+    ((process- new user goes to site, clicks through options, sends db request, this sees no user, makes the partition,
+        completes the request, sends back a result WITH a json of userid and time, frontend saves this to localstorage))
     -backend assigns, sends back to user...?
     -frontend saves, then sends it all future times
     -backend checks the timer, deletes it if timed out, and assigns new one

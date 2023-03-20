@@ -7,7 +7,7 @@ export function handleUserID(req: any, res: any, next: any){
     }
         //if not, assign a random one....
 
-    //check if userID is valid(starting with numbers will crash the db)
+    //check if userID is valid(all only numbers will crash the db)
     console.log(uuidv4())
 
 
