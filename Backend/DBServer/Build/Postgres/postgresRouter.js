@@ -7,6 +7,7 @@ exports.postgresRouter = void 0;
 const express_1 = __importDefault(require("express"));
 exports.postgresRouter = express_1.default.Router();
 const postgresController_js_1 = require("./postgresController.js");
+// postgresRouter.route('/:id').all(handleUserID)
 // REQUEST FORMAT -  ${url}/ts/postgres/${userID}?objectID=${objectID}
 exports.postgresRouter.route('/:id')
     .get(postgresController_js_1.get)

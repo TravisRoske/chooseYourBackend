@@ -1,11 +1,14 @@
 
 
-function handleUserID(req: any, res: any, next: any){
-    //check if there is a userId...maybe this should be after each db choice
-    if(req.params){
-        console.log(req.params)
+export function handleUserID(req: any, res: any, next: any){
+    //check if there is a userId
+    if(req.params.id){
+        console.log(req.params.id)
     }
         //if not, assign a random one....
+
+    //check if userID is valid(starting with numbers will crash the db)
+
 
     //check if userid exists in list of active dbs
         //(if it's new AND it exists, that's weird, maybe assign new userID)
