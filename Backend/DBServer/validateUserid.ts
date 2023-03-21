@@ -1,14 +1,14 @@
-import {v4 as uuidv4} from 'uuid';
-
-export function handleUserID(req: any, res: any, next: any){
+export function validateUserid(req: any, res: any, next: any){
     //check if there is a userId
-    if(req.params.id){
-        console.log(req.params.id)
+    if(req.params.id &&  req.params.id != 'null' && req.params.id != 'undefined'){
+        console.log("got the id!!!!",  req.params.id)
+    } else {
+        res.status(401)
+        res.json({})
+        return;
+        console.log("SHOTULD NOT BE HERE")
     }
-        //if not, assign a random one....
-
-    //check if userID is valid(all only numbers will crash the db)
-    console.log(uuidv4())
+    //also check for special characters/////////
 
 
     //check if userid exists in list of active dbs

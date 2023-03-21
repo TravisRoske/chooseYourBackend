@@ -34,9 +34,10 @@
         //how do i make everything wait for this????(otherwise the requests will send with userid of undefined)
             //maybe an onload function that awaits it...
             //maybe only render the console once this returns...
-        let userid
-        getUserID()
-        .then((result) => userid = result)
+        let userid = getUserID();
+        userid.then((result) => userid = result)
+        //this don't work.....
+        
 
         //get the userid when page loads, or use id saved in localStorage        
         function getUserID() {

@@ -11,7 +11,7 @@ function assignUserID(req, res) {
     else {
         userid = (0, uuid_1.v4)();
         const parts = userid.split('-');
-        userid = "u" + parts.join('');
+        userid = "uid" + parts.join('');
     }
     res.status(200).json({ "userid": userid });
 }

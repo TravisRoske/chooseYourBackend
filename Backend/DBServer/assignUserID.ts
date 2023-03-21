@@ -8,7 +8,7 @@ export function assignUserID(req: any, res: any){
     } else {
         userid = uuidv4()
         const parts = userid.split('-')
-        userid = "u" + parts.join('')
+        userid = "uid" + parts.join('')
     }
 
     res.status(200).json({"userid": userid})

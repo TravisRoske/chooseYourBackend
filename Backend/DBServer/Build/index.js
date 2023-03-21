@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const assignUserID_js_1 = require("./assignUserID.js");
+const validateUserid_js_1 = require("./validateUserid.js");
 const mySQLRouter_js_1 = require("./MySQL/mySQLRouter.js");
 const postgresRouter_js_1 = require("./Postgres/postgresRouter.js");
 const cors = require('cors');
@@ -13,6 +14,7 @@ const app = (0, express_1.default)();
 app.use(cors());
 app.use(express_1.default.json());
 app.get('/userid', assignUserID_js_1.assignUserID);
+app.use(validateUserid_js_1.validateUserid);
 //this uses the mysql file as a middleware
 app.use("/ts/mysql", mySQLRouter_js_1.mySQLRouter);
 app.use("/ts/postgres", postgresRouter_js_1.postgresRouter);
