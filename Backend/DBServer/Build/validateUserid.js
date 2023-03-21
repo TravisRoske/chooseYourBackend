@@ -2,17 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateUserid = void 0;
 function validateUserid(req, res, next) {
-    //check if there is a userId
-    if (req.params.id && req.params.id.split(0, 3) == 'uid' && req.params.id != 'null' && req.params.id != 'undefined') {
-        console.log("got the id!!!!", req.params.id);
-    }
-    else {
+    console.log(req.params);
+    if (!req.params.id || req.params.id.slice(0, 3) != 'uid' || req.params.id == 'null' || req.params.id == 'undefined') {
         res.status(401);
         res.json({});
         return;
-        console.log("SHOTULD NOT BE HERE");
     }
-    //also check for special characters/////////
+    //also check for special characters/////////!!!!!!!!!!!!!
+    //this would be how users can inject code or something
     //check if userid exists in list of active dbs
     //(if it's new AND it exists, that's weird, maybe assign new userID)
     //if it exists, update it's timestamp to now, and get it's server id to route to....

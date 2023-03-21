@@ -1,7 +1,6 @@
 import express from 'express'
-import path from 'path'
 
-const port = 8080;///////
+const port = 8080;//////////
 
 const app = express();
 
@@ -22,13 +21,6 @@ app.get("/ts/mysql", (req, res) => {
 app.get("/ts/postgres", (req, res) => {
     res.sendFile('postgresConsole.html', { root: __dirname + "../../../../Public/2d" })
 })
-
-//endpoints
-//ts/
-//ts/mongo
-//ts/postgres
-//ts/mysql
-
 
 app.listen(port, () => {
     console.log(`Main Server Listening on port ${port}`)

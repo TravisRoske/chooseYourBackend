@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>MySQL Test Rest</title>
+    <link rel="stylesheet" type="text/css" href="console.css">
   </head>
   <body>
     <h1>MySQL</h1>
@@ -31,23 +32,21 @@
     <script>
         const url = "http://localhost:8081/ts/mysql/";
 
-        //how do i make everything wait for this????(otherwise the requests will send with userid of undefined)
-            //maybe an onload function that awaits it...
-            //maybe only render the console once this returns...
-        let userid = getUserID();
-        userid.then((result) => userid = result)
-        //this don't work.....
-        
 
-        //get the userid when page loads, or use id saved in localStorage        
+        //maybe only render the console once this promise resolves
+        let userid = ""
+        getUserID().then((result) => userid = result)
+
+        //Get a userid from the server, or use saved id    
         function getUserID() {
             const idurl = "http://localhost:8081/userid"
             let headers = {}
             const currid = localStorage.getItem("userid")
-            if(currid && currid != "null" && currid != "undefined" ) {
-                return currid
-            }
+
             let prom = new Promise((resolve, reject) => {
+                if(currid && currid != "null" && currid != "undefined" ) {
+                    resolve(currid)
+                }
                 fetch(idurl, {
                     method : "GET",
                     headers : headers

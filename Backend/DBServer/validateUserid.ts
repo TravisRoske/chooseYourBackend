@@ -1,14 +1,13 @@
 export function validateUserid(req: any, res: any, next: any){
-    //check if there is a userId
-    if(req.params.id &&  req.params.id != 'null' && req.params.id != 'undefined'){
-        console.log("got the id!!!!",  req.params.id)
-    } else {
+
+    if(!req.params.id || req.params.id.slice(0,3) != 'uid' || req.params.id == 'null' || req.params.id == 'undefined'){
         res.status(401)
         res.json({})
         return;
-        console.log("SHOTULD NOT BE HERE")
     }
-    //also check for special characters/////////
+    
+    //also check for special characters/////////!!!!!!!!!!!!!
+        //this would be how users can inject code or something
 
 
     //check if userid exists in list of active dbs

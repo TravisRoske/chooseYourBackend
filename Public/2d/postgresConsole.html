@@ -2,14 +2,12 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>MySQL Test Rest</title>
+    <title>Postgres Test Rest</title>
+    <link rel="stylesheet" type="text/css" href="console.css">
   </head>
   <body>
     <h1>Postgres</h1>
     <form>
-        <label for="userID">User ID (temp) :</label>
-        <input type="text" id="userID" name="userID"><br><br>
-
       <label for="id">Object ID:</label>
       <input type="text" id="id" name="id"><br><br>
 
@@ -34,20 +32,49 @@
     <script>
         const url = "http://localhost:8081/ts/postgres/";
 
-        //get rid of all this and get the userID from local storage, or make a new one.
+
+        //maybe only render the console once this promise resolves
+        let userid = ""
+        getUserID().then((result) => userid = result)
+
+        //Get a userid from the server, or use saved id    
         function getUserID() {
-            return document.querySelector('#userID').value;
+            const idurl = "http://localhost:8081/userid"
+            let headers = {}
+            const currid = localStorage.getItem("userid")
+
+            let prom = new Promise((resolve, reject) => {
+                if(currid && currid != "null" && currid != "undefined" ) {
+                    resolve(currid)
+                }
+                fetch(idurl, {
+                    method : "GET",
+                    headers : headers
+                })
+                .then((response) => {
+                    return response.json()
+                })
+                .then((result) => {
+                    localStorage.setItem("userid", result.userid)
+                    resolve(result.userid)
+                })    
+                .catch((err) => {
+                    console.log(err)
+                    reject()
+                })
+            })
+            return prom
         }
 
         async function getRecord() {
-            const userID = getUserID()////////
+            console.log(userid)
 
             const idInput = document.querySelector('#id').value;
             let idString = ''
             if(idInput){
                 idString = '?objectID=' + idInput
             }
-            fetch(url + userID + idString, {
+            fetch(url + userid + idString, {
                 method: 'GET'
             })
             .then((response) => {
@@ -59,8 +86,6 @@
         }
 
         async function createRecord() {
-            const userID = getUserID()////////
-
 
             const firstNameInput = document.querySelector('#firstName').value;
             const lastNameInput = document.querySelector('#lastName').value;
@@ -68,7 +93,7 @@
             const passwordInput = document.querySelector('#password').value;
             console.log("VALS", firstNameInput, lastNameInput, usernameInput, passwordInput)
 
-            fetch(url + userID, {
+            fetch(url + userid, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -89,8 +114,6 @@
         }
 
         async function updateRecord() {
-            const userID = getUserID()////////
-
 
             const firstNameInput = document.querySelector('#firstName').value;
             const lastNameInput = document.querySelector('#lastName').value;
@@ -102,7 +125,7 @@
                 idString = '?objectID=' + idInput
             }
 
-            fetch(url + userID + idString, {
+            fetch(url + userid + idString, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json"
@@ -123,15 +146,13 @@
         }
 
         async function deleteRecord() {
-            const userID = getUserID()////////
-
 
             const idInput = document.querySelector('#id').value;
             let idString = ''
             if(idInput){
                 idString = '?objectID=' + idInput
             }
-            fetch(url + userID + idString, {
+            fetch(url + userid + idString, {
                 method: 'DELETE'
             })
             .then((response) => {
@@ -141,6 +162,7 @@
                 console.log(result)
             })
         }
+
     </script>
   </body>
 </html>
