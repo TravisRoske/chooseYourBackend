@@ -37,7 +37,7 @@
         let userid
         getUserID()
         .then((result) => userid = result)
-        
+
         //get the userid when page loads, or use id saved in localStorage        
         function getUserID() {
             const idurl = "http://localhost:8081/userid"
@@ -58,6 +58,10 @@
                     localStorage.setItem("userid", result.userid)
                     resolve(result.userid)
                 })    
+                .catch((err) => {
+                    console.log(err)
+                    reject()
+                })
             })
             return prom
         }
