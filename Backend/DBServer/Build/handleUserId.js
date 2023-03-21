@@ -8,7 +8,7 @@ function handleUserID(req, res, next) {
         console.log(req.params.id);
     }
     //if not, assign a random one....
-    //check if userID is valid(starting with numbers will crash the db)
+    //check if userID is valid(all only numbers will crash the db)
     console.log((0, uuid_1.v4)());
     //check if userid exists in list of active dbs
     //(if it's new AND it exists, that's weird, maybe assign new userID)

@@ -1,20 +1,19 @@
 import express from 'express'
-import { handleUserID } from './handleUserID.js'
+import { assignUserID } from './assignUserID.js'
 import { mySQLRouter } from './MySQL/mySQLRouter.js'
 import { postgresRouter } from './Postgres/postgresRouter.js';
 const cors = require('cors');
 
 const app = express();
 
-//I'll have to change this later because this just allows everything
+
+//I'll have to change this later because this just allows everything//////
 app.use(cors());
 
 
 app.use(express.json())
 
-
-app.use("*/:id", handleUserID)
-
+app.get('/userid', assignUserID)
 
 //this uses the mysql file as a middleware
 app.use("/ts/mysql", mySQLRouter)

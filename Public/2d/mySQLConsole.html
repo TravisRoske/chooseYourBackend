@@ -7,9 +7,6 @@
   <body>
     <h1>MySQL</h1>
     <form>
-        <label for="userID">User ID (temp) :</label>
-        <input type="text" id="userID" name="userID"><br><br>
-
       <label for="id">Object ID:</label>
       <input type="text" id="id" name="id"><br><br>
 
@@ -34,20 +31,46 @@
     <script>
         const url = "http://localhost:8081/ts/mysql/";
 
-        //get rid of all this and get the userID from local storage, or make a new one.
+        //how do i make everything wait for this????(otherwise the requests will send with userid of undefined)
+            //maybe an onload function that awaits it...
+            //maybe only render the console once this returns...
+        let userid
+        getUserID()
+        .then((result) => userid = result)
+        
+        //get the userid when page loads, or use id saved in localStorage        
         function getUserID() {
-            return document.querySelector('#userID').value;
+            const idurl = "http://localhost:8081/userid"
+            let headers = {}
+            const currid = localStorage.getItem("userid")
+            if(currid && currid != "null" && currid != "undefined" ) {
+                return currid
+            }
+            let prom = new Promise((resolve, reject) => {
+                fetch(idurl, {
+                    method : "GET",
+                    headers : headers
+                })
+                .then((response) => {
+                    return response.json()
+                })
+                .then((result) => {
+                    localStorage.setItem("userid", result.userid)
+                    resolve(result.userid)
+                })    
+            })
+            return prom
         }
 
         async function getRecord() {
-            const userID = getUserID()////////
+            console.log(userid)
 
             const idInput = document.querySelector('#id').value;
             let idString = ''
             if(idInput){
                 idString = '?objectID=' + idInput
             }
-            fetch(url + userID + idString, {
+            fetch(url + userid + idString, {
                 method: 'GET'
             })
             .then((response) => {
@@ -59,8 +82,6 @@
         }
 
         async function createRecord() {
-            const userID = getUserID()////////
-
 
             const firstNameInput = document.querySelector('#firstName').value;
             const lastNameInput = document.querySelector('#lastName').value;
@@ -68,7 +89,7 @@
             const passwordInput = document.querySelector('#password').value;
             console.log("VALS", firstNameInput, lastNameInput, usernameInput, passwordInput)
 
-            fetch(url + userID, {
+            fetch(url + userid, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -89,8 +110,6 @@
         }
 
         async function updateRecord() {
-            const userID = getUserID()////////
-
 
             const firstNameInput = document.querySelector('#firstName').value;
             const lastNameInput = document.querySelector('#lastName').value;
@@ -102,7 +121,7 @@
                 idString = '?objectID=' + idInput
             }
 
-            fetch(url + userID + idString, {
+            fetch(url + userid + idString, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json"
@@ -123,15 +142,13 @@
         }
 
         async function deleteRecord() {
-            const userID = getUserID()////////
-
 
             const idInput = document.querySelector('#id').value;
             let idString = ''
             if(idInput){
                 idString = '?objectID=' + idInput
             }
-            fetch(url + userID + idString, {
+            fetch(url + userid + idString, {
                 method: 'DELETE'
             })
             .then((response) => {
@@ -141,6 +158,11 @@
                 console.log(result)
             })
         }
+
+
+
+
+
     </script>
   </body>
 </html>

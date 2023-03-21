@@ -1,5 +1,4 @@
 import express from 'express'
-import { assignUserID } from './assignUserID.js'
 import path from 'path'
 
 const port = 8080;///////
@@ -7,8 +6,6 @@ const port = 8080;///////
 const app = express();
 
 app.use(express.json());
-
-app.use(assignUserID)
 
 app.get("/", (req, res) => {
     res.sendFile('chooseLanguage.html', { root: __dirname + "../../../../Public/2d" })
