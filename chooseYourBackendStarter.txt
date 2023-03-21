@@ -21,11 +21,7 @@ database console:
 
 
 ToDo:
--Build the userID system(frontend saves to localstorage)
-    ((process- new user goes to site, clicks through options, sends db request, this sees no user, makes the partition,
-        completes the request, sends back a result WITH a json of userid and time, frontend saves this to localstorage))
-    -backend assigns, sends back to user...?
-    -frontend saves, then sends it all future times
+-Database deleting and userid timestamp validation systems, and userid string validation
     -backend checks the timer, deletes it if timed out, and assigns new one
 -Build the dababase timeout and deletion system
     -all usernames and timestamps saved in a small database(with the name of the server they are on)
@@ -35,5 +31,7 @@ ToDo:
 
 -Build a shitty basic front end
 -Get this all going on a single ec2 instance for now.(with containers on it or ecs or lambda)
--Set up nginx, and other stuff like logging, server process and restart, static ec2 ip address, etc
+    -make an ec2 instance
+    -pull mainserver, db server, and frontend builds
+-Set up nginx, and other stuff like logging, server process and restart(main and dbserver), static ec2 ip address, etc
 -Go live
