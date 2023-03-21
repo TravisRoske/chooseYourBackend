@@ -1,4 +1,5 @@
 import express from 'express'
+import { requestLogger } from './middleware/requestLogger.js'
 import { assignUserID } from './assignUserID.js'
 import { mySQLRouter } from './MySQL/mySQLRouter.js'
 import { postgresRouter } from './Postgres/postgresRouter.js';
@@ -10,8 +11,9 @@ const app = express();
 //I'll have to change this later because this just allows everything//////
 app.use(cors());
 
-
 app.use(express.json())
+
+app.use(requestLogger)
 
 app.get('/userid', assignUserID)
 
