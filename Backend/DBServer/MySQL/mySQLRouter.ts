@@ -1,8 +1,9 @@
 import express from 'express'
-import { validateUserid } from '../validateUserid.js';
+import { validateUserid } from '../middleware/validateUserid.js';
+import { get, create, update, deleteRecords } from './mySQLController.js'
+
 export const mySQLRouter = express.Router();
 
-import { get, create, update, deleteRecords } from './mySQLController.js'
 
 // REQUEST FORMAT -  ${url}/ts/mysql/${userID}?objectID=${objectID}
 mySQLRouter.route('/:id')

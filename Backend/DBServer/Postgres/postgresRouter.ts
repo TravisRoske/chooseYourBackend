@@ -1,5 +1,5 @@
 import express from 'express'
-import { validateUserid } from '../validateUserid.js';
+import { validateUserid } from '../middleware/validateUserid.js';
 
 export const postgresRouter = express.Router();
 

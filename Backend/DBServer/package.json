@@ -7,7 +7,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "npx tsc && node ./build/index.js",
+    "start": "npx tsc && node ./build/dbServer.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
