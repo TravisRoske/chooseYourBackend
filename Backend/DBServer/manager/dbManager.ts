@@ -49,30 +49,34 @@ async function initConnection() {
     //delete
     //get outdated
 
-export async function get(req: any, res: any) {
+export async function get(req: any, res: any, next : any) {
 
     const userid : string = req.params.userid
     
     const connection = await initConnection()
 
     const [ rows ] = await connection.execute('SELECT * FROM users WHERE userid = ?;', [userid])
-    res.json(rows)
+    // res.json(rows)
     
     await connection.end()
+
+    next()
 }
 
 
-export async function getAll(req: any, res: any) {
+export async function getAll(req: any, res: any, next : any) {
     
     const connection = await initConnection()
 
     const [ rows ] = await connection.execute('SELECT * FROM users;')
-    res.json(rows)
+    // res.json(rows)
 
     await connection.end()
+
+    next()
 }
 
-export async function create(req: any, res: any) {
+export async function create(req: any, res: any, next : any) {
 
     const userid : string = req.params.userid
     let dbcode : number = parseInt(req.query.dbcode)
@@ -88,16 +92,18 @@ export async function create(req: any, res: any) {
     try {
         const [ rows ] = await connection.execute('INSERT INTO users (userid, lastTimestamp, dbsUsed) VALUES (?, ?, ?)'
                     , [userid, Math.floor(new Date().getTime() / 1000), dbcode])
-        res.json(rows)
+        // res.json(rows)
     } catch {
-        res.sendStatus(400)
+        // res.sendStatus(400)
     }
 
     await connection.end()
+
+    next()
 }
 
 
-export async function update(req: any, res: any) {
+export async function update(req: any, res: any, next : any) {
 
     const userid : string = req.params.userid
     let dbcode : number = parseInt(req.query.dbcode)
@@ -117,8 +123,8 @@ export async function update(req: any, res: any) {
 
         //if user doesn't exist
         if(!rows[0]) {
-            res.sendStatus(404)
-            return
+            // res.sendStatus(404)
+            next()
         }
 
         //update the db code based with bitwise OR
@@ -131,13 +137,15 @@ export async function update(req: any, res: any) {
     const [ rows ] = await connection.execute(`UPDATE users SET lastTimeStamp = ? ${newDbString} WHERE userid = ?`, 
                     [...entries, userid])
 
-    res.json(rows)
+    // res.json(rows)
 
     await connection.end()
+
+    next()
 }
 
 
-export async function deleteRecords(req: any, res: any) {
+export async function deleteRecords(req: any, res: any, next : any) {
 
     const userid : string = req.params.userid
     if(!userid){
@@ -150,9 +158,11 @@ export async function deleteRecords(req: any, res: any) {
 
     const [ rows ] = await connection.execute('DELETE FROM users WHERE userid = ?', [ userid ])
 
-    res.json(rows)
+    // res.json(rows)
 
     await connection.end()
+
+    next()
 }
 
 

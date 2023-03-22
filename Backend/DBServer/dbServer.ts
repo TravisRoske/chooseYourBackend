@@ -18,8 +18,10 @@ app.use(express.json())
 
 // app.use(requestLogger)
 
-app.get('/userid', assignUserID)
+app.get('/assignid', assignUserID)  //this should create new user in dbmaster
 
+
+                                    //each request should update the user in dbmster, by sending put with the current db used
 app.use('/ts/mysql', mySQLRouter)
 
 app.use('/ts/postgres', postgresRouter)

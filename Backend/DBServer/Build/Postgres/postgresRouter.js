@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postgresRouter = void 0;
 const express_1 = __importDefault(require("express"));
-const validateUserid_js_1 = require("../validateUserid.js");
+const validateUserid_js_1 = require("../middleware/validateUserid.js");
 exports.postgresRouter = express_1.default.Router();
 const postgresController_js_1 = require("./postgresController.js");
 // REQUEST FORMAT -  ${url}/ts/postgres/${userID}?objectID=${objectID}
