@@ -49,6 +49,7 @@ function initConnection(userID) {
         let client = new pg_1.Client(withDatabase);
         try {
             yield client.connect();
+            //check if db exists first/////////!!
             //check if tbl exists
             yield client.query('SELECT * FROM tbl;');
         }

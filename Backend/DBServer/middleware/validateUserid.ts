@@ -3,11 +3,16 @@ export function validateUserid(req: any, res: any, next: any){
     if(!req.params.id || req.params.id.slice(0,3) != 'uid' || req.params.id == 'null' || req.params.id == 'undefined'){
         res.status(401)
         res.json({})
+
+        
+    //create user id if it doesn't exist...
         return;
     }
 
     //also check for special characters/////////!!!!!!!!!!!!!
         //this would be how users can inject code or something
+
+
 
 
     //check if userid exists in list of active dbs

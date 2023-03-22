@@ -29,6 +29,15 @@
       <button type="button" onclick="deleteRecord()">Delete Record</button>
     </form>
 
+    
+    <div id="display">
+        <h1>Display</h1>
+        <p id="temp"></p>
+    </div>
+
+
+    
+
     <script>
         const url = "http://localhost:8080/ts/mysql/query/";
 
@@ -82,6 +91,7 @@
             })
             .then((result) => {
                 console.log(result)
+                display(result)
             })
         }
 
@@ -110,6 +120,7 @@
             })
             .then((result) => {
                 console.log(result)
+                display(result)
             })
         }
 
@@ -142,6 +153,7 @@
             })
             .then((result) => {
                 console.log(result)
+                display(result)
             })
         }
 
@@ -160,8 +172,17 @@
             })
             .then((result) => {
                 console.log(result)
+                display(result)
             })
         }
+
+
+
+
+        function display(data){
+            document.querySelector('#temp').innerHTML = JSON.stringify(data)
+        }
+
 
     </script>
   </body>

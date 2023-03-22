@@ -13,9 +13,7 @@ function assignUserID(req, res, next) {
         userid = (0, uuid_1.v4)();
         const parts = userid.split('-');
         userid = "uid" + parts.join('');
-        console.log("params", req.params);
         req.params['userid'] = userid;
-        console.log("params", req.params);
         (0, dbManager_js_1.create)(req, res, next); /////////
     }
     res.status(200).json({ "userid": userid });
