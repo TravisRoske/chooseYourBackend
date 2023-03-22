@@ -32,14 +32,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteRecords = exports.update = exports.create = exports.getAll = exports.get = void 0;
+exports.deleteUser = exports.deleteUserPartitions = exports.update = exports.create = exports.getExpired = exports.getAll = exports.get = void 0;
 const mysql = __importStar(require("mysql2/promise"));
 const dotenv = __importStar(require("dotenv"));
+const mySQLController_1 = require("../MySQL/mySQLController");
+const postgresController_1 = require("../Postgres/postgresController");
 dotenv.config();
-// dbUsersMaster
+// =========== dbUsersMaster ========================================================
+// ============ Schema ==============================================================
 // userid
 // lastTimestamp
-// dbsUsed (binary format:  00000001 = mysql, 00000010 = postres, 00000100 = mongo)
+// dbsUsed (binary format:  00000001 = mysql, 00000010 = postgres, 00000100 = mongo)
 // serverid : text
 ////////this should use a totally different database, only on the dbmaster server
 function initConnection() {
@@ -73,17 +76,19 @@ function initConnection() {
 //update
 //delete
 //get outdated
+//probably can be normal functions
 function get(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const userid = req.params.userid;
         const connection = yield initConnection();
+        //////////add error handling to all routes like this
         const [rows] = yield connection.execute('SELECT * FROM users WHERE userid = ?;', [userid]);
-        // res.json(rows)
         yield connection.end();
         next();
     });
 }
 exports.get = get;
+//probably can be normal functions
 function getAll(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const connection = yield initConnection();
@@ -94,10 +99,22 @@ function getAll(req, res, next) {
     });
 }
 exports.getAll = getAll;
+function getExpired() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const connection = yield initConnection();
+        //timestamp at one hour ago
+        const expireTime = Math.floor(new Date().getTime() / 1000) - 3600;
+        const [rows] = yield connection.execute('SELECT * FROM users WHERE lastTimeStamp < ?;', [expireTime]);
+        yield connection.end();
+        return rows;
+    });
+}
+exports.getExpired = getExpired;
 function create(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log("creating", req.params.userid, Math.floor(new Date().getTime() / 1000));
         const userid = req.params.userid;
-        let dbcode = parseInt(req.query.dbcode);
+        let dbcode = getdbCode(req);
         if (!userid) {
             return res.status(401).send({
                 message: `Request doesn't contain the proper information`
@@ -116,10 +133,12 @@ function create(req, res, next) {
     });
 }
 exports.create = create;
+///////update will normally be called, but if user doesn't exists this will call create/////
 function update(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log("updating", req.params.userid, Math.floor(new Date().getTime() / 1000));
         const userid = req.params.userid;
-        let dbcode = parseInt(req.query.dbcode);
+        let dbcode = getdbCode(req);
         if (!userid) {
             return res.status(401).send({
                 message: `Request doesn't contain the proper information`
@@ -134,7 +153,9 @@ function update(req, res, next) {
             //if user doesn't exist
             if (!rows[0]) {
                 // res.sendStatus(404)
+                yield create(req, res, next);
                 next();
+                //idk if i need to call next here or return or what
             }
             //update the db code based with bitwise OR
             dbcode = dbcode | rows[0].dbsUsed;
@@ -142,39 +163,52 @@ function update(req, res, next) {
             entries.push(dbcode);
         }
         const [rows] = yield connection.execute(`UPDATE users SET lastTimeStamp = ? ${newDbString} WHERE userid = ?`, [...entries, userid]);
-        // res.json(rows)
         yield connection.end();
         next();
     });
 }
 exports.update = update;
-function deleteRecords(req, res, next) {
+function deleteUserPartitions(userid, dbsUsed, serverid) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userid = req.params.userid;
-        if (!userid) {
-            return res.status(401).send({
-                message: `Request doesn't contain the proper information`
-            });
+        if (dbsUsed & 1) {
+            (0, mySQLController_1.deletePartition)(userid);
         }
-        const connection = yield initConnection();
-        const [rows] = yield connection.execute('DELETE FROM users WHERE userid = ?', [userid]);
-        // res.json(rows)
-        yield connection.end();
-        next();
+        if (dbsUsed & 2) {
+            (0, postgresController_1.deletePartition)(userid);
+        }
+        if (dbsUsed & 4) {
+            //mongo
+        }
     });
 }
-exports.deleteRecords = deleteRecords;
-//save each userid with current timestamp into a db or text file...(use redis or mysql or something)
-//check if userid exists
-//if not, create with current timestamp, and dbs
-//if so, update with current timestamp
-//this will be a seperate process on the dbmaster server(or a different server)
-//every minute or so, go through everything and delete the expired dbs....
-//each userid can have a db in mysql, mongo, or postgres, so it will have to delete from all valid dbs.
-//the db can store which dbs were used.(this can literally be a binary. 01 for mysql, 02 for postgres, etc)
-//then just call the deleteDB function on each of these dbs
-// //delete process
-// setInterval(() => {
-//     //check db for expired users
-//         //delete all their dbs
-// }, 3600000)
+exports.deleteUserPartitions = deleteUserPartitions;
+function deleteUser(userid) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!userid) {
+            return;
+        }
+        const connection = yield initConnection();
+        const [rows] = yield connection.execute(`DELETE FROM users WHERE userid = ?;`, [userid]);
+        yield connection.end();
+        return rows;
+    });
+}
+exports.deleteUser = deleteUser;
+function getdbCode(req) {
+    let dbString = req.originalUrl.split('/')[2];
+    let dbcode;
+    switch (dbString) {
+        case 'mysql':
+            dbcode = 1; ////use enums???
+            break;
+        case 'postgres':
+            dbcode = 2;
+            break;
+        case 'mongo':
+            dbcode = 4;
+            break;
+        default:
+            dbcode = 0;
+    }
+    return dbcode;
+}

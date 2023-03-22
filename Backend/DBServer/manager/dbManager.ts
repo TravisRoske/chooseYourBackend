@@ -1,11 +1,15 @@
 import * as mysql from 'mysql2/promise'
 import * as dotenv from 'dotenv'
+import { deletePartition as mysqlDeletePartition } from '../MySQL/mySQLController';
+import { deletePartition as postgresDeletePartition } from '../Postgres/postgresController';
+
 dotenv.config()
 
-// dbUsersMaster
+// =========== dbUsersMaster ========================================================
+// ============ Schema ==============================================================
 // userid
 // lastTimestamp
-// dbsUsed (binary format:  00000001 = mysql, 00000010 = postres, 00000100 = mongo)
+// dbsUsed (binary format:  00000001 = mysql, 00000010 = postgres, 00000100 = mongo)
 // serverid : text
 
 
@@ -49,21 +53,23 @@ async function initConnection() {
     //delete
     //get outdated
 
+
+//probably can be normal functions
 export async function get(req: any, res: any, next : any) {
 
     const userid : string = req.params.userid
     
     const connection = await initConnection()
 
+    //////////add error handling to all routes like this
     const [ rows ] = await connection.execute('SELECT * FROM users WHERE userid = ?;', [userid])
-    // res.json(rows)
     
     await connection.end()
 
     next()
 }
 
-
+//probably can be normal functions
 export async function getAll(req: any, res: any, next : any) {
     
     const connection = await initConnection()
@@ -76,10 +82,26 @@ export async function getAll(req: any, res: any, next : any) {
     next()
 }
 
+export async function getExpired(){
+    const connection = await initConnection()
+
+    //timestamp at one hour ago
+    const expireTime = Math.floor(new Date().getTime() / 1000) - 3600
+
+    const [ rows ] = await connection.execute('SELECT * FROM users WHERE lastTimeStamp < ?;', [expireTime])
+
+    await connection.end()
+
+    return rows;
+}
+
 export async function create(req: any, res: any, next : any) {
 
+    console.log("creating", req.params.userid, Math.floor(new Date().getTime() / 1000))
+
+
     const userid : string = req.params.userid
-    let dbcode : number = parseInt(req.query.dbcode)
+    let dbcode : number = getdbCode(req)
 
     if(!userid){
         return res.status(401).send({
@@ -97,16 +119,22 @@ export async function create(req: any, res: any, next : any) {
         // res.sendStatus(400)
     }
 
+
     await connection.end()
+
 
     next()
 }
 
-
+///////update will normally be called, but if user doesn't exists this will call create/////
 export async function update(req: any, res: any, next : any) {
 
+    console.log("updating", req.params.userid, Math.floor(new Date().getTime() / 1000))
+
+
     const userid : string = req.params.userid
-    let dbcode : number = parseInt(req.query.dbcode)
+    let dbcode : number = getdbCode(req)
+
     if(!userid){
         return res.status(401).send({
             message: `Request doesn't contain the proper information`
@@ -124,7 +152,9 @@ export async function update(req: any, res: any, next : any) {
         //if user doesn't exist
         if(!rows[0]) {
             // res.sendStatus(404)
+            await create(req, res, next)
             next()
+            //idk if i need to call next here or return or what
         }
 
         //update the db code based with bitwise OR
@@ -137,7 +167,6 @@ export async function update(req: any, res: any, next : any) {
     const [ rows ] = await connection.execute(`UPDATE users SET lastTimeStamp = ? ${newDbString} WHERE userid = ?`, 
                     [...entries, userid])
 
-    // res.json(rows)
 
     await connection.end()
 
@@ -145,49 +174,51 @@ export async function update(req: any, res: any, next : any) {
 }
 
 
-export async function deleteRecords(req: any, res: any, next : any) {
-
-    const userid : string = req.params.userid
-    if(!userid){
-        return res.status(401).send({
-            message: `Request doesn't contain the proper information`
-         });
+export async function deleteUserPartitions (userid: string, dbsUsed : number, serverid : string) {
+    if(dbsUsed & 1){
+        mysqlDeletePartition(userid)
     }
+    if(dbsUsed & 2){
+        postgresDeletePartition(userid)
+    }
+    if(dbsUsed & 4){
+        //mongo
+    }
+}
 
+
+export async function deleteUser(userid : string) {
+    if(!userid){
+        return;
+    }
     const connection = await initConnection()
 
-    const [ rows ] = await connection.execute('DELETE FROM users WHERE userid = ?', [ userid ])
-
-    // res.json(rows)
+    const [ rows ] = await connection.execute(`DELETE FROM users WHERE userid = ?;`, [ userid ])
 
     await connection.end()
 
-    next()
+    return rows
 }
 
 
 
+function getdbCode(req : any) {
+    let dbString = req.originalUrl.split('/')[2]
 
+    let dbcode : number;
+    switch(dbString){
+        case 'mysql' :
+            dbcode = 1; ////use enums???
+            break;
+        case 'postgres' :
+            dbcode = 2;
+            break;
+        case 'mongo' :
+            dbcode = 4;
+            break;
+        default :
+            dbcode = 0;
+    }
 
-
-
-
-//save each userid with current timestamp into a db or text file...(use redis or mysql or something)
-    //check if userid exists
-        //if not, create with current timestamp, and dbs
-            
-        //if so, update with current timestamp
-
-
-//this will be a seperate process on the dbmaster server(or a different server)
-    //every minute or so, go through everything and delete the expired dbs....
-    //each userid can have a db in mysql, mongo, or postgres, so it will have to delete from all valid dbs.
-        //the db can store which dbs were used.(this can literally be a binary. 01 for mysql, 02 for postgres, etc)
-        //then just call the deleteDB function on each of these dbs
-
-
-// //delete process
-// setInterval(() => {
-//     //check db for expired users
-//         //delete all their dbs
-// }, 3600000)
+    return dbcode
+}

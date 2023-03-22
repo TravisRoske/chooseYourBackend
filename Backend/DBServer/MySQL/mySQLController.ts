@@ -42,7 +42,7 @@ async function initConnection(userID : string) {
 
 export async function get(req: any, res: any) {
 
-    const userID : string = req.params.id
+    const userID : string = req.params.userid
     const objectID : string = req.query.objectID
     if(!userID){
         return res.status(401).send({
@@ -65,7 +65,7 @@ export async function get(req: any, res: any) {
 
 export async function create(req: any, res: any) {
 
-    const userID : string = req.params.id
+    const userID : string = req.params.userid
     const dataObject : ObjectSchema = req.body;///////
 
     if(!userID || !dataObject ){
@@ -99,7 +99,7 @@ export async function create(req: any, res: any) {
 
 export async function update(req: any, res: any) {
 
-    const userID : string = req.params.id
+    const userID : string = req.params.userid
     const objectID : string = req.query.objectID
     const dataObject : ObjectSchema = req.body;
     if(!userID || !objectID || !dataObject){
@@ -134,7 +134,7 @@ export async function update(req: any, res: any) {
 
 export async function deleteRecords(req: any, res: any) {
 
-    const userID : string = req.params.id
+    const userID : string = req.params.userid
     const objectID : string = req.query.objectID
     if(!userID || !objectID){
         return res.status(401).send({
@@ -150,4 +150,32 @@ export async function deleteRecords(req: any, res: any) {
     // return res.sendStatus(200)
 
     await connection.end()
+}
+
+
+
+export async function deletePartition(userid : string) : Promise<boolean> {
+    
+    if(!userid){
+        console.log("No valid userid!  userid:", userid)
+        return false;
+    }
+
+    const options = {
+        host     :  process.env.mysqlUrl,
+        port     :  Number(process.env.mysqlPort),
+        user     :  process.env.mysqluser,
+        password :  process.env.mysqlPassword,
+    }
+    const connection = await mysql.createConnection(options);
+
+    const [ rows ] = await connection.execute(`SHOW DATABASES LIKE '${userid}';`)
+
+    if(rows.toString()) { //this was the only way I could find to see if the query found a database
+        await connection.query(`DROP DATABASE ${userid}`)
+    }
+
+    await connection.end()
+
+    return true
 }

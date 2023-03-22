@@ -9,7 +9,7 @@ const validateUserid_js_1 = require("../middleware/validateUserid.js");
 const mySQLController_js_1 = require("./mySQLController.js");
 exports.mySQLRouter = express_1.default.Router();
 // REQUEST FORMAT -  ${url}/ts/mysql/${userID}?objectID=${objectID}
-exports.mySQLRouter.route('/:id')
+exports.mySQLRouter.route('/:userid')
     .all(validateUserid_js_1.validateUserid)
     .get(mySQLController_js_1.get)
     .post(mySQLController_js_1.create)

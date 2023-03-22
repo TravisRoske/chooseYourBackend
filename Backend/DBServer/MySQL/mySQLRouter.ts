@@ -6,7 +6,7 @@ export const mySQLRouter = express.Router();
 
 
 // REQUEST FORMAT -  ${url}/ts/mysql/${userID}?objectID=${objectID}
-mySQLRouter.route('/:id')
+mySQLRouter.route('/:userid')
     .all(validateUserid)
     .get(get)
     .post(create)

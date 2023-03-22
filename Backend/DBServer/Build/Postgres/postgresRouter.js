@@ -9,7 +9,7 @@ const validateUserid_js_1 = require("../middleware/validateUserid.js");
 exports.postgresRouter = express_1.default.Router();
 const postgresController_js_1 = require("./postgresController.js");
 // REQUEST FORMAT -  ${url}/ts/postgres/${userID}?objectID=${objectID}
-exports.postgresRouter.route('/:id')
+exports.postgresRouter.route('/:userid')
     .all(validateUserid_js_1.validateUserid)
     .get(postgresController_js_1.get)
     .post(postgresController_js_1.create)

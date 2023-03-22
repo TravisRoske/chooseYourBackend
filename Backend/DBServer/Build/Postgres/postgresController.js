@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteRecords = exports.update = exports.create = exports.get = void 0;
+exports.deletePartition = exports.deleteRecords = exports.update = exports.create = exports.get = void 0;
 const pg_1 = require("pg");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
@@ -74,7 +74,7 @@ function initConnection(userID) {
 }
 function get(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userID = req.params.id;
+        const userID = req.params.userid;
         const objectID = req.query.objectID;
         if (!userID) {
             return res.status(401).send({
@@ -100,7 +100,7 @@ function get(req, res) {
 exports.get = get;
 function create(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userID = req.params.id;
+        const userID = req.params.userid;
         const dataObject = req.body; ///////
         if (!userID || !dataObject) {
             return res.status(401).send({
@@ -135,7 +135,7 @@ function create(req, res) {
 exports.create = create;
 function update(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userID = req.params.id;
+        const userID = req.params.userid;
         const objectID = req.query.objectID;
         const dataObject = req.body;
         if (!userID || !objectID || !dataObject) {
@@ -173,7 +173,7 @@ function update(req, res) {
 exports.update = update;
 function deleteRecords(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userID = req.params.id;
+        const userID = req.params.userid;
         const objectID = req.query.objectID;
         if (!userID || !objectID) {
             return res.status(401).send({
@@ -192,3 +192,24 @@ function deleteRecords(req, res) {
     });
 }
 exports.deleteRecords = deleteRecords;
+function deletePartition(userid) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!userid) {
+            console.log("No valid userid!  userid:", userid);
+            return false;
+        }
+        const noDatabase = {
+            host: process.env.postgresUrl,
+            port: Number(process.env.postgresPort),
+            user: process.env.postgresuser,
+            password: process.env.postgresPassword
+        };
+        const client = new pg_1.Client(noDatabase);
+        yield client.connect();
+        //Prepared statements do not work here!!!//////////
+        yield client.query(`DROP DATABASE ${userid}`);
+        yield client.end();
+        return true;
+    });
+}
+exports.deletePartition = deletePartition;

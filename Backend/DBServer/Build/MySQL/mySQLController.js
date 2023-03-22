@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteRecords = exports.update = exports.create = exports.get = void 0;
+exports.deletePartition = exports.deleteRecords = exports.update = exports.create = exports.get = void 0;
 const mysql = __importStar(require("mysql2/promise"));
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
@@ -64,7 +64,7 @@ function initConnection(userID) {
 }
 function get(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userID = req.params.id;
+        const userID = req.params.userid;
         const objectID = req.query.objectID;
         if (!userID) {
             return res.status(401).send({
@@ -86,7 +86,7 @@ function get(req, res) {
 exports.get = get;
 function create(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userID = req.params.id;
+        const userID = req.params.userid;
         const dataObject = req.body; ///////
         if (!userID || !dataObject) {
             return res.status(401).send({
@@ -114,7 +114,7 @@ function create(req, res) {
 exports.create = create;
 function update(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userID = req.params.id;
+        const userID = req.params.userid;
         const objectID = req.query.objectID;
         const dataObject = req.body;
         if (!userID || !objectID || !dataObject) {
@@ -144,7 +144,7 @@ function update(req, res) {
 exports.update = update;
 function deleteRecords(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userID = req.params.id;
+        const userID = req.params.userid;
         const objectID = req.query.objectID;
         if (!userID || !objectID) {
             return res.status(401).send({
@@ -159,3 +159,25 @@ function deleteRecords(req, res) {
     });
 }
 exports.deleteRecords = deleteRecords;
+function deletePartition(userid) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!userid) {
+            console.log("No valid userid!  userid:", userid);
+            return false;
+        }
+        const options = {
+            host: process.env.mysqlUrl,
+            port: Number(process.env.mysqlPort),
+            user: process.env.mysqluser,
+            password: process.env.mysqlPassword,
+        };
+        const connection = yield mysql.createConnection(options);
+        const [rows] = yield connection.execute(`SHOW DATABASES LIKE '${userid}';`);
+        if (rows.toString()) { //this was the only way I could find to see if the query found a database
+            yield connection.query(`DROP DATABASE ${userid}`);
+        }
+        yield connection.end();
+        return true;
+    });
+}
+exports.deletePartition = deletePartition;

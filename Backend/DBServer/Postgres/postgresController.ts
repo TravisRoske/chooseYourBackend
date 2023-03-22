@@ -51,7 +51,7 @@ async function initConnection(userID : string) {
 
 export async function get(req: any, res: any) {
 
-    const userID : string = req.params.id
+    const userID : string = req.params.userid
     const objectID : string = req.query.objectID
     if(!userID){
         return res.status(401).send({
@@ -78,7 +78,7 @@ export async function get(req: any, res: any) {
 
 export async function create(req: any, res: any) {
 
-    const userID : string = req.params.id
+    const userID : string = req.params.userid
     const dataObject : ObjectSchema = req.body;///////
 
     if(!userID || !dataObject ){
@@ -119,7 +119,7 @@ export async function create(req: any, res: any) {
 
 export async function update(req: any, res: any) {
 
-    const userID : string = req.params.id
+    const userID : string = req.params.userid
     const objectID : string = req.query.objectID
     const dataObject : ObjectSchema = req.body;
     if(!userID || !objectID || !dataObject){
@@ -162,7 +162,7 @@ export async function update(req: any, res: any) {
 
 export async function deleteRecords(req: any, res: any) {
 
-    const userID : string = req.params.id
+    const userID : string = req.params.userid
     const objectID : string = req.query.objectID
     if(!userID || !objectID){
         return res.status(401).send({
@@ -182,4 +182,31 @@ export async function deleteRecords(req: any, res: any) {
     // return res.sendStatus(200)
 
     await client.end()
+}
+
+
+
+
+export async function deletePartition(userid : string) : Promise<boolean> {
+    
+    if(!userid){
+        console.log("No valid userid!  userid:", userid)
+        return false;
+    }
+
+    const noDatabase = {
+        host: process.env.postgresUrl,
+        port: Number(process.env.postgresPort),
+        user: process.env.postgresuser,
+        password: process.env.postgresPassword
+    }
+    const client = new Client(noDatabase)
+    await client.connect()
+    
+    //Prepared statements do not work here!!!//////////
+    await client.query(`DROP DATABASE ${userid}`)
+
+    await client.end()
+
+    return true
 }

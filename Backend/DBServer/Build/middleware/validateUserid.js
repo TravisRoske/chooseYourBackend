@@ -2,9 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateUserid = void 0;
 function validateUserid(req, res, next) {
-    if (!req.params.id || req.params.id.slice(0, 3) != 'uid' || req.params.id == 'null' || req.params.id == 'undefined') {
+    if (!req.params.userid || req.params.userid.slice(0, 3) != 'uid' || req.params.userid == 'null' || req.params.userid == 'undefined') {
         res.status(401);
         res.json({});
+        //create user id if it doesn't exist...
         return;
     }
     //also check for special characters/////////!!!!!!!!!!!!!
