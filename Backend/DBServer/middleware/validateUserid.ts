@@ -5,7 +5,7 @@ export function validateUserid(req: any, res: any, next: any){
         res.json({})
 
         
-    //create user id if it doesn't exist...
+    //////create user id if it doesn't exist...or send back a new valid id
         return;
     }
 
@@ -16,7 +16,7 @@ export function validateUserid(req: any, res: any, next: any){
 
 
     //check if userid exists in list of active dbs
-        //(if it's new AND it exists, that's weird, maybe assign new userID)
+        //(if it's new AND it exists, that's weird, maybe assign new userid)
         //if it exists, update it's timestamp to now, and get it's server id to route to....
         //if not, check available servers, and route(based on method I choose later)
             //..so for now just call next.

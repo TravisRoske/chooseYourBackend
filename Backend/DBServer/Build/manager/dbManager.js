@@ -154,7 +154,7 @@ function update(req, res, next) {
             if (!rows[0]) {
                 // res.sendStatus(404)
                 yield create(req, res, next);
-                next();
+                return;
                 //idk if i need to call next here or return or what
             }
             //update the db code based with bitwise OR

@@ -5,7 +5,7 @@ import { get, create, update, deleteRecords } from './mySQLController.js'
 export const mySQLRouter = express.Router();
 
 
-// REQUEST FORMAT -  ${url}/ts/mysql/${userID}?objectID=${objectID}
+// REQUEST FORMAT -  ${url}/ts/mysql/${userid}?objectid=${objectid}
 mySQLRouter.route('/:userid')
     .all(validateUserid)
     .get(get)

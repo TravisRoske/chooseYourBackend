@@ -5,7 +5,7 @@ export const postgresRouter = express.Router();
 
 import { get, create, update, deleteRecords } from './postgresController.js'
 
-// REQUEST FORMAT -  ${url}/ts/postgres/${userID}?objectID=${objectID}
+// REQUEST FORMAT -  ${url}/ts/postgres/${userid}?objectid=${objectid}
 postgresRouter.route('/:userid')
     .all(validateUserid)
     .get(get)

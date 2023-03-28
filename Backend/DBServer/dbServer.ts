@@ -1,6 +1,6 @@
 import express from 'express'
 import { requestLogger } from './middleware/requestLogger.js'
-import { assignUserID } from './manager/assignUserID.js'
+import { assignUserid } from './manager/assignUserid.js'
 import { mySQLRouter } from './MySQL/mySQLRouter.js'
 import { postgresRouter } from './Postgres/postgresRouter.js';
 import { dbManagerRouter } from './manager/dbManagerRouter.js';
@@ -21,7 +21,7 @@ app.use(express.json())
 
 // app.use(requestLogger)
 
-app.get('/assignid', assignUserID)  //this should create new user in dbmaster
+app.get('/assignid', assignUserid)  //this should create new user in dbmaster
 
 app.use('/', dbManagerRouter)
 

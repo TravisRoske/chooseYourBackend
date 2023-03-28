@@ -4,26 +4,26 @@ dotenv.config()
 
 import ObjectSchema from './ObjectSchema.js'
 
+
 //this function could also save a timestamp to know when to delete the db
-async function initConnection(userID : string) {
+async function initConnection(userid : string) : Promise<Client> {
 
     const withDatabase = {
         host: process.env.postgresUrl,
         port: Number(process.env.postgresPort),
         user: process.env.postgresuser,
         password: process.env.postgresPassword,
-        database: userID
+        database: userid
     }
     let client = new Client(withDatabase)
 
+    //try to connect to db of userid
     try {
         await client.connect()
-        
-        //check if db exists first/////////!!
-
-        //check if tbl exists
-        await client.query('SELECT * FROM tbl;')
+        //this could error for other reasons....
     } catch {
+        //if not exists, create new db
+        console.log("no dang db")
         const noDatabase = {
             host: process.env.postgresUrl,
             port: Number(process.env.postgresPort),
@@ -34,9 +34,20 @@ async function initConnection(userID : string) {
         await client.connect()
         
         //Prepared statements do not work here!!!//////////
-        await client.query(`CREATE DATABASE ${userID}`)
+        await client.query(`CREATE DATABASE ${userid}`)
+        //this STILL has to check if db exists first.....///////////because it can get here if the connection fails for another reason.
 
         await client.end()
+
+        //recursively call this function now that the db exists
+        return initConnection(userid)
+    }
+
+    //now that the db is connected check if tbl exists or create tbl
+    try {
+        await client.query('SELECT * FROM tbl LIMIT 1;')
+    } catch {
+        console.log("no dang tbl")
 
         client = new Client(withDatabase)
 
@@ -44,6 +55,7 @@ async function initConnection(userID : string) {
 
         await client.query(`CREATE TABLE IF NOT EXISTS tbl ( id serial primary key, firstName text, lastName text, username text, password text );`)
     }
+
  
     return client;
 }
@@ -51,20 +63,20 @@ async function initConnection(userID : string) {
 
 export async function get(req: any, res: any) {
 
-    const userID : string = req.params.userid
-    const objectID : string = req.query.objectID
-    if(!userID){
+    const userid : string = req.params.userid
+    const objectid : string = req.query.objectid
+    if(!userid){
         return res.status(401).send({
             message: `Request doesn't contain the proper information`
         });
     }
-    const client = await initConnection(userID)
+    const client = await initConnection(userid)
 
-    if(objectID){
+    if(objectid){
         const queryResponse = await client.query({
             name: 'getAll',
             text: 'SELECT * FROM tbl WHERE id = $1;',
-            values: [objectID]
+            values: [objectid]
         })
         res.json(queryResponse.rows)
     } else {
@@ -78,16 +90,16 @@ export async function get(req: any, res: any) {
 
 export async function create(req: any, res: any) {
 
-    const userID : string = req.params.userid
+    const userid : string = req.params.userid
     const dataObject : ObjectSchema = req.body;///////
 
-    if(!userID || !dataObject ){
+    if(!userid || !dataObject ){
         return res.status(401).send({
             message: `Request doesn't contain the proper information`
         });
     }
 
-    const client = await initConnection(userID)
+    const client = await initConnection(userid)
 
     //change all strings to dynamically change with the schema...
     let tempFields = ''
@@ -119,16 +131,16 @@ export async function create(req: any, res: any) {
 
 export async function update(req: any, res: any) {
 
-    const userID : string = req.params.userid
-    const objectID : string = req.query.objectID
+    const userid : string = req.params.userid
+    const objectid : string = req.query.objectid
     const dataObject : ObjectSchema = req.body;
-    if(!userID || !objectID || !dataObject){
+    if(!userid || !objectid || !dataObject){
         return res.status(401).send({
             message: `Request doesn't contain the proper information`
          });
     }
 
-    const client = await initConnection(userID)
+    const client = await initConnection(userid)
    
     //change all strings to dynamically change with the schema...
     let tempFields = ''
@@ -145,7 +157,7 @@ export async function update(req: any, res: any) {
     const queryString = `UPDATE tbl 
         SET ${tempFields}
         WHERE id = $${num}`
-    queryValues.push(objectID)
+    queryValues.push(objectid)
 
     // console.log(queryString, queryValues)
 
@@ -162,20 +174,20 @@ export async function update(req: any, res: any) {
 
 export async function deleteRecords(req: any, res: any) {
 
-    const userID : string = req.params.userid
-    const objectID : string = req.query.objectID
-    if(!userID || !objectID){
+    const userid : string = req.params.userid
+    const objectid : string = req.query.objectid
+    if(!userid || !objectid){
         return res.status(401).send({
             message: `Request doesn't contain the proper information`
          });
     }
 
-    const client = await initConnection(userID)
+    const client = await initConnection(userid)
 
     const result = await client.query({
         name: "delete",
         text: 'DELETE FROM tbl WHERE id = $1',
-        values: [ objectID ]
+        values: [ objectid ]
     })
 
     res.json(result.rows)

@@ -8,7 +8,7 @@ const express_1 = __importDefault(require("express"));
 const validateUserid_js_1 = require("../middleware/validateUserid.js");
 exports.postgresRouter = express_1.default.Router();
 const postgresController_js_1 = require("./postgresController.js");
-// REQUEST FORMAT -  ${url}/ts/postgres/${userID}?objectID=${objectID}
+// REQUEST FORMAT -  ${url}/ts/postgres/${userid}?objectid=${objectid}
 exports.postgresRouter.route('/:userid')
     .all(validateUserid_js_1.validateUserid)
     .get(postgresController_js_1.get)

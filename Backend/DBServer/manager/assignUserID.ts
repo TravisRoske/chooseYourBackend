@@ -1,7 +1,7 @@
 import {v4 as uuidv4} from 'uuid';
 import { create } from './dbManager.js'
 
-export function assignUserID(req: any, res: any, next: any){
+export function assignUserid(req: any, res: any, next: any){
     let userid;
     if(req.params.userid){
         console.log("Found userid", req.headers.userid)///////////

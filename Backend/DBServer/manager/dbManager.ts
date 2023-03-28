@@ -153,7 +153,7 @@ export async function update(req: any, res: any, next : any) {
         if(!rows[0]) {
             // res.sendStatus(404)
             await create(req, res, next)
-            next()
+            return
             //idk if i need to call next here or return or what
         }
 

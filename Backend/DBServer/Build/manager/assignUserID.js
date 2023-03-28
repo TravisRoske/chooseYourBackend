@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.assignUserID = void 0;
+exports.assignUserid = void 0;
 const uuid_1 = require("uuid");
-function assignUserID(req, res, next) {
+const dbManager_js_1 = require("./dbManager.js");
+function assignUserid(req, res, next) {
     let userid;
     if (req.params.userid) {
         console.log("Found userid", req.headers.userid); ///////////
@@ -13,8 +14,8 @@ function assignUserID(req, res, next) {
         const parts = userid.split('-');
         userid = "uid" + parts.join('');
         req.params['userid'] = userid;
-        // create(req, res, next)/////////
+        (0, dbManager_js_1.create)(req, res, next); /////////
     }
     res.status(200).json({ "userid": userid });
 }
-exports.assignUserID = assignUserID;
+exports.assignUserid = assignUserid;

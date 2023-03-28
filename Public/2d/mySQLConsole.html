@@ -8,7 +8,7 @@
   <body>
     <h1>MySQL</h1>
     <form>
-      <label for="id">Object ID:</label>
+      <label for="id">Object id:</label>
       <input type="text" id="id" name="id"><br><br>
 
       <label for="firstName">First Name:</label>
@@ -44,10 +44,10 @@
 
         //maybe only render the console once this promise resolves
         let userid = ""
-        getUserID().then((result) => userid = result)
+        getUserid().then((result) => userid = result)
 
         //Get a userid from the server, or use saved id    
-        function getUserID() {
+        function getUserid() {
             const idurl = "http://localhost:8081/assignid"
             let headers = {}
             const currid = localStorage.getItem("userid")
@@ -81,7 +81,7 @@
             const idInput = document.querySelector('#id').value;
             let idString = ''
             if(idInput){
-                idString = '?objectID=' + idInput
+                idString = '?objectid=' + idInput
             }
             fetch(url + userid + idString, {
                 method: 'GET'
@@ -133,7 +133,7 @@
             const idInput = document.querySelector('#id').value;
             let idString = ''
             if(idInput){
-                idString = '?objectID=' + idInput
+                idString = '?objectid=' + idInput
             }
 
             fetch(url + userid + idString, {
@@ -162,7 +162,7 @@
             const idInput = document.querySelector('#id').value;
             let idString = ''
             if(idInput){
-                idString = '?objectID=' + idInput
+                idString = '?objectid=' + idInput
             }
             fetch(url + userid + idString, {
                 method: 'DELETE'
