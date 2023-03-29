@@ -12,8 +12,8 @@ Servers/runtimes
 	Load Balancer?
 	Nginx/apache
 
-Protocol
--rest, Graphql
+	Protocol
+	-rest, Graphql
 
 Security/Encryption??
 -for the data in the dbs??

@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npx tsc && node ./build/dbServer.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx tsc && node ./build/dbServerApp.test.js"
   },
   "keywords": [],
   "author": "",

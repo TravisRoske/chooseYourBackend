@@ -21,13 +21,12 @@ database console:
 
 
 ToDo:
--Database deleting and userid timestamp validation systems, and userid string validation
-    -backend checks the timer, deletes it if timed out, and assigns new one
--Build the dababase timeout and deletion system
-    -all usernames and timestamps saved in a small database(with the name of the server they are on)
-    -check them every minute or so, find all expired ones
-    -send each of these to a delete function on their respective servers
-    -db servers delete the db
+-Set up all the github repos 
+    -mainserver, database master, frontend, threejs frontend
+    -set up ci/cd for these
+    
+-userid timestamp validation systems, and userid string validation
+-test the dababase timeout and deletion system
 
 -Build a shitty basic front end
 -Get this all going on a single ec2 instance for now.(with containers on it or ecs or lambda)
@@ -35,3 +34,7 @@ ToDo:
     -pull mainserver, db server, and frontend builds
 -Set up nginx, and other stuff like logging, server process and restart(main and dbserver), static ec2 ip address, etc
 -Go live
+
+-build tests for the backend
+    -test each main function
+    -end to end tests
