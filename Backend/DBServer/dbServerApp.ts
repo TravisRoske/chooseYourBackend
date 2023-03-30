@@ -32,4 +32,4 @@ app.use('/ts/postgres', postgresRouter)
 
 //app.use('/ts/mongo', mongoRouter)
 
-export default app
+export { app }

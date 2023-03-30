@@ -1,4 +1,4 @@
-import app from './dbServerApp.js'
+import { app } from './dbServerApp.js'
 
 
 

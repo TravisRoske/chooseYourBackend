@@ -12,13 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const dbServerApp_js_1 = __importDefault(require("./dbServerApp.js"));
+const supertest_1 = __importDefault(require("supertest"));
+const dbServerApp_js_1 = require("../dbServerApp.js");
 describe('GET /assignid', () => {
     describe('Given no userid', () => {
         //should return a new valid userid
         //should return status 200
         test("should return a new valid userid", () => __awaiter(void 0, void 0, void 0, function* () {
-            const response = yield request(dbServerApp_js_1.default).get('/assignid').send();
+            const response = yield (0, supertest_1.default)(dbServerApp_js_1.app).get('/assignid').send();
+            const result = yield (0, supertest_1.default)(dbServerApp_js_1.app).get("/assignid");
             expect(response.statusCode).toBe(200);
         }));
     });

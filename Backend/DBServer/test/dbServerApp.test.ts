@@ -1,5 +1,5 @@
-import supertest from 'supertest'
-import app from './dbServerApp.js'
+import request from 'supertest'
+import { app } from '../dbServerApp.js'
 
 
 describe('GET /assignid', () =>  {
@@ -8,6 +8,7 @@ describe('GET /assignid', () =>  {
         //should return status 200
         test("should return a new valid userid", async () => {
             const response = await request(app).get('/assignid').send()
+            const result = await request(app).get("/assignid");
             expect(response.statusCode).toBe(200)
         })
     })
