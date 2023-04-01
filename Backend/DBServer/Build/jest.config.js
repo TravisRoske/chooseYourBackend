@@ -1,11 +1,11 @@
 "use strict";
-//jest.config.ts
-Object.defineProperty(exports, "__esModule", { value: true });
-// Sync object
-const config = {
-    verbose: true,
-    transform: {
-        '^.+\\.tsx?$': 'ts-jest',
-    },
-};
-exports.default = config;
+// //jest.config.ts
+// import type {Config} from '@jest/types';
+// // Sync object
+// const config: Config.InitialOptions = {
+//   verbose: true,
+//   transform: {
+//   '^.+\\.tsx?$': 'ts-jest',
+//   },
+// };
+// export default config;

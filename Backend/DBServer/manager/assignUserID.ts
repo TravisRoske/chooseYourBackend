@@ -1,19 +1,17 @@
 import {v4 as uuidv4} from 'uuid';
 import { create } from './dbManager.js'
+import { isValidUserid } from '../middleware/validateUserid.js';
 
-export function assignUserid(req: any, res: any, next: any){
-    let userid;
-    if(req.params.userid){
-        console.log("Found userid", req.headers.userid)///////////
-        userid = req.params.userid
-    } else {
+export function assignUserid(req: any, res: any){
+    let userid = req.params?.userid;
+    if(!userid || !isValidUserid(userid)){
         userid = uuidv4()
         const parts = userid.split('-')
         userid = "uid" + parts.join('')
     
         req.params['userid'] = userid
 
-        create(req, res, next)/////////
+        // create(req, res, next)////////////////
     }
 
     res.status(200).json({"userid": userid})

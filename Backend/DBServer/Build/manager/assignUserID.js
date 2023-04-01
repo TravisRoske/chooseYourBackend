@@ -2,19 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.assignUserid = void 0;
 const uuid_1 = require("uuid");
-const dbManager_js_1 = require("./dbManager.js");
-function assignUserid(req, res, next) {
-    let userid;
-    if (req.params.userid) {
-        console.log("Found userid", req.headers.userid); ///////////
-        userid = req.params.userid;
-    }
-    else {
+const validateUserid_js_1 = require("../middleware/validateUserid.js");
+function assignUserid(req, res) {
+    var _a;
+    let userid = (_a = req.params) === null || _a === void 0 ? void 0 : _a.userid;
+    if (!userid || !(0, validateUserid_js_1.isValidUserid)(userid)) {
         userid = (0, uuid_1.v4)();
         const parts = userid.split('-');
         userid = "uid" + parts.join('');
         req.params['userid'] = userid;
-        (0, dbManager_js_1.create)(req, res, next); /////////
+        // create(req, res, next)////////////////
     }
     res.status(200).json({ "userid": userid });
 }

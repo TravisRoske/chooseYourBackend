@@ -6,9 +6,9 @@ import { postgresRouter } from './Postgres/postgresRouter.js';
 import { dbManagerRouter } from './manager/dbManagerRouter.js';
 import { deletingProcess } from './manager/deletingProcess.js'
 
-deletingProcess()
+// deletingProcess()
 
-const cors = require('cors');
+const cors = require('cors');/////////
 
 const app = express();
 
@@ -21,15 +21,17 @@ app.use(express.json())
 
 // app.use(requestLogger)
 
-app.get('/assignid', assignUserid)  //this should create new user in dbmaster
+app.get('/assignid', assignUserid) 
+app.get('/assignid/:userid', assignUserid)  
 
-app.use('/', dbManagerRouter)
 
-                                    //each request should update the user in dbmster, by sending put with the current db used
-app.use('/ts/mysql', mySQLRouter)
+// app.use('/', dbManagerRouter)
 
-app.use('/ts/postgres', postgresRouter)
+//                                     //each request should update the user in dbmster, by sending put with the current db used
+// app.use('/ts/mysql', mySQLRouter)
 
-//app.use('/ts/mongo', mongoRouter)
+// app.use('/ts/postgres', postgresRouter)
+
+// //app.use('/ts/mongo', mongoRouter)
 
 export { app }
