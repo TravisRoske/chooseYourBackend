@@ -1,0 +1,25 @@
+either react or vanilla js for main stuff
+an element with the threejs stuff
+    this will be built
+
+three js files
+    init
+    add lights/backgrounds/effects...
+    class that extends objects
+        -each has a ccs2d label element
+            -which has a hover display of the name of the thing
+            -and a sub element when you click it, that adds a persistant detailed panel, with a link to the code 
+                -a method will collapse all sub elements when clicked elsewhere
+        -each has its own model passed in   
+        -and it's own coordinates
+    some sort of arrow line class
+        -connect between the locations of each node thing
+        -they can maybe glow, in the appropriate direction, when a db call is made
+        --possibly arrow lines can have their own labels describing the protocol and data sent
+
+
+
+
+const mainServer = new DisplayNode("./file", new Label("title", "titel, info info info", myMaterial))
+mainServer.position.set(-10, 0, 0)
+const databaseController .....

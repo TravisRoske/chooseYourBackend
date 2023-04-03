@@ -1,0 +1,410 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- <link rel="stylesheet" type="text/css" href="asdgasdgashashsah.css"> -->
+    <style>
+      html, body{
+        margin: 0;
+        height: 100%;
+      }
+      #diagram {
+        width: 85%;
+        height: 30%;
+        display: block;
+        background-color: rgb(0, 0, 0);
+      }
+    </style>
+<!-- /////////////////////// -->
+
+     <style>
+        /* Set the body background color to a light grey */
+        body {
+            background-color: #f5f5f5;  
+        }
+
+        /* Style the form container */
+        form {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 500px;
+        }
+
+        /* Style the form header */
+        form h2 {
+            color: #555555;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        /* Style the form input fields */
+        form input, form textarea {
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+            color: #555555;
+            font-size: 16px;
+            margin-bottom: 20px;
+            padding: 15px;
+            width: 100%;
+        }
+
+        /* Style the form submit button */
+        form button {
+            background-color: #6796ed;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 15px;
+            transition: background-color 0.2s ease-in-out;
+            width: 100%;
+        }
+
+        form button:hover {
+            background-color: #09358d;
+        }
+
+        label {
+            color: #555555;
+            display: inline-block;
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        /* Style form input labels */
+            label[for] {
+            font-weight: 700;
+            margin-right: 5px;
+        }
+
+        /* Style required form input labels */
+        label[for][required]::after {
+            content: "*";
+            color: #ff0000;
+            margin-left: 5px;
+        }
+        #grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+        }
+    </style>
+<!-- /////////////////////// -->
+
+  </head>
+  <body>
+    <main>
+        <div id="explanation">
+            <div id="info">
+                <h1>Dynamic Backend Demo</h1>
+                <p>This content is currently being served by.....</p>
+            </div>
+            <div id="collapsable">
+                <canvas id="diagram">
+                    
+                </canvas>
+            </div>
+        </div>
+        <div id="database">
+            <div id="console">
+
+            </div>
+            <div id="display">
+                <table id="displyTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>John</td>
+                            <td>Doe</td>
+                            <td>johndoe</td>
+                            <td>password123</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Jane</td>
+                            <td>Smith</td>
+                            <td>janesmith</td>
+                            <td>abc123</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+<!-- /////////////////////// -->
+<form>
+    <h2>Postgres</h2>
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName"><br><br>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName"><br><br>
+
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username"><br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password"><br><br>
+
+    <div id="grid">
+      <div id="left">
+
+          <button type="button" onclick="getRecord()">Get Record/s</button>
+          <button type="button" onclick="createRecord()">Create Record</button>
+          <button type="button" onclick="updateRecord()">Update Record</button>
+          <button type="button" onclick="deleteRecord()">Delete Record</button>
+      </div>
+      <div id="right">
+          <label for="id">Object id:</label>
+          <input type="text" id="id" name="id"><br><br>
+      </div>
+    </div>
+  </form>
+
+  <script>
+      const url = "http://localhost:8080/ts/postgres/query/";
+
+
+
+      //maybe only render the console once this promise resolves/////////
+      let userid = ""
+      getUserid().then((result) => userid = result)
+
+      //Get a userid from the server, trying the saved userid first
+      function getUserid() {
+          const idurl = "http://localhost:8081/assignid/"//////////////
+          let headers = {}
+          const currid = localStorage.getItem("userid")
+          console.log(currid)
+
+          let prom = new Promise((resolve, reject) => {
+            //   if(currid && currid != "null" && currid != "undefined" ) {
+            //       resolve(currid)
+            //   }
+            console.log(idurl + currid)
+              fetch(idurl + currid, {
+                  method : "GET",
+                  headers : headers
+              })
+              .then((response) => {
+                  return response.json()
+              })
+              .then((result) => {
+                  localStorage.setItem("userid", result.userid)
+                  resolve(result.userid)
+              })    
+              .catch((err) => {
+                  console.log(err)
+                  reject()
+              })
+          })
+          return prom
+      }
+
+
+
+      async function getRecord() {
+          console.log(userid)
+
+          const idInput = document.querySelector('#id').value;
+          let idString = ''
+          if(idInput){
+              idString = '?objectid=' + idInput
+          }
+          fetch(url + userid + idString, {
+              method: 'GET'
+          })
+          .then((response) => {
+              return response.json()
+          })
+          .then((result) => {
+              console.log(result)
+              deleteAllRows()
+              display(result)
+          })
+      }
+
+      async function createRecord() {
+
+          const firstNameInput = document.querySelector('#firstName').value;
+          const lastNameInput = document.querySelector('#lastName').value;
+          const usernameInput = document.querySelector('#username').value;
+          const passwordInput = document.querySelector('#password').value;
+          console.log("VALS", firstNameInput, lastNameInput, usernameInput, passwordInput)
+
+          fetch(url + userid, {
+              method: 'POST',
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body : JSON.stringify({
+                  "firstName": firstNameInput, 
+                  "lastName":  lastNameInput, 
+                  "userName":  usernameInput,
+                  "password":  passwordInput
+              })
+          })
+          .then((response) => {
+              return response.json()
+          })
+          .then((result) => {
+              console.log(result)
+              display(result)
+          })
+      }
+
+      async function updateRecord() {
+
+          const firstNameInput = document.querySelector('#firstName').value;
+          const lastNameInput = document.querySelector('#lastName').value;
+          const usernameInput = document.querySelector('#username').value;
+          const passwordInput = document.querySelector('#password').value;
+          const idInput = document.querySelector('#id').value;
+          let idString = ''
+          if(idInput){
+              idString = '?objectid=' + idInput
+          }
+
+          fetch(url + userid + idString, {
+              method: 'PUT',
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body : JSON.stringify({
+                  "firstName": firstNameInput, 
+                  "lastName":  lastNameInput, 
+                  "userName":  usernameInput,
+                  "password":  passwordInput
+              })
+          })
+          .then((response) => {
+              return response.json()
+          })
+          .then((result) => {
+              console.log(result)
+              display(result)
+          })
+      }
+
+      async function deleteRecord() {
+
+          const idInput = document.querySelector('#id').value;
+          let idString = ''
+          if(idInput){
+              idString = '?objectid=' + idInput
+          }
+          fetch(url + userid + idString, {
+              method: 'DELETE'
+          })
+          .then((response) => {
+              return response.json()
+          })
+          .then((result) => {
+              console.log(result)
+              display(result)
+          })
+      }
+
+
+
+      function display(data){        
+          for(let row of data){
+              const { id, firstname, lastname, username, password } = row
+              addRow(id, firstname, lastname, username, password)
+          }
+      }
+
+
+  </script>
+<!-- //////////////////// -->
+
+    <script type="module" src="/src/main.ts"></script>
+    <script>
+
+        function addRow(idValue, firstNameValue, lastNameValue, usernameValue, passwordValue) {
+
+            // Get the table body
+            var tbody = document.getElementById('displyTable');
+
+            // Create a new row
+            var newRow = document.createElement('tr');
+
+            // Create cells for each column
+            var idCell = document.createElement('td');
+            var firstNameCell = document.createElement('td');
+            var lastNameCell = document.createElement('td');
+            var usernameCell = document.createElement('td');
+            var passwordCell = document.createElement('td');
+
+            // Set the text content of each cell
+            idCell.innerHTML = idValue;
+            firstNameCell.innerHTML = firstNameValue;
+            lastNameCell.innerHTML = lastNameValue;
+            usernameCell.innerHTML = usernameValue;
+            passwordCell.innerHTML = passwordValue;
+
+            // Append the cells to the new row
+            newRow.appendChild(idCell);
+            newRow.appendChild(firstNameCell);
+            newRow.appendChild(lastNameCell);
+            newRow.appendChild(usernameCell);
+            newRow.appendChild(passwordCell);
+
+            // Append the new row to the table body
+            tbody.appendChild(newRow);
+        }
+
+        function deleteRow(idValue) {
+            // Get the table body
+            var tbody = document.getElementById('displyTable');
+
+            // Find the row with the matching ID value
+            var rows = tbody.querySelectorAll('tr');
+            for (var i = 0; i < rows.length; i++) {
+                var idCell = rows[i].querySelector('td:first-child');
+                if (idCell?.innerHTML == idValue) {
+                    rows[i].remove()
+                    break;
+                }
+            }
+        }
+
+        function deleteAllRows() {
+            // Get the table body
+            var tbody = document.getElementById('displyTable');
+
+            // Find the row with the matching ID value
+            var rows = tbody.querySelectorAll('tr');
+            for (var i = 1; i < rows.length; i++) {
+                rows[i].remove()
+            }
+        }
+
+    </script>
+  </body>
+</html>
