@@ -50,7 +50,7 @@ function initConnection(userid) {
         //try to connect to db of userid
         try {
             yield client.connect();
-            //this could error for other reasons....
+            //this could error for other reasons......../////////////
         }
         catch (_a) {
             //if not exists, create new db
@@ -112,27 +112,27 @@ exports.get = get;
 function create(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const userid = req.params.userid;
-        const dataObject = req.body; ///////
+        const dataObject = req.body;
         if (!userid || !dataObject) {
             return res.status(401).send({
                 message: `Request doesn't contain the proper information`
             });
         }
         const client = yield initConnection(userid);
-        //change all strings to dynamically change with the schema...
-        let tempFields = '';
-        let queryInserts = '';
+        //Build the custom queryString, which can change if the schema changes
+        let queryFields = [];
+        let queryInsertNumbers = [];
         let queryValues = [];
         let num = 1;
         for (const [key, value] of Object.entries(dataObject)) {
-            tempFields += key + ", ";
-            queryInserts += `$${num}, `;
+            queryFields.push(key);
+            queryInsertNumbers.push(`$${num}`);
             queryValues.push(value);
             num++;
         }
-        tempFields = tempFields.slice(0, -2);
-        queryInserts = queryInserts.slice(0, -2);
-        const queryString = `INSERT INTO tbl (${tempFields}) VALUES (${queryInserts})`;
+        queryFields = queryFields.join(',');
+        queryInsertNumbers = queryInsertNumbers.join(',');
+        const queryString = `INSERT INTO tbl (${queryFields}) VALUES (${queryInsertNumbers})`;
         // console.log(queryString, queryValues)
         const queryResults = yield client.query({
             name: "create",
@@ -156,19 +156,19 @@ function update(req, res) {
         }
         const client = yield initConnection(userid);
         //change all strings to dynamically change with the schema...
-        let tempFields = '';
+        let setStrings = [];
         let queryValues = [];
         let num = 1;
         for (const [key, value] of Object.entries(dataObject)) {
             if (value) {
-                tempFields += key + ` = $${num}, `;
+                setStrings.push(key + ` = $${num}`);
                 queryValues.push(value);
                 num++;
             }
         }
-        tempFields = tempFields.slice(0, -2);
+        setStrings = setStrings.join(',');
         const queryString = `UPDATE tbl 
-        SET ${tempFields}
+        SET ${setStrings}
         WHERE id = $${num}`;
         queryValues.push(objectid);
         // console.log(queryString, queryValues)
@@ -218,9 +218,13 @@ function deletePartition(userid) {
         const client = new pg_1.Client(noDatabase);
         yield client.connect();
         //Prepared statements do not work here!!!//////////
-        yield client.query(`DROP DATABASE ${userid}`);
-        yield client.end();
-        return true;
+        try {
+            yield client.query(`DROP DATABASE ${userid}`);
+        }
+        finally {
+            yield client.end();
+            return true;
+        }
     });
 }
 exports.deletePartition = deletePartition;

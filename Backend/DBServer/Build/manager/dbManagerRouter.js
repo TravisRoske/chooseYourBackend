@@ -1,12 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.dbManagerRouter = void 0;
-const express_1 = __importDefault(require("express"));
-const dbManager_js_1 = require("./dbManager.js");
-exports.dbManagerRouter = express_1.default.Router();
-exports.dbManagerRouter.route('*/:userid')
-    // .all(validateUserid)
-    .all(dbManager_js_1.update);
+// import express from 'express'
+// import { update } from './dbManager.js'
+// export const dbManagerRouter = express.Router();
+// dbManagerRouter.route()
+//     .all(update)

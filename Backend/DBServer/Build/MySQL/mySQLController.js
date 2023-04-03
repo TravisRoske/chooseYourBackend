@@ -36,10 +36,7 @@ exports.deletePartition = exports.deleteRecords = exports.update = exports.creat
 const mysql = __importStar(require("mysql2/promise"));
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
-//note I may need to unprepare the prepared statements
-//I may also need to find a way to make and use databases with prepared statements or somehting else safe
-//this function could also save a timestamp to know when to delete the db
-function initConnection(userID) {
+function initConnection(userid) {
     return __awaiter(this, void 0, void 0, function* () {
         const options = {
             host: process.env.mysqlUrl,
@@ -47,33 +44,33 @@ function initConnection(userID) {
             user: process.env.mysqluser,
             password: process.env.mysqlPassword,
         };
-        const connection = yield mysql.createConnection(options);
-        const [rows] = yield connection.execute(`SHOW DATABASES LIKE '${userID}';`);
+        const connection = yield mysql.createConnection(options); /////////////This could fail if connection fails
+        const [rows] = yield connection.execute(`SHOW DATABASES LIKE '${userid}';`);
         if (!rows.toString()) { //this was the only way I could find to see if the query found a database
             //warning prepared statements DO NOT work here!!!!!!!!!!!!//////////////
-            yield connection.execute(`CREATE DATABASE IF NOT EXISTS ${userID}`);
+            yield connection.execute(`CREATE DATABASE IF NOT EXISTS ${userid}`);
             //warning prepared statements DO NOT work here!!!!!!!//////////////
-            yield connection.query(`USE ${userID}`);
+            yield connection.query(`USE ${userid}`);
             yield connection.execute(`CREATE TABLE IF NOT EXISTS tbl ( id int not null auto_increment, firstName text, lastName text, username text, password text, primary key (id) );`);
         }
         else {
-            yield connection.query(`USE ${userID}`);
+            yield connection.query(`USE ${userid}`);
         }
         return connection;
     });
 }
 function get(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userID = req.params.userid;
-        const objectID = req.query.objectID;
-        if (!userID) {
+        const userid = req.params.userid;
+        const objectid = req.query.objectid;
+        if (!userid) {
             return res.status(401).send({
                 message: `Request doesn't contain the proper information`
             });
         }
-        const connection = yield initConnection(userID);
-        if (objectID) {
-            const [rows] = yield connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectID]);
+        const connection = yield initConnection(userid);
+        if (objectid) {
+            const [rows] = yield connection.execute('SELECT * FROM tbl WHERE id = ?;', [objectid]);
             res.json(rows);
         }
         else {
@@ -86,26 +83,27 @@ function get(req, res) {
 exports.get = get;
 function create(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userID = req.params.userid;
-        const dataObject = req.body; ///////
-        if (!userID || !dataObject) {
+        const userid = req.params.userid;
+        const dataObject = req.body;
+        if (!userid || !dataObject) {
             return res.status(401).send({
                 message: `Request doesn't contain the proper information`
             });
         }
-        const connection = yield initConnection(userID);
-        //change all strings to dynamically change with the schema...
-        let queryFields = '';
-        let queryInserts = '';
+        const connection = yield initConnection(userid);
+        //Build the custom queryString, which can change if the schema changes
+        let queryFields = [];
+        let queryQuestionMarks = [];
         let queryValues = [];
         for (const [key, value] of Object.entries(dataObject)) {
-            queryFields += key + ", ";
-            queryInserts += "?, ";
+            queryFields.push(key);
+            queryQuestionMarks.push('?');
             queryValues.push(value);
         }
-        queryFields = queryFields.slice(0, -2);
-        queryInserts = queryInserts.slice(0, -2);
-        const queryString = `INSERT INTO tbl (${queryFields}) VALUES (${queryInserts})`;
+        queryFields = queryFields.join(', ');
+        queryQuestionMarks = queryQuestionMarks.join(', ');
+        const queryString = `INSERT INTO tbl (${queryFields}) VALUES (${queryQuestionMarks})`;
+        // console.log(queryString, queryValues)
         const [rows] = yield connection.execute(queryString, queryValues);
         res.json(rows);
         yield connection.end();
@@ -114,29 +112,32 @@ function create(req, res) {
 exports.create = create;
 function update(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userID = req.params.userid;
-        const objectID = req.query.objectID;
+        const userid = req.params.userid;
+        const objectid = req.query.objectid;
         const dataObject = req.body;
-        if (!userID || !objectID || !dataObject) {
+        if (!userid || !objectid || !dataObject) {
             return res.status(401).send({
                 message: `Request doesn't contain the proper information`
             });
         }
-        const connection = yield initConnection(userID);
+        const connection = yield initConnection(userid);
         //change all strings to dynamically change with the schema...
-        let queryFields = '';
+        let setStrings = [];
         let queryValues = [];
+        let num = 1;
         for (const [key, value] of Object.entries(dataObject)) {
             if (value) {
-                queryFields += key + " = ?, ";
+                setStrings.push(key + ' = ?');
                 queryValues.push(value);
+                num++;
             }
         }
-        queryFields = queryFields.slice(0, -2);
+        setStrings = setStrings.join(',');
         const queryString = `UPDATE tbl 
-        SET ${queryFields}
+        SET ${setStrings}
         WHERE id = ?`;
-        const [rows] = yield connection.execute(queryString, [...queryValues, objectID]);
+        console.log(queryString, queryValues);
+        const [rows] = yield connection.execute(queryString, [...queryValues, objectid]);
         res.json(rows);
         yield connection.end();
     });
@@ -144,15 +145,15 @@ function update(req, res) {
 exports.update = update;
 function deleteRecords(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userID = req.params.userid;
-        const objectID = req.query.objectID;
-        if (!userID || !objectID) {
+        const userid = req.params.userid;
+        const objectid = req.query.objectid;
+        if (!userid || !objectid) {
             return res.status(401).send({
                 message: `Request doesn't contain the proper information`
             });
         }
-        const connection = yield initConnection(userID);
-        const [rows] = yield connection.execute('DELETE FROM tbl WHERE id = ?', [objectID]);
+        const connection = yield initConnection(userid);
+        const [rows] = yield connection.execute('DELETE FROM tbl WHERE id = ?', [objectid]);
         res.json(rows);
         // return res.sendStatus(200)
         yield connection.end();

@@ -11,7 +11,6 @@ function assignUserid(req, res) {
         const parts = userid.split('-');
         userid = "uid" + parts.join('');
         req.params['userid'] = userid;
-        // create(req, res, next)////////////////
     }
     res.status(200).json({ "userid": userid });
 }

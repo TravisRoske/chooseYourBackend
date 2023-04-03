@@ -1,5 +1,4 @@
 import {v4 as uuidv4} from 'uuid';
-import { create } from './dbManager.js'
 import { isValidUserid } from '../middleware/validateUserid.js';
 
 export function assignUserid(req: any, res: any){
@@ -10,8 +9,6 @@ export function assignUserid(req: any, res: any){
         userid = "uid" + parts.join('')
     
         req.params['userid'] = userid
-
-        // create(req, res, next)////////////////
     }
 
     res.status(200).json({"userid": userid})

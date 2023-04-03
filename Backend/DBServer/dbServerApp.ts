@@ -3,12 +3,16 @@ import { requestLogger } from './middleware/requestLogger.js'
 import { assignUserid } from './manager/assignUserid.js'
 import { mySQLRouter } from './MySQL/mySQLRouter.js'
 import { postgresRouter } from './Postgres/postgresRouter.js';
-import { dbManagerRouter } from './manager/dbManagerRouter.js';
+import { update } from './manager/dbManager.js'
 import { deletingProcess } from './manager/deletingProcess.js'
+import { validateUserid } from './middleware/validateUserid.js';
 
-// deletingProcess()
 
 const cors = require('cors');/////////
+
+
+deletingProcess()
+
 
 const app = express();
 
@@ -24,13 +28,14 @@ app.use(express.json())
 app.get('/assignid', assignUserid) 
 app.get('/assignid/:userid', assignUserid)  
 
+app.use('*/:userid', validateUserid)
 
-// app.use('/', dbManagerRouter)
+//update the data in user database
+app.use('*/:userid', update)
 
-//                                     //each request should update the user in dbmster, by sending put with the current db used
-// app.use('/ts/mysql', mySQLRouter)
+app.use('/ts/mysql', mySQLRouter)
 
-// app.use('/ts/postgres', postgresRouter)
+app.use('/ts/postgres', postgresRouter)
 
 // //app.use('/ts/mongo', mongoRouter)
 

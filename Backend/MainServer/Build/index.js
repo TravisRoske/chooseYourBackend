@@ -4,9 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const cors = require('cors'); //////////////
 const port = 8080; //////////
 const dbMasterUrl = "http://localhost:8081"; ////////
 const app = (0, express_1.default)();
+//I'll have to change this later because this just allows everything//////
+app.use(cors());
 app.use(express_1.default.json());
 app.get("/", (req, res) => {
     res.sendFile('chooseLanguage.html', { root: __dirname + "../../../../Public/2d" });

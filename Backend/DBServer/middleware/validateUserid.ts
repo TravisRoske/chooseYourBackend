@@ -13,7 +13,6 @@ export function validateUserid(req: any, res: any, next: any){
     next()
 }
 
-
 export function isValidUserid(userid : string) : boolean {
     if(!userid || userid == 'null' || userid == 'undefined'){
         return false;

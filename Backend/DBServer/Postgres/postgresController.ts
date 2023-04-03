@@ -5,6 +5,12 @@ dotenv.config()
 import ObjectSchema from './ObjectSchema.js'
 
 
+/////////////////
+//sometimes it throws this error
+// duplicate key value violates unique constraint "pg_database_datname_index"
+//////////////
+
+
 //this function could also save a timestamp to know when to delete the db
 async function initConnection(userid : string) : Promise<Client> {
 
@@ -20,7 +26,7 @@ async function initConnection(userid : string) : Promise<Client> {
     //try to connect to db of userid
     try {
         await client.connect()
-        //this could error for other reasons....
+        //this could error for other reasons......../////////////
     } catch {
         //if not exists, create new db
         console.log("no dang db")
@@ -63,8 +69,8 @@ async function initConnection(userid : string) : Promise<Client> {
 
 export async function get(req: any, res: any) {
 
-    const userid : string = req.params.userid
-    const objectid : string = req.query.objectid
+    const userid : string = req.params.userid;
+    const objectid : string = req.query.objectid;
     if(!userid){
         return res.status(401).send({
             message: `Request doesn't contain the proper information`
@@ -90,8 +96,8 @@ export async function get(req: any, res: any) {
 
 export async function create(req: any, res: any) {
 
-    const userid : string = req.params.userid
-    const dataObject : ObjectSchema = req.body;///////
+    const userid : string = req.params.userid;
+    const dataObject : ObjectSchema = req.body;
 
     if(!userid || !dataObject ){
         return res.status(401).send({
@@ -101,20 +107,20 @@ export async function create(req: any, res: any) {
 
     const client = await initConnection(userid)
 
-    //change all strings to dynamically change with the schema...
-    let tempFields = ''
-    let queryInserts = ''
+    //Build the custom queryString, which can change if the schema changes
+    let queryFields : any = []
+    let queryInsertNumbers : any = []
     let queryValues = []
     let num = 1
     for(const [key, value] of Object.entries(dataObject)) {
-        tempFields += key + ", "
-        queryInserts += `$${num}, `
+        queryFields.push(key)
+        queryInsertNumbers.push(`$${num}`)
         queryValues.push( value )
         num++
     }
-    tempFields = tempFields.slice(0, -2)
-    queryInserts = queryInserts.slice(0, -2)
-    const queryString = `INSERT INTO tbl (${tempFields}) VALUES (${queryInserts})`
+    queryFields = queryFields.join(',')
+    queryInsertNumbers = queryInsertNumbers.join(',')
+    const queryString = `INSERT INTO tbl (${queryFields}) VALUES (${queryInsertNumbers})`
 
     // console.log(queryString, queryValues)
 
@@ -142,20 +148,21 @@ export async function update(req: any, res: any) {
 
     const client = await initConnection(userid)
    
+
     //change all strings to dynamically change with the schema...
-    let tempFields = ''
+    let setStrings : any = []
     let queryValues = []
     let num = 1;
     for(const [key, value] of Object.entries(dataObject)) {
         if(value){
-            tempFields += key + ` = $${num}, `
+            setStrings.push(key + ` = $${num}`)
             queryValues.push( value )
             num++
         }
     }
-    tempFields = tempFields.slice(0, -2)
+    setStrings = setStrings.join(',')
     const queryString = `UPDATE tbl 
-        SET ${tempFields}
+        SET ${setStrings}
         WHERE id = $${num}`
     queryValues.push(objectid)
 
@@ -216,9 +223,12 @@ export async function deletePartition(userid : string) : Promise<boolean> {
     await client.connect()
     
     //Prepared statements do not work here!!!//////////
-    await client.query(`DROP DATABASE ${userid}`)
+    try{
+        await client.query(`DROP DATABASE ${userid}`)
+    } finally {
+        await client.end()
+    
+        return true
+    }
 
-    await client.end()
-
-    return true
 }

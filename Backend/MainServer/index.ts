@@ -1,9 +1,16 @@
 import express from 'express'
+const cors = require('cors')//////////////
+//add helmet///////
+//add a rate limiter/////
 
 const port = 8080;//////////
 const dbMasterUrl = "http://localhost:8081"////////
 
 const app = express();
+
+
+//I'll have to change this later because this just allows everything//////
+app.use(cors());
 
 
 app.use(express.json());
