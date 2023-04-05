@@ -39,6 +39,39 @@
             </div>
         </div>
         <div id="database">
+            <div id="console">
+                <form>
+                    <h2 id="databaseTitle">Postgres</h2>
+                    <div id="formInputWrapper">
+                        <label for="firstName">First Name:</label>
+                        <input type="text" id="firstName" name="firstName">
+                    
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" id="lastName" name="lastName">
+                    
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username">
+                    
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password">
+                    </div>
+
+                    <div id="grid">
+                      <div id="left">
+                
+                          <button type="button" id="buttonGet">Get Record/s</button>
+                          <button type="button" id="buttonCreate">Create Record</button>
+                          <button type="button" id="buttonUpdate">Update Record</button>
+                          <button type="button" id="buttonDelete">Delete Record</button>
+                      </div>
+                      <div id="right">
+                          <label for="id">Object id:</label>
+                          <input type="text" id="id" name="id"><br><br>
+                      </div>
+                    </div>
+                  </form>
+            </div>
+
             <div id="display">
                 <table id="displyTable">
                     <thead>
@@ -67,37 +100,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-
-            <div id="console">
-                <form>
-                    <h2>Postgres</h2>
-                    <label for="firstName">First Name:</label>
-                    <input type="text" id="firstName" name="firstName"><br><br>
-                
-                    <label for="lastName">Last Name:</label>
-                    <input type="text" id="lastName" name="lastName"><br><br>
-                
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username"><br><br>
-                
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password"><br><br>
-                
-                    <div id="grid">
-                      <div id="left">
-                
-                          <button type="button" id="buttonGet">Get Record/s</button>
-                          <button type="button" id="buttonCreate">Create Record</button>
-                          <button type="button" id="buttonUpdate">Update Record</button>
-                          <button type="button" id="buttonDelete">Delete Record</button>
-                      </div>
-                      <div id="right">
-                          <label for="id">Object id:</label>
-                          <input type="text" id="id" name="id"><br><br>
-                      </div>
-                    </div>
-                  </form>
             </div>
         </div>
     </main>

@@ -166,16 +166,16 @@ makeDiagram()
 
 
 function addLights(){
-    const light = new THREE.PointLight(0xffffff, 2)
+    const light = new THREE.PointLight(0xffffff, 3)
     scene.add(light)
-    light.position.set(2, 10, 4)
-    const light2 = new THREE.PointLight(0xffffff, 2)
+    light.position.set(-10, 10, 8)
+    const light2 = new THREE.PointLight(0xffffff, 3)
     scene.add(light2)
-    light2.position.set(2, -10, -4)
-    const light3 = new THREE.PointLight(0xffffff, 2)
+    light2.position.set(10, 10, 8)
+    const light3 = new THREE.PointLight(0xffffff, 3)
     scene.add(light3)
-    light3.position.set(-5, 15, -7)
-	const ambientLight = new THREE.AmbientLight(0xffffff, 1)
+    light3.position.set(-5, 15, -8)
+	const ambientLight = new THREE.AmbientLight(0xffffff, 2)
 	scene.add(ambientLight)
 }
 addLights()
@@ -224,6 +224,7 @@ let canvasBounds = canvas.getBoundingClientRect();
 window.addEventListener('mousemove', onMouseMove);
 function onMouseMove(event : any) {
 
+	//////this math work work if the window is partially scrolled out of sight!!!
 	pointer.x = ((event.clientX -canvasBounds.left) / (canvasBounds.right - canvasBounds.left)) * 2 - 1;
 	pointer.y = - ((event.clientY - canvasBounds.top) / (canvasBounds.bottom - canvasBounds.top)) * 2 + 1;
 

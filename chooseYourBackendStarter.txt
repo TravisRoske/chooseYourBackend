@@ -25,10 +25,8 @@ ToDo:
     -mainserver, database master, frontend, threejs frontend
     -set up ci/cd for these
     
--userid timestamp validation systems, and userid string validation
--test the dababase timeout and deletion system
-
--Build a shitty basic front end
+-finish the frontend design
+    -make it modular with diff databases consoles
 -Get this all going on a single ec2 instance for now.(with containers on it or ecs or lambda)
     -make an ec2 instance
     -pull mainserver, db server, and frontend builds
