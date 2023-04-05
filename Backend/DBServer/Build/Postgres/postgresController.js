@@ -36,6 +36,10 @@ exports.deletePartition = exports.deleteRecords = exports.update = exports.creat
 const pg_1 = require("pg");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
+/////////////////
+//sometimes it throws this error
+// duplicate key value violates unique constraint "pg_database_datname_index"
+//////////////
 //this function could also save a timestamp to know when to delete the db
 function initConnection(userid) {
     return __awaiter(this, void 0, void 0, function* () {

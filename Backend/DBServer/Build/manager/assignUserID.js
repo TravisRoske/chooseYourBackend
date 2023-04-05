@@ -5,6 +5,7 @@ const uuid_1 = require("uuid");
 const validateUserid_js_1 = require("../middleware/validateUserid.js");
 function assignUserid(req, res) {
     var _a;
+    console.log("url", req.url);
     let userid = (_a = req.params) === null || _a === void 0 ? void 0 : _a.userid;
     if (!userid || !(0, validateUserid_js_1.isValidUserid)(userid)) {
         userid = (0, uuid_1.v4)();

@@ -20,7 +20,6 @@ const app = express();
 //I'll have to change this later because this just allows everything//////
 app.use(cors());
 
-
 app.use(express.json())
 
 // app.use(requestLogger)

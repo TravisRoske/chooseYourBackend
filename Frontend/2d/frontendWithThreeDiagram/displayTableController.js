@@ -1,11 +1,11 @@
-function display(data){        
+export function display(data){        
     for(let row of data){
         const { id, firstname, lastname, username, password } = row
         addRow(id, firstname, lastname, username, password)
     }
 }
 
-function addRow(idValue, firstNameValue, lastNameValue, usernameValue, passwordValue) {
+export function addRow(idValue, firstNameValue, lastNameValue, usernameValue, passwordValue) {
 
     // Get the table body
     var tbody = document.getElementById('displyTable');
@@ -38,7 +38,7 @@ function addRow(idValue, firstNameValue, lastNameValue, usernameValue, passwordV
     tbody.appendChild(newRow);
 }
 
-function deleteRow(idValue) {
+export function deleteRow(idValue) {
     // Get the table body
     var tbody = document.getElementById('displyTable');
 
@@ -53,7 +53,7 @@ function deleteRow(idValue) {
     }
 }
 
-function deleteAllRows() {
+export function deleteAllRows() {
     // Get the table body
     var tbody = document.getElementById('displyTable');
 

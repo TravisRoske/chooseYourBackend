@@ -82,7 +82,16 @@ createBackground()
 function makeDiagram() {
 	////////make an object factory that creates and loads new display nodes, and adds them to the scene when loaded!!!!!!
 	
-	const mainServer = new DisplayNodeTest( new THREE.Vector3(-5, 0, 0), 
+	const client = new DisplayNodeTest( new THREE.Vector3(-9, 0, 0), 
+		new Label(
+			"<h1>Main Server</h1>",
+			`<h1>Main Server</h1>
+			<p>This server does stuff</p>`
+			),
+			"client.gltf"
+	)
+
+	const mainServer = new DisplayNodeTest( new THREE.Vector3(-3, 0, 0), 
 		new Label(
 			"<h1>Main Server</h1>",
 			`<h1>Main Server</h1>
@@ -125,7 +134,7 @@ function makeDiagram() {
 		"server.gltf"
 	)
 
-	nodes.push(mainServer, dbServer, mongo, postgres, mySQL)
+	nodes.push(client, mainServer, dbServer, mongo, postgres, mySQL)
 	for(let n of nodes) {
 		n.addToScene(scene)
 	}
@@ -133,12 +142,16 @@ function makeDiagram() {
 	setTimeout(() => {/////////////////////////////
 		mainServer.object.scale.addScalar(2)
 		dbServer.object.scale.addScalar(2)
+		client.object.rotateY(-45)
+		client.object.scale.multiply(new THREE.Vector3(2,2,2))
 
+		let line0 = new LinkLine(client.object.position, mainServer.object.position)
 		let line = new LinkLine(mainServer.object.position, dbServer.object.position)
 		let line2 = new LinkLine(dbServer.object.position, mongo.object.position)
 		let line3 = new LinkLine(dbServer.object.position, postgres.object.position)
 		let line4 = new LinkLine(dbServer.object.position, mySQL.object.position)
 	
+		scene.add(line0)
 		scene.add(line)
 		scene.add(line2)
 		scene.add(line3)
@@ -179,7 +192,7 @@ const bloomComposer = new EffectComposer( renderer );
 
 const renderScene1 = new RenderPass( scene, mainCam);
 bloomComposer.addPass( renderScene1 );
-const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1, 1.5, 0.2 );
+const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), .5, 0.8, 0.2 );
 bloomComposer.addPass( bloomPass );
 
 

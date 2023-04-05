@@ -3,8 +3,9 @@ document.getElementById('buttonCreate').addEventListener('click', createRecord)
 document.getElementById('buttonUpdate').addEventListener('click', updateRecord)
 document.getElementById('buttonDelete').addEventListener('click', deleteRecord)
 
+import { deleteAllRows, display } from './displayTableController.js'
 
-const url = "http://localhost:8080/ts/postgres/query/";
+const url = "http://localhost:8080/ts/postgres/query/";///////////
 
 //maybe only render the console once this promise resolves/////////
 let userid = ""
@@ -12,7 +13,7 @@ getUserid().then((result) => userid = result)
 
 //Get a userid from the server, trying the saved userid first
 function getUserid() {
-    const idurl = "http://localhost:8081/assignid/"//////////////
+    const idurl = "http://localhost:8080/assignid/"
     let headers = {}
     const currid = localStorage.getItem("userid")
     console.log("userid:", currid)
@@ -41,7 +42,10 @@ function getUserid() {
 
 
 async function getRecord() {
-    console.log(userid)
+
+    deleteAllRows()/////////////
+
+    console.log(userid)/////////
 
     const idInput = document.querySelector('#id').value;
     let idString = ''

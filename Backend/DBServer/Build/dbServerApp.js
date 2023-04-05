@@ -17,6 +17,10 @@ const app = (0, express_1.default)();
 exports.app = app;
 //I'll have to change this later because this just allows everything//////
 app.use(cors());
+app.all('*', (req, res, next) => {
+    console.log("URL", req.url);
+    next();
+});
 app.use(express_1.default.json());
 // app.use(requestLogger)
 app.get('/assignid', assignUserid_js_1.assignUserid);
