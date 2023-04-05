@@ -7,9 +7,10 @@
             padding: 18px;
             width: 86.5%;
             border: none;
-            text-align: left;
+            text-align: center;
             outline: none;
             font-size: 15px;
+            border-radius: 10px;
         }
 
         /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */

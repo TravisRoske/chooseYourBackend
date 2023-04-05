@@ -17,5 +17,6 @@ html, body{
 #database {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 10px;
+    width: 90%;
+    margin: auto;
 }

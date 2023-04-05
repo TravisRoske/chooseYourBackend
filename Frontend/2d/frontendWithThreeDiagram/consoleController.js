@@ -5,7 +5,16 @@ document.getElementById('buttonDelete').addEventListener('click', deleteRecord)
 
 import { deleteAllRows, display } from './displayTableController.js'
 
+
 const url = "http://localhost:8080/ts/postgres/query/";///////////
+// const url = "http://localhost:8080/ts/mysql/query/";///////////
+
+
+const consoleHeader = document.getElementById("databaseTitle")
+////////change header bases on which db is used
+consoleHeader.innerHTML = "Postgres"
+////////////also change the color pattens
+
 
 //maybe only render the console once this promise resolves/////////
 let userid = ""
@@ -39,13 +48,7 @@ function getUserid() {
     return prom
 }
 
-
-
 async function getRecord() {
-
-    deleteAllRows()/////////////
-
-    console.log(userid)/////////
 
     const idInput = document.querySelector('#id').value;
     let idString = ''
@@ -71,7 +74,6 @@ async function createRecord() {
     const lastNameInput = document.querySelector('#lastName').value;
     const usernameInput = document.querySelector('#username').value;
     const passwordInput = document.querySelector('#password').value;
-    console.log("VALS", firstNameInput, lastNameInput, usernameInput, passwordInput)
 
     fetch(url + userid, {
         method: 'POST',
