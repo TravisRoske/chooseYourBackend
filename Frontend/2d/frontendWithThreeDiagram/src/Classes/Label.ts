@@ -18,8 +18,8 @@ export class Label extends CSS2DObject {
         this.element.innerHTML = contractedHTML;
         
         //label style
-        this.element.style.backgroundColor = "#DDDDDD";
-        this.element.style.opacity = ".2";
+        this.element.style.backgroundColor = "#EEEEEE";
+        this.element.style.opacity = ".4";
         this.element.style.border = "2px solid grey";
         this.element.style.borderRadius = "10px";
         this.element.style.maxWidth = "400px"
@@ -28,15 +28,23 @@ export class Label extends CSS2DObject {
     }
 
     expand() {
-        //some growing animation maybe
         this.element.innerHTML = this.expandedHTML;
         this.isExpanded = true;
     }
 
     collapse() {
-        //some shrinking animation maybe
         this.element.innerHTML = this.contractedHTML;
         this.isExpanded = false;
+    }
+
+    toggle() {
+        console.log(this.isExpanded)
+
+        if(!this.isExpanded){
+            this.expand()
+        } else {
+            this.collapse()
+        }
     }
 
     close() {
