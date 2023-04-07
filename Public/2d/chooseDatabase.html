@@ -16,22 +16,32 @@
 
         <div class="container">
 
-            <div class="btn" id="mongo"><a href="http://localhost:8080/dist/index.html">MongoDB</a></div>
+            <div class="btn" id="mongo"><a>MongoDB</a></div>
 
-            <div class="btn" id="postgres"><a href="http://localhost:8080/dist/index.html">Postgres</a></div>
+            <div class="btn" id="postgres"><a>Postgres</a></div>
 
-            <div class="btn" id="mysql"><a href="http://localhost:8080/dist/index.html">MySQL</a></div>
+            <div class="btn" id="mysql"><a>MySQL</a></div>
 
         </div>
         
 
         <script>
+            const domain = "http://192.168.7.238:8080"//////////
+
+            const mongoButton = document.getElementById("mongo")
+            mongoButton.children[0].href = `${domain}/dist/index.html` 
             document.getElementById("mongo").addEventListener("click", () => {
                 sessionStorage.setItem("db", "MongoDB")
             })
+
+            const postgresButton = document.getElementById("postgres")
+            postgresButton.children[0].href = `${domain}/dist/index.html` 
             document.getElementById("postgres").addEventListener("click", () => {
                 sessionStorage.setItem("db", "Postgres")
             })
+
+            const mysqlButton = document.getElementById("mysql")
+            mysqlButton.children[0].href = `${domain}/dist/index.html` 
             document.getElementById("mysql").addEventListener("click", () => {
                 sessionStorage.setItem("db", "MySQL")
             })

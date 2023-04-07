@@ -16,18 +16,25 @@
 
         <div class="container">
 
-            <div class="btn" id="typescript"><a href="http://localhost:8080/chooseDatabase.html">typescript</a></div>
+            <div class="btn" id="typescript"><a>typescript</a></div>
 
-            <div class="btn" id="python"><a href="http://localhost:8080/chooseDatabase.html">python</a></div>
+            <div class="btn" id="python"><a href=`${url}/chooseDatabase.html`>python</a></div>
 
         </div>
         
 
         <script>
-            document.getElementById("typescript").addEventListener("click", () => {
+            const domain = "http://192.168.7.238:8080"//////////
+
+            const tsButton = document.getElementById("typescript")
+            tsButton.children[0].href = `${domain}/chooseDatabase.html`
+            console.log(tsButton.children)
+            tsButton.addEventListener("click", () => {
                 sessionStorage.setItem("language", "typescript")
             })
-            document.getElementById("python").addEventListener("click", () => {
+            const pyButton = document.getElementById("python")
+            pyButton.children[0].href = `${domain}/chooseDatabase.html`
+            pyButton.addEventListener("click", () => {
                 sessionStorage.setItem("language", "python")
             })
         </script>

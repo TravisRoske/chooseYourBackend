@@ -47,9 +47,11 @@ export class DisplayNodeTest {
                 texture.repeat.set( 20, 20 );
 
                 //setting material property
-                this.object.children[0].material.bumpMap = texture;
-                this.object.children[0].material.bumpScale = .01
-                this.object.children[0].material.roughness = .45
+                const mesh = this.object.children[0] as THREE.Mesh
+                const material = mesh.material as THREE.MeshStandardMaterial
+                material.bumpMap = texture;
+                material.bumpScale = .01
+                material.roughness = .45
             })
         }
 
