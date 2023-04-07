@@ -6,7 +6,6 @@ html, body{
 #diagramWrapper {
     width: fit-content;
     margin: auto;
-    /* border: 5px solid grey; */
     border-radius: 10px;
 }
 #diagramWrapper > * {

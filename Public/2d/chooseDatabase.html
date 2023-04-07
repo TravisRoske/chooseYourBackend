@@ -1,11 +1,40 @@
-<body>
-    <div>
-        <h1><a href="http://localhost:8080/ts/mongo">MongoDB</a></h1>
-    </div>
-    <div>
-        <h1><a href="http://localhost:8080/three.html">Postgres</a></h1>
-    </div>
-    <div>
-        <h1><a href="http://localhost:8080/ts/mysql">MySQL</a></h1>
-    </div>
-</body>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Choose Your Database</title>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="buttons.css">
+
+  </head>
+    <body>
+        <div>
+            <h1>Choose Your Database</h1>
+        </div>
+
+        <div class="container">
+
+            <div class="btn" id="mongo"><a href="http://localhost:8080/three.html">MongoDB</a></div>
+
+            <div class="btn" id="postgres"><a href="http://localhost:8080/three.html">Postgres</a></div>
+
+            <div class="btn" id="mysql"><a href="http://localhost:8080/three.html">MySQL</a></div>
+
+        </div>
+        
+
+        <script>
+            document.getElementById("mongo").addEventListener("click", () => {
+                sessionStorage.setItem("db", "MongoDB")
+            })
+            document.getElementById("postgres").addEventListener("click", () => {
+                sessionStorage.setItem("db", "Postgres")
+            })
+            document.getElementById("mysql").addEventListener("click", () => {
+                sessionStorage.setItem("db", "MySQL")
+            })
+        </script>
+    </body>
+</html>

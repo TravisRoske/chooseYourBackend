@@ -5,15 +5,13 @@ document.getElementById('buttonDelete').addEventListener('click', deleteRecord)
 
 import { deleteAllRows, display } from './displayTableController.js'
 
+const db = sessionStorage.getItem("db")
+if(!db) db = "MySQL"
 
-const url = "http://localhost:8080/ts/postgres/query/";///////////
-// const url = "http://localhost:8080/ts/mysql/query/";///////////
-
+const url = `http://localhost:8080/ts/${db}/query/`;//////////
 
 const consoleHeader = document.getElementById("databaseTitle")
-////////change header bases on which db is used
-consoleHeader.innerHTML = "Postgres"
-////////////also change the color pattens
+consoleHeader.innerHTML = db
 
 
 //maybe only render the console once this promise resolves/////////
@@ -25,10 +23,8 @@ function getUserid() {
     const idurl = "http://localhost:8080/assignid/"
     let headers = {}
     const currid = localStorage.getItem("userid")
-    console.log("userid:", currid)
 
     let prom = new Promise((resolve, reject) => {
-        console.log(idurl + currid)
         fetch(idurl + currid, {
             method : "GET",
             headers : headers
