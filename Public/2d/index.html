@@ -1,8 +1,35 @@
-<body>
-    <div>
-        <h1><a href="http://localhost:8080/chooseDatabase.html">TypeScript/Express</a></h1>
-    </div>
-    <div>
-        <h1><a href="http://localhost:8080/py">Python/Flask</a></h1>
-    </div>
-</body>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Choose Your Database</title>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="buttons.css">
+
+  </head>
+    <body>
+        <div>
+            <h1>Choose Your Backend Language</h1>
+        </div>
+
+        <div class="container">
+
+            <div class="btn" id="typescript"><a href="http://localhost:8080/chooseDatabase.html">typescript</a></div>
+
+            <div class="btn" id="python"><a href="http://localhost:8080/chooseDatabase.html">python</a></div>
+
+        </div>
+        
+
+        <script>
+            document.getElementById("typescript").addEventListener("click", () => {
+                sessionStorage.setItem("language", "typescript")
+            })
+            document.getElementById("python").addEventListener("click", () => {
+                sessionStorage.setItem("language", "python")
+            })
+        </script>
+    </body>
+</html>

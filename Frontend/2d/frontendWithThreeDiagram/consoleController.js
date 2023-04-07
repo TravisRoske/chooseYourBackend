@@ -5,7 +5,7 @@ document.getElementById('buttonDelete').addEventListener('click', deleteRecord)
 
 import { deleteAllRows, display } from './displayTableController.js'
 
-const db = sessionStorage.getItem("db")
+let db = sessionStorage.getItem("db")
 if(!db) db = "MySQL"
 
 const url = `http://localhost:8080/ts/${db}/query/`;//////////

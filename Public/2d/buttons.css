@@ -3,6 +3,9 @@ h1 {
 	font-family: "Roboto", sans-serif;
     padding: 20px;
     text-align: center;
+    color: #fff;
+	font-weight: 200px;
+
 }
 
 * {

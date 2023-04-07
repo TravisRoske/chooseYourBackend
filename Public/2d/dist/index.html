@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    <!-- threejs display script -->
+    
+
+    <script type="module" crossorigin src="/assets/index-c266a84d.js"></script>
+    <link rel="stylesheet" href="/assets/index-24e8d2cf.css">
+  </head>
+
+
+  <body>
+    <video id="video" src="matrix-green.mp4" loop="true" autoplay="true" muted="muted"></video>
+    <main>
+        <div id="explanation">
+            <div id="info">
+                <h1>Dynamic Backend Demo</h1>
+            </div>
+            <button type="button" class="collapsible">This content is currently being served by...</button>
+            <div class="content">
+                <div id="diagramWrapper">
+                    
+                </div>
+            </div>
+        </div>
+        <div id="database">
+            <div id="console">
+                <form>
+                    <h2 id="databaseTitle">Temp</h2>
+                    <p>Here you can make example users to be entered into your individual partition of your chosen database.</p>
+                    <div id="formInputWrapper">
+                        <label for="firstName">First Name:</label>
+                        <input type="text" id="firstName" name="firstName">
+                    
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" id="lastName" name="lastName">
+                    
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username">
+                    
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password">
+                    </div>
+
+                    <div id="grid">
+                      <div id="left">
+                
+                          <button type="button" id="buttonGet">Get Record/s</button>
+                          <button type="button" id="buttonCreate">Create Record</button>
+                          <button type="button" id="buttonUpdate">Update Record</button>
+                          <button type="button" id="buttonDelete">Delete Record</button>
+                      </div>
+                      <div id="right">
+                          <label for="id">Object id:</label>
+                          <input type="text" id="id" name="id"><br><br>
+                      </div>
+                    </div>
+                  </form>
+            </div>
+
+            <div id="display">
+                <table id="displyTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+  </body>
+</html>
