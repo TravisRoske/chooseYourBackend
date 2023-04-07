@@ -7,15 +7,15 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" type="text/css" href="test.css">
-    <link rel="stylesheet" type="text/css" href="collapsible.css">
-    <link rel="stylesheet" type="text/css" href="postgresPanel.css">
-    <link rel="stylesheet" type="text/css" href="displayTableStyle.css">
+    <link rel="stylesheet" type="text/css" href="src/css/style.css">
+    <link rel="stylesheet" type="text/css" href="src/css/collapsible.css">
+    <link rel="stylesheet" type="text/css" href="src/css/console.css">
+    <link rel="stylesheet" type="text/css" href="src/css/displayTableStyle.css">
 
     
-    <script type="module" src="/collapsible.js" async></script>
-    <script type="module" src="/consoleController.js" async></script>
-    <script type="module" src="/displayTableController.js" async></script>
+    <script type="module" src="src/js/collapsible.js" async></script>
+    <script type="module" src="src/js/consoleController.js" async></script>
+    <script type="module" src="src/js/displayTableController.js" async></script>
 
     <!-- threejs display script -->
     <script type="module" src="/src/main.ts"></script>
@@ -41,19 +41,19 @@
             <div id="console">
                 <form>
                     <h2 id="databaseTitle">Temp</h2>
-                    <p>Here you can make example users to be entered into your individual partition of your chosen database.</p>
+                    <p>Here you can enter fake user information to your chosen database.</p>
                     <div id="formInputWrapper">
                         <label for="firstName">First Name:</label>
-                        <input type="text" id="firstName" name="firstName">
+                        <input type="text" id="firstName" name="firstName" value="Travis">
                     
                         <label for="lastName">Last Name:</label>
-                        <input type="text" id="lastName" name="lastName">
+                        <input type="text" id="lastName" name="lastName" value="Roske">
                     
                         <label for="username">Username:</label>
-                        <input type="text" id="username" name="username">
+                        <input type="text" id="username" name="username" value="exampleUsername">
                     
                         <label for="password">Password:</label>
-                        <input type="password" id="password" name="password">
+                        <input type="password" id="password" name="password" value="Password">
                     </div>
 
                     <div id="grid">

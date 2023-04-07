@@ -11,7 +11,7 @@ import { LinkLine } from "./Classes/LinkLine";
 
 
 let width = window.innerWidth * .85;
-let height = window.innerHeight * .75;
+let height = window.innerHeight * .55;
 const scene = new THREE.Scene()
 
 const wrapper = document.getElementById('diagramWrapper')
@@ -22,8 +22,7 @@ canvas.style.textAlign = 'center';
 wrapper.appendChild(canvas)
 const renderer = new THREE.WebGLRenderer({
 	canvas: canvas,
-  	antialias: true,
-  	// alpha: true
+  	antialias: true
 })
 
 renderer.setSize(width, height);
@@ -34,7 +33,8 @@ const mainCam = new THREE.PerspectiveCamera(
 	0.1,              //Near Clipping
 	1000               //Far Clipping
 ) 
-mainCam.position.z = 10
+mainCam.position.set(-6, 0, 12);
+mainCam.rotateY(15);
 
 const cssrenderer = new CSS2DRenderer();
 cssrenderer.setSize(width, height);
@@ -84,9 +84,9 @@ function makeDiagram() {
 	
 	const client = new DisplayNodeTest( new THREE.Vector3(-9, 0, 0), 
 		new Label(
-			"<h1>Main Server</h1>",
-			`<h1>Main Server</h1>
-			<p>This server does stuff</p>`
+			"<h1>Front-End</h1>",
+			`<h1>Front-End</h1>
+			<p>Everything you see on your screen right now is generated with HTML, CSS, JavaScript, and the THREE.js 3d graphics library.</p>`
 			),
 			"client.gltf"
 	)
@@ -95,7 +95,7 @@ function makeDiagram() {
 		new Label(
 			"<h1>Main Server</h1>",
 			`<h1>Main Server</h1>
-			<p>This server does stuff</p>`
+			<p>You are currently being served HTML, CSS, and JavaScript files from this server.  It also communicates with the database server, acting as a middle-man for each of your database requests.</p>`
 			),
 			"server.gltf"
 	)
@@ -104,7 +104,7 @@ function makeDiagram() {
 			new Label(
 				"<h1>Database Manager</h1>",
 				`<h1>Database Manager</h1>
-				<p>This server receives http requests and manages database access.  It also keeps track of all active users and deletes user information after one hour of inactivity.</p>`
+				<p>This server receives http requests and manages access to any of the three databases.  It also keeps track of all active users and deletes user information after one hour of inactivity.</p>`
 			),
 			"server.gltf"
 	)
@@ -113,7 +113,7 @@ function makeDiagram() {
 		new Label(
 			"<h1>Mongo</h1>",
 			`<h1>Mongo</h1>
-			<p>This server does stuff</p>`
+			<p>This is a docker container with an instance of Mongo DB.  MongoDB is a NoSQL document-oriented database that stores data in flexible, JSON-like documents.</p>`
 		),
 		"server.gltf"
 	)
@@ -121,7 +121,7 @@ function makeDiagram() {
 		new Label(
 			"<h1>Postgres</h1>",
 			`<h1>Postgres</h1>
-			<p>This server does stuff</p>`
+			<p>This is a docker container with an instance of Postgres.  Postgres (PostgreSQL) is a powerful open-source relational database management system known for its robustness and support for advanced SQL features.</p>`
 		),
 		"server.gltf"
 	)
@@ -129,7 +129,7 @@ function makeDiagram() {
 		new Label(
 			"<h1>MySQL</h1>",
 			`<h1>MySQL</h1>
-			<p>This server does stuff</p>`
+			<p>This is a docker container with an instance of MySQL.  MySQL is a popular open-source relational database management system that is widely used for web applications and supports a wide range of programming languages.</p>`
 		),
 		"server.gltf"
 	)
@@ -168,14 +168,14 @@ makeDiagram()
 function addLights(){
     const light = new THREE.PointLight(0xffffff, 3)
     scene.add(light)
-    light.position.set(-10, 10, 8)
+    light.position.set(-15, 15, 12)
     const light2 = new THREE.PointLight(0xffffff, 3)
     scene.add(light2)
-    light2.position.set(10, 10, 8)
+    light2.position.set(15, 15, 12)
     const light3 = new THREE.PointLight(0xffffff, 3)
     scene.add(light3)
-    light3.position.set(-5, 15, -8)
-	const ambientLight = new THREE.AmbientLight(0xffffff, 2)
+    light3.position.set(-5, 15, -12)
+	const ambientLight = new THREE.AmbientLight(0xaaffaa, 2.5)
 	scene.add(ambientLight)
 }
 addLights()
@@ -224,7 +224,6 @@ let canvasBounds = canvas.getBoundingClientRect();
 window.addEventListener('mousemove', onMouseMove);
 function onMouseMove(event : any) {
 
-	//////this math work work if the window is partially scrolled out of sight!!!
 	pointer.x = ((event.clientX -canvasBounds.left) / (canvasBounds.right - canvasBounds.left)) * 2 - 1;
 	pointer.y = - ((event.clientY - canvasBounds.top) / (canvasBounds.bottom - canvasBounds.top)) * 2 + 1;
 
@@ -298,6 +297,10 @@ function onWindowResize() {
 	canvasBounds = canvas.getBoundingClientRect();
 }
 
+window.addEventListener('scroll', onWindowScroll)
+function onWindowScroll() {
+	canvasBounds = canvas.getBoundingClientRect();
+}
 
 
 

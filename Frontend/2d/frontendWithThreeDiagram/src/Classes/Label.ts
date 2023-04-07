@@ -38,8 +38,6 @@ export class Label extends CSS2DObject {
     }
 
     toggle() {
-        console.log(this.isExpanded)
-
         if(!this.isExpanded){
             this.expand()
         } else {

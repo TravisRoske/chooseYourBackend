@@ -1,9 +1,5 @@
-document.getElementById('buttonGet').addEventListener('click', getRecord)
-document.getElementById('buttonCreate').addEventListener('click', createRecord)
-document.getElementById('buttonUpdate').addEventListener('click', updateRecord)
-document.getElementById('buttonDelete').addEventListener('click', deleteRecord)
-
 import { deleteAllRows, display } from './displayTableController.js'
+
 
 let db = sessionStorage.getItem("db")
 if(!db) db = "MySQL"
@@ -14,7 +10,6 @@ const consoleHeader = document.getElementById("databaseTitle")
 consoleHeader.innerHTML = db
 
 
-//maybe only render the console once this promise resolves/////////
 let userid = ""
 getUserid().then((result) => userid = result)
 
@@ -43,6 +38,13 @@ function getUserid() {
     })
     return prom
 }
+
+
+
+document.getElementById('buttonGet').addEventListener('click', getRecord)
+document.getElementById('buttonCreate').addEventListener('click', createRecord)
+document.getElementById('buttonUpdate').addEventListener('click', updateRecord)
+document.getElementById('buttonDelete').addEventListener('click', deleteRecord)
 
 async function getRecord() {
 

@@ -6,7 +6,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 export class DisplayNodeTest {
     label : any;
 
-    public object: THREE.Object3D ;
+    public object: THREE.Object3D;
     private isLoaded : boolean = false;
 
     constructor( pos : THREE.Vector3, label : Label, gltfFile? : string | null){
@@ -30,11 +30,26 @@ export class DisplayNodeTest {
                 } );
             })
             prom.then((res) => {
-                this.object = res
+                this.object = res;
             })
             prom.finally(() => { 
                 this.isLoaded = true 
                 this.changePosition(pos.x, pos.y, pos.z)
+
+                //initialization
+                const textureLoader = new THREE.TextureLoader();
+
+                //loading texture
+                const texture = textureLoader.load ('bump_map.jpg')
+
+                texture.wrapS = THREE.RepeatWrapping;
+                texture.wrapT = THREE.RepeatWrapping;
+                texture.repeat.set( 20, 20 );
+
+                //setting material property
+                this.object.children[0].material.bumpMap = texture;
+                this.object.children[0].material.bumpScale = .01
+                this.object.children[0].material.roughness = .45
             })
         }
 
@@ -52,7 +67,6 @@ export class DisplayNodeTest {
     }
 
     onClick() {
-        console.log("!")
         this.label.toggle()
     }
 
