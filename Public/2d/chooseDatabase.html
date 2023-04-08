@@ -29,13 +29,13 @@
             const domain = window.location.hostname
 
             const mongoButton = document.getElementById("mongo")
-            mongoButton.children[0].href = `${domain}/dist/index.html` 
+            mongoButton.children[0].href = `/dist/index.html` 
             document.getElementById("mongo").addEventListener("click", () => {
                 sessionStorage.setItem("db", "MongoDB")
             })
 
             const postgresButton = document.getElementById("postgres")
-            postgresButton.children[0].href = `${domain}/dist/index.html` 
+            postgresButton.children[0].href = `/dist/index.html` 
             document.getElementById("postgres").addEventListener("click", () => {
                 sessionStorage.setItem("db", "Postgres")
             })

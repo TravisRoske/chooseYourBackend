@@ -27,13 +27,13 @@
             const domain = window.location.hostname
 
             const tsButton = document.getElementById("typescript")
-            tsButton.children[0].href = `${domain}/chooseDatabase.html`
+            tsButton.children[0].href = `/chooseDatabase.html`
             console.log(tsButton.children)
             tsButton.addEventListener("click", () => {
                 sessionStorage.setItem("language", "typescript")
             })
             const pyButton = document.getElementById("python")
-            pyButton.children[0].href = `${domain}/chooseDatabase.html`
+            pyButton.children[0].href = `/chooseDatabase.html`
             pyButton.addEventListener("click", () => {
                 sessionStorage.setItem("language", "python")
             })
