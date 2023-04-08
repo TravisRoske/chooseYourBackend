@@ -1,7 +1,6 @@
 export function display(data){        
     for(let row of data){
-        const { id, firstname, lastname, username, password } = row
-        addRow(id, firstname, lastname, username, password)
+        addRow(row.id, row.firstName, row.lastName, row.username, row.password)
     }
 }
 
