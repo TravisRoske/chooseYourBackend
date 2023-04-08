@@ -43,8 +43,7 @@ app.get("/assignid/:userid", (req, res) => {
     })
 })
 
-app.all("/ts/mysql/query", mysqlForwarder)
-
+app.use("/ts/mysql/query", mysqlForwarder)
 
 app.use("/ts/postgres/query", postgresForwarder)
 

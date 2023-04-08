@@ -17,7 +17,6 @@ mysqlForwarder.route('/')
 const dbMasterUrl = process.env.dbMasterUrl
 
 async function forward(req: any, res: any) {
-    console.log("Forwarding!!")
 
     let queryString : string = ""
     if(!req.query.isEmpty){
