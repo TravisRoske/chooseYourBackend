@@ -5,7 +5,7 @@ let db = sessionStorage.getItem("db")
 if(!db) db = "MySQL"
 
 const domain = window.location.hostname;
-const url = `${domain}/ts/${db}/query/`;
+const queryUrl = `${domain}/ts/${db}/query/`;
 
 const consoleHeader = document.getElementById("databaseTitle")
 consoleHeader.innerHTML = db
@@ -54,7 +54,7 @@ async function getRecord() {
     if(idInput){
         idString = '?objectid=' + idInput
     }
-    fetch(url + userid + idString, {
+    fetch(queryUrl + userid + idString, {
         method: 'GET'
     })
     .then((response) => {
@@ -74,7 +74,7 @@ async function createRecord() {
     const usernameInput = document.querySelector('#username').value;
     const passwordInput = document.querySelector('#password').value;
 
-    fetch(url + userid, {
+    fetch(queryUrl + userid, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -107,7 +107,7 @@ async function updateRecord() {
         idString = '?objectid=' + idInput
     }
 
-    fetch(url + userid + idString, {
+    fetch(queryUrl + userid + idString, {
         method: 'PUT',
         headers: {
             "Content-Type": "application/json"
@@ -135,7 +135,7 @@ async function deleteRecord() {
     if(idInput){
         idString = '?objectid=' + idInput
     }
-    fetch(url + userid + idString, {
+    fetch(queryUrl + userid + idString, {
         method: 'DELETE'
     })
     .then((response) => {

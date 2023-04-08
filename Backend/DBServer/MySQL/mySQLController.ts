@@ -165,7 +165,7 @@ export async function deletePartition(userid : string) : Promise<boolean> {
     const options = {
         host     :  process.env.mysqlUrl,
         port     :  Number(process.env.mysqlPort),
-        user     :  process.env.mysqluser,
+        user     :  process.env.mysqlUser,
         password :  process.env.mysqlPassword,
     }
     const connection = await mysql.createConnection(options);
