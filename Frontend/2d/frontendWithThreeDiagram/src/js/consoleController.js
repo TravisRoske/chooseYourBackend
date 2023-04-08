@@ -4,13 +4,11 @@ import { deleteAllRows, display } from './displayTableController.js'
 let db = sessionStorage.getItem("db")
 if(!db) db = "MySQL"
 
-const domain = window.location.origin;
-console.log("hostname", window.location)
-console.log("hostname", window.location.hostname)
-console.log("origin", window.location.origin)
+// const domain = window.location.origin;  // Doesn't work .... http://3.145.88.185:8080/dist/3.145.88.185
+const domain = 'http://3.145.88.185:8080' ////////////////Change this
 
 const queryUrl = `${domain}/ts/${db}/query/`;
-http://3.145.88.185:8080/dist/3.145.88.185/ts/MySQL/query/
+
 
 const consoleHeader = document.getElementById("databaseTitle")
 consoleHeader.innerHTML = db
