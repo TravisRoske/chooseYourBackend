@@ -26,8 +26,6 @@
         
 
         <script>
-            const domain = window.location.hostname
-
             const mongoButton = document.getElementById("mongo")
             mongoButton.children[0].href = `/dist/index.html` 
             document.getElementById("mongo").addEventListener("click", () => {
@@ -41,7 +39,7 @@
             })
 
             const mysqlButton = document.getElementById("mysql")
-            mysqlButton.children[0].href = `${domain}/dist/index.html` 
+            mysqlButton.children[0].href = `/dist/index.html` 
             document.getElementById("mysql").addEventListener("click", () => {
                 sessionStorage.setItem("db", "MySQL")
             })
