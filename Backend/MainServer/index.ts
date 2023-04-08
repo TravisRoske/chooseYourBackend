@@ -8,6 +8,7 @@ const cors = require('cors')//////////////
 //add a rate limiter/////
 
 import { postgresForwarder } from './postgres/forwardPostgres.js'
+import { mysqlForwarder } from './mysql/forwardMysql.js'
 
 const port = process.env.port;
 const dbMasterUrl = process.env.dbMasterUrl;
@@ -42,36 +43,7 @@ app.get("/assignid/:userid", (req, res) => {
     })
 })
 
-///////////make simple forward functions
-app.all("/ts/mysql/query/:userid", (req, res) => {
-    
-    let queryString : string = ""
-    if(req.query.isEmpty){
-        queryString = "?"
-        for(let key in req.query){
-            queryString += key + "=" + req.query[key]
-        }
-    }
-
-    const options = {
-        url: dbMasterUrl + "/ts/mysql/" + req.params.userid + queryString,
-        method: req.method,
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json;charset=UTF-8'
-        },
-        data : JSON.stringify(req.body)
-    };
-
-    axios(options)
-    .then(axiosResponse => {
-        res.status(axiosResponse.status)
-        res.json(axiosResponse.data)
-    })
-    .catch((err) => {
-        res.sendStatus(500)
-    })
-})
+app.all("/ts/mysql/query", mysqlForwarder)
 
 
 app.use("/ts/postgres/query", postgresForwarder)
