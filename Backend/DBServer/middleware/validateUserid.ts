@@ -1,4 +1,4 @@
-import { assignUserid } from "../manager/assignUserid";
+import { assignUserid } from "../manager/assignUserid.js";
 
 export function validateUserid(req: any, res: any, next: any){
 
