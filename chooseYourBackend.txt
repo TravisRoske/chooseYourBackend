@@ -5,15 +5,15 @@ Servers/runtimes
 -Ruby/rails
 -?Java/
 
-	Cloud?
-	-AWS
-	-Azure
+		Cloud?
+		-AWS
+		-Azure
 
 	Load Balancer?
 	Nginx/apache
 
 	Protocol
-	-rest, Graphql
+	-rest, Graphql, quic
 
 Security/Encryption??
 -for the data in the dbs??
@@ -26,93 +26,11 @@ Databases(Dockerized)
 
 
 
-User selects all these options, then it spins up all of these containers,  it then has a link to connect GET to the new backend.  It will deliver the front end files, then they are in the world.
-(each type of server already has the front end files on deck), and more of them can be spun up
-There can be a live display of the dockerized cache, it will show everything currently in the cache(like 10-20 items.)  mabye with redis you can change the storing policy with a button.
-You can interact with the db
--add new user(for now just user, later maybe object, transactions etc)
--search
--update
--delete
-another screen will show the request.  ie get/post etc, and the body...
-security - you can store passwords in plain text/rsa?/bcrypt/bcrypt with salt....
-each db request will go to the cache first, then to the db if not there, and update the cache based on its policy.
-Analysis tool
--analyzed db size, speed of read and write, etc etc.
+ToDo:
+-Set up ci/cd for repos
+    
+-Set up nginx, and other stuff like logging, server process and restart(main and dbserver), static ec2 ip address, etc
 
-(also a report bug tool)
-
-
-
-Starting
-Build a node/express backend
--serve the files(shitty temp html shit)
-Have a seperate server that spins up docker containers of dbs.
--start with mongo or mysql
--This server will connect to another server with a db of current active users.  Each user will be asigned a code when they start.  The code will connect them to a certain db docker container.  So there will have to be some sort of load balancer that points to the docker instances...
-They store their code in a cookie or in local storage...With an expiration date, that expires...
-If they sumbit a request and their code is not found, it will error and ask if they want a new session.
-So each request will include their code...
-(this would be really easy on lambda, otherwise I'd have to have firstly a process that spins up new ec2 instances, and secondly a system of keeping track of each server and each container on those servers)...
-
-
-
-
-
-
-
-
-
-
--check if db operations can be concurrent.  Do they queue automatically?
--understand graphql
--how to determine the protocol in the front end.  json or graphql etc.
--understand dynamic urls better
--server failover.  how it works, how to set up
--dynamic load balancing.  nginx or totally make my own thing.
-
-
-
-
-
-
-
-//Entire process
-Nodejs server serves, Choose your language
-TypeScript / Python
-Assigns you an id
-Send to the same or the python server
-Choose your database
-MongoDB, MySQL, Postgres
-Choose your cache
-Redis/Memcached
-Choose your protocol/format
-quic, https, json, graphql....
-
-Then, the server or a cdn sends the new index.html, and routes you to it
-It has the 3d world and everything...
-meanwhile a db partition is created, and a cache container
-
-
-
-
-
-
-how to deal with userID====
--saved in local storage with timeout
--frontend sends the userid with time in the body of every request
--also the userid in the url of some requests
--backend verifies url and body userid match
--checks if timer is timed out.
--if timed out, make new user id???? or send the same????
--db creation/using is already handled
--db master will search for userid and check which server it's on then route everything to that server
-	-if it's not found, just route it to the first low-load server available
--db master will every minute or so check through the list of all id and their timeouts
-	-save a list of all expired ids
-	-then send a request to their servers to delete the partition of each expired userID
--so db master will have a database or a txt file with
-	-userID, timeout, db serverIP
-
-
--sends back save local storage with userid and timer(or the frontend does this???)
+-build tests for the backend
+    -test each main function
+    -end to end tests
