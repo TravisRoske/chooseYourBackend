@@ -5,7 +5,11 @@ let db = sessionStorage.getItem("db")
 if(!db) db = "MySQL"
 
 const domain = window.location.hostname;
+console.log("hostname", window.location)
+console.log("hostname", window.location.hostname)
+
 const queryUrl = `${domain}/ts/${db}/query/`;
+http://3.145.88.185:8080/dist/3.145.88.185/ts/MySQL/query/
 
 const consoleHeader = document.getElementById("databaseTitle")
 consoleHeader.innerHTML = db
