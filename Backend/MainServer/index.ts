@@ -9,8 +9,8 @@ const cors = require('cors')//////////////
 
 import { postgresForwarder } from './postgres/forwardPostgres.js'
 
-const port = 8080;//////////
-const dbMasterUrl = "http://localhost:8081"////////
+const port = process.env.port;
+const dbMasterUrl = process.env.dbMasterUrl;
 
 const app = express();
 

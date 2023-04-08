@@ -18,13 +18,13 @@
 
             <div class="btn" id="typescript"><a>typescript</a></div>
 
-            <div class="btn" id="python"><a href=`${url}/chooseDatabase.html`>python</a></div>
+            <div class="btn" id="python"><a>python</a></div>
 
         </div>
         
 
         <script>
-            const domain = "http://192.168.7.238:8080"//////////
+            const domain = window.location.hostname
 
             const tsButton = document.getElementById("typescript")
             tsButton.children[0].href = `${domain}/chooseDatabase.html`

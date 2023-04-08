@@ -4,7 +4,8 @@ import { deleteAllRows, display } from './displayTableController.js'
 let db = sessionStorage.getItem("db")
 if(!db) db = "MySQL"
 
-const url = `http://localhost:8080/ts/${db}/query/`;//////////
+const domain = window.location.hostname;
+const url = `${domain}/ts/${db}/query/`;
 
 const consoleHeader = document.getElementById("databaseTitle")
 consoleHeader.innerHTML = db
@@ -15,7 +16,7 @@ getUserid().then((result) => userid = result)
 
 //Get a userid from the server, trying the saved userid first
 function getUserid() {
-    const idurl = "http://localhost:8080/assignid/"
+    const idurl = `${domain}/assignid/`
     let headers = {}
     const currid = localStorage.getItem("userid")
 

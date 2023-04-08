@@ -1,5 +1,8 @@
 import express from 'express'
 import axios from 'axios'
+import * as dotenv from 'dotenv'
+dotenv.config()
+
 
 export const postgresForwarder = express.Router();
 
@@ -11,7 +14,7 @@ postgresForwarder.route('/')
     .all(() => console.log("no userid!!!"))//////////////
 
 
-const dbMasterUrl = "http://localhost:8081"////////
+const dbMasterUrl = process.env.dbMasterUrl
 
 async function forward(req: any, res: any) {
 
