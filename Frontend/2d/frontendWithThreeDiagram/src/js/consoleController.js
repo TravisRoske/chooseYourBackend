@@ -5,7 +5,7 @@ let db = sessionStorage.getItem("db")
 if(!db) db = "MySQL"
 
 // const domain = window.location.origin;  // Doesn't work .... http://3.145.88.185:8080/dist/3.145.88.185
-const domain = 'http://3.145.88.185:8080' ////////////////Change this
+const domain = 'http://18.222.117.45:8080' ////////////////Change this
 
 const queryUrl = `${domain}/ts/${db}/query/`;
 

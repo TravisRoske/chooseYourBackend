@@ -13,6 +13,3 @@ export async function deletingProcess() {
         }
     }, 30000)
 }
-
-
-///////////set up tests for this
