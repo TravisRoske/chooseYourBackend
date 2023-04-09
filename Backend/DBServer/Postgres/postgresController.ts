@@ -59,7 +59,7 @@ async function initConnection(userid : string) : Promise<Client> {
 
         await client.connect()
 
-        await client.query(`CREATE TABLE IF NOT EXISTS tbl ( id serial primary key, firstName text, lastName text, username text, password text );`)
+        await client.query(`CREATE TABLE IF NOT EXISTS tbl ( id serial primary key, firstname text, lastname text, username text, password text );`)
     }
 
  

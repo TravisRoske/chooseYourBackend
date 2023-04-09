@@ -72,8 +72,8 @@ async function getRecord() {
 
 async function createRecord() {
 
-    const firstNameInput = document.querySelector('#firstName').value;
-    const lastNameInput = document.querySelector('#lastName').value;
+    const firstNameInput = document.querySelector('#firstname').value;
+    const lastNameInput = document.querySelector('#lastname').value;
     const usernameInput = document.querySelector('#username').value;
     const passwordInput = document.querySelector('#password').value;
 
@@ -83,9 +83,9 @@ async function createRecord() {
             "Content-Type": "application/json"
         },
         body : JSON.stringify({
-            "firstName": firstNameInput, 
-            "lastName":  lastNameInput, 
-            "userName":  usernameInput,
+            "firstname": firstNameInput, 
+            "lastname":  lastNameInput, 
+            "username":  usernameInput,
             "password":  passwordInput
         })
     })
@@ -100,8 +100,8 @@ async function createRecord() {
 
 async function updateRecord() {
 
-    const firstNameInput = document.querySelector('#firstName').value;
-    const lastNameInput = document.querySelector('#lastName').value;
+    const firstNameInput = document.querySelector('#firstname').value;
+    const lastNameInput = document.querySelector('#lastname').value;
     const usernameInput = document.querySelector('#username').value;
     const passwordInput = document.querySelector('#password').value;
     const idInput = document.querySelector('#id').value;
@@ -116,9 +116,9 @@ async function updateRecord() {
             "Content-Type": "application/json"
         },
         body : JSON.stringify({
-            "firstName": firstNameInput, 
-            "lastName":  lastNameInput, 
-            "userName":  usernameInput,
+            "firstname": firstNameInput, 
+            "lastname":  lastNameInput, 
+            "username":  usernameInput,
             "password":  passwordInput
         })
     })
