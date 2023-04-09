@@ -27,10 +27,21 @@ Databases(Dockerized)
 
 
 ToDo:
--Set up ci/cd for repos
+-Make Coming Soon tags
+-Make choose your password encryption tag
+-fix bugs
     
--Set up nginx, and other stuff like logging, server process and restart(main and dbserver), static ec2 ip address, etc
+-Set up nginx
+-set up  server process and restart(main and dbserver)
+-and other stuff like logging
 
+-clean up three code
+	-make object factory
+	-make lineobjects that glow
+
+-Choose json, xml, etc???
+
+-Set up ci/cd for repos
 -build tests for the backend
     -test each main function
     -end to end tests

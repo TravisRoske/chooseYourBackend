@@ -1,5 +1,4 @@
 import * as THREE from "three"
-// import ("c:/Users/TRavi/WebDev/threeDiagramTest/node_modules/@types/three/index")
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { DisplayNodeTest } from "./Classes/DisplayNodeTest";
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
@@ -156,7 +155,7 @@ function makeDiagram() {
 		scene.add(line2)
 		scene.add(line3)
 		scene.add(line4)
-	}, 1000);///////////////////////////
+	}, 1500);///////////////////////////
 
 
 
@@ -168,13 +167,13 @@ makeDiagram()
 function addLights(){
     const light = new THREE.PointLight(0xffffff, 3)
     scene.add(light)
-    light.position.set(-15, 15, 12)
+    light.position.set(-15, 20, 12)
     const light2 = new THREE.PointLight(0xffffff, 3)
     scene.add(light2)
-    light2.position.set(15, 15, 12)
+    light2.position.set(10, 2, 20)
     const light3 = new THREE.PointLight(0xffffff, 3)
     scene.add(light3)
-    light3.position.set(-5, 15, -12)
+    light3.position.set(-5, 20, -12)
 	const ambientLight = new THREE.AmbientLight(0xaaffaa, 2.5)
 	scene.add(ambientLight)
 }
