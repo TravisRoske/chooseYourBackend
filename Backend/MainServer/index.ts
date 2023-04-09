@@ -6,8 +6,6 @@ import path from 'path';
 const cors = require('cors');//////////////
 import rateLimit from 'express-rate-limit';
 
-import helmet from 'helmet';
-
 
 import { postgresForwarder } from './postgres/forwardPostgres.js';
 import { mysqlForwarder } from './mysql/forwardMysql.js';
@@ -35,9 +33,6 @@ const limiter2 = rateLimit({
 // Apply the rate limiting middleware to all requests
 app.use(limiter)
 app.use(limiter2)
-
-
-app.use(helmet());
 
 //I'll have to change this later because this just allows everything/////////
 app.use(cors());
