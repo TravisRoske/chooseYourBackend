@@ -216,7 +216,7 @@ export async function deletePartition(userid : string) : Promise<boolean> {
     const noDatabase = {
         host: process.env.postgresUrl,
         port: Number(process.env.postgresPort),
-        user: process.env.postgresUser,
+        user: process.env.postgresuser,
         password: process.env.postgresPassword
     }
     const client = new Client(noDatabase)
