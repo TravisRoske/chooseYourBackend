@@ -23,16 +23,16 @@ const limiter = rateLimit({
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
 
-const limiter2 = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	max: 2000, // Limit each IP to 2000 requests per `window` (here, per 15 minutes)
-	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-})
+// const limiter2 = rateLimit({
+// 	windowMs: 15 * 60 * 1000, // 15 minutes
+// 	max: 2000, // Limit each IP to 2000 requests per `window` (here, per 15 minutes)
+// 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+// 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+// })
 
 // Apply the rate limiting middleware to all requests
 app.use(limiter)
-app.use(limiter2)
+// app.use(limiter2)
 
 //I'll have to change this later because this just allows everything/////////
 app.use(cors());
