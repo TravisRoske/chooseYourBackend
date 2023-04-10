@@ -9,7 +9,7 @@ async function initConnection(userid : string) {
     const options = {
         host     :  process.env.mysqlUrl,
         port     :  Number(process.env.mysqlPort),
-        user     :  process.env.mysqluser,
+        user     :  process.env.mysqlUser,
         password :  process.env.mysqlPassword,
     }
     const connection = await mysql.createConnection(options);/////////////This could fail if connection fails
@@ -25,7 +25,7 @@ async function initConnection(userid : string) {
         await connection.query(`USE ${userid}`)
 
         await connection.execute(
-            `CREATE TABLE IF NOT EXISTS tbl ( id int not null auto_increment, firstName text, lastName text, username text, password text, primary key (id) );`
+            `CREATE TABLE IF NOT EXISTS tbl ( id int not null auto_increment, firstname text, lastname text, username text, password text, primary key (id) );`
         )
     } else {
         await connection.query(`USE ${userid}`)
@@ -165,7 +165,7 @@ export async function deletePartition(userid : string) : Promise<boolean> {
     const options = {
         host     :  process.env.mysqlUrl,
         port     :  Number(process.env.mysqlPort),
-        user     :  process.env.mysqluser,
+        user     :  process.env.mysqlUser,
         password :  process.env.mysqlPassword,
     }
     const connection = await mysql.createConnection(options);

@@ -1,6 +1,6 @@
 export default interface ObjectSchema {
-    firstName ?: string,
-    lastName ?: string,
-    userName: string,
+    firstname ?: string,
+    lastname ?: string,
+    username: string,
     password : string,
 }

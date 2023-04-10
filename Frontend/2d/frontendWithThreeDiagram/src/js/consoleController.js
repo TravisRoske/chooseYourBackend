@@ -4,8 +4,11 @@ import { deleteAllRows, display } from './displayTableController.js'
 let db = sessionStorage.getItem("db")
 if(!db) db = "MySQL"
 
-const domain = window.location.hostname;
-const url = `${domain}/ts/${db}/query/`;
+// const domain = window.location.origin;  // Doesn't work .... http://3.145.88.185:8080/dist/3.145.88.185
+const domain = 'http://18.190.58.1:8080' ////////////////Change this
+
+const queryUrl = `${domain}/ts/${db}/query/`;
+
 
 const consoleHeader = document.getElementById("databaseTitle")
 consoleHeader.innerHTML = db
@@ -54,7 +57,7 @@ async function getRecord() {
     if(idInput){
         idString = '?objectid=' + idInput
     }
-    fetch(url + userid + idString, {
+    fetch(queryUrl + userid + idString, {
         method: 'GET'
     })
     .then((response) => {
@@ -69,20 +72,20 @@ async function getRecord() {
 
 async function createRecord() {
 
-    const firstNameInput = document.querySelector('#firstName').value;
-    const lastNameInput = document.querySelector('#lastName').value;
+    const firstNameInput = document.querySelector('#firstname').value;
+    const lastNameInput = document.querySelector('#lastname').value;
     const usernameInput = document.querySelector('#username').value;
     const passwordInput = document.querySelector('#password').value;
 
-    fetch(url + userid, {
+    fetch(queryUrl + userid, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
         },
         body : JSON.stringify({
-            "firstName": firstNameInput, 
-            "lastName":  lastNameInput, 
-            "userName":  usernameInput,
+            "firstname": firstNameInput, 
+            "lastname":  lastNameInput, 
+            "username":  usernameInput,
             "password":  passwordInput
         })
     })
@@ -97,8 +100,8 @@ async function createRecord() {
 
 async function updateRecord() {
 
-    const firstNameInput = document.querySelector('#firstName').value;
-    const lastNameInput = document.querySelector('#lastName').value;
+    const firstNameInput = document.querySelector('#firstname').value;
+    const lastNameInput = document.querySelector('#lastname').value;
     const usernameInput = document.querySelector('#username').value;
     const passwordInput = document.querySelector('#password').value;
     const idInput = document.querySelector('#id').value;
@@ -107,15 +110,15 @@ async function updateRecord() {
         idString = '?objectid=' + idInput
     }
 
-    fetch(url + userid + idString, {
+    fetch(queryUrl + userid + idString, {
         method: 'PUT',
         headers: {
             "Content-Type": "application/json"
         },
         body : JSON.stringify({
-            "firstName": firstNameInput, 
-            "lastName":  lastNameInput, 
-            "userName":  usernameInput,
+            "firstname": firstNameInput, 
+            "lastname":  lastNameInput, 
+            "username":  usernameInput,
             "password":  passwordInput
         })
     })
@@ -135,7 +138,7 @@ async function deleteRecord() {
     if(idInput){
         idString = '?objectid=' + idInput
     }
-    fetch(url + userid + idString, {
+    fetch(queryUrl + userid + idString, {
         method: 'DELETE'
     })
     .then((response) => {

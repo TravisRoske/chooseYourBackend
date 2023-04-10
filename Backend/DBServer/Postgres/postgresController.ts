@@ -29,7 +29,7 @@ async function initConnection(userid : string) : Promise<Client> {
         //this could error for other reasons......../////////////
     } catch {
         //if not exists, create new db
-        console.log("no dang db")
+        console.log("no postgres db found")
         const noDatabase = {
             host: process.env.postgresUrl,
             port: Number(process.env.postgresPort),
@@ -53,13 +53,13 @@ async function initConnection(userid : string) : Promise<Client> {
     try {
         await client.query('SELECT * FROM tbl LIMIT 1;')
     } catch {
-        console.log("no dang tbl")
+        console.log("no postgres tbl")
 
         client = new Client(withDatabase)
 
         await client.connect()
 
-        await client.query(`CREATE TABLE IF NOT EXISTS tbl ( id serial primary key, firstName text, lastName text, username text, password text );`)
+        await client.query(`CREATE TABLE IF NOT EXISTS tbl ( id serial primary key, firstname text, lastname text, username text, password text );`)
     }
 
  
