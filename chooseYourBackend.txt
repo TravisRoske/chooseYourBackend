@@ -28,6 +28,8 @@ Databases(Dockerized)
 
 ToDo:
 -Make Coming Soon tags
+-Change console and disply css!
+-Add About me section
 -Make choose your password encryption tag
 -fix bugs
     
