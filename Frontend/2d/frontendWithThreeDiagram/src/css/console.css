@@ -10,13 +10,27 @@ form {
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
     padding: 20px;
     margin: 10px auto;
-    max-width: 500px;
+    max-width: 90%;
+}
+#formHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+#formHeader > * {
+    margin-left: 30px;
+    margin-right: 30px;
 }
 
-#formInputWrapper {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-gap: 10px;
+
+
+.formInputWrapper, .formButtonsWrapper{
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
 /* Style the form header */
@@ -24,7 +38,6 @@ form h2 {
     color: #555555;
     font-size: 28px;
     font-weight: 700;
-    margin-bottom: 30px;
     text-align: center;
     text-transform: uppercase;
 }
@@ -39,7 +52,8 @@ form input, form textarea {
     font-size: 14px;
     margin-bottom: 14px;
     padding: 15px;
-    width: 100%;
+    padding-top: 30px;
+    width: 200px;
 }
 
 /* Style the form submit button */
@@ -54,7 +68,7 @@ form button {
     font-weight: 700;
     padding: 15px;
     transition: background-color 0.2s ease-in-out;
-    width: 100%;
+    width: 200px;
 }
 
 form button:hover {
@@ -81,7 +95,21 @@ label[for][required]::after {
     color: #ff0000;
     margin-left: 5px;
 }
-#grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
+
+
+
+
+
+.inputDiv {
+    position: relative;
+}
+
+label {
+	font-size: 70%;
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+	
+	position: absolute;
+	top: 10px;
+	left: 10px;
 }

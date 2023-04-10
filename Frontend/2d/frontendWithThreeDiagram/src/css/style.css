@@ -13,8 +13,6 @@ html, body{
 }
 
 #database {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
   width: 90%;
   margin: auto;
 }

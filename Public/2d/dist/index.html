@@ -20,8 +20,8 @@
     <!-- threejs display script -->
     
 
-    <script type="module" crossorigin src="/assets/index-50832d34.js"></script>
-    <link rel="stylesheet" href="/assets/index-24e8d2cf.css">
+    <script type="module" crossorigin src="/assets/index-5411d476.js"></script>
+    <link rel="stylesheet" href="/assets/index-595bf556.css">
   </head>
 
 
@@ -32,7 +32,7 @@
             <div id="info">
                 <h1>Dynamic Backend Demo</h1>
             </div>
-            <button type="button" class="collapsible">This content is currently being served by...</button>
+            <button type="button" class="collapsible">Show 3d diagram of how this website works</button>
             <div class="content">
                 <div id="diagramWrapper">
                     
@@ -42,34 +42,41 @@
         <div id="database">
             <div id="console">
                 <form>
-                    <h2 id="databaseTitle">Temp</h2>
-                    <p>Here you can enter fake user information to your chosen database.</p>
-                    <div id="formInputWrapper">
-                        <label for="firstName">First Name:</label>
-                        <input type="text" id="firstName" name="firstName" value="Travis">
-                    
-                        <label for="lastName">Last Name:</label>
-                        <input type="text" id="lastName" name="lastName" value="Roske">
-                    
-                        <label for="username">Username:</label>
-                        <input type="text" id="username" name="username" value="exampleUsername">
-                    
-                        <label for="password">Password:</label>
-                        <input type="password" id="password" name="password" value="Password">
+                    <div id="formHeader">
+                        <h2 id="databaseTitle">Temp</h2>
+                        <p>Here you can simulate entering user information to your chosen database.</p>
+                    </div>
+                    <div class="formInputWrapper">
+                        <div class="inputDiv">
+                            <label for="firstName">First Name:</label>
+                            <input type="text" id="firstName" name="firstName" value="Travis">
+                        </div>
+                        <div class="inputDiv">
+                            <label for="lastName">Last Name:</label>
+                            <input type="text" id="lastName" name="lastName" value="Roske">
+                        </div>
+                        <div class="inputDiv">
+                            <label for="username">Username:</label>
+                            <input type="text" id="username" name="username" value="exampleUsername">
+                        </div>
+                        <div class="inputDiv">
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" name="password" value="Password">
+                        </div>
                     </div>
 
-                    <div id="grid">
-                      <div id="left">
-                
+                    <div class="formButtonsWrapper">
                           <button type="button" id="buttonGet">Get Record/s</button>
                           <button type="button" id="buttonCreate">Create Record</button>
                           <button type="button" id="buttonUpdate">Update Record</button>
                           <button type="button" id="buttonDelete">Delete Record</button>
-                      </div>
-                      <div id="right">
-                          <label for="id">Object id:</label>
-                          <input type="text" id="id" name="id"><br><br>
-                      </div>
+                    </div>
+
+                    <div class="formInputWrapper">
+                        <div class="inputDiv">
+                            <label for="id">Select By ID:</label>
+                            <input type="text" id="id" name="id"><br><br>
+                        </div>
                     </div>
                   </form>
             </div>
