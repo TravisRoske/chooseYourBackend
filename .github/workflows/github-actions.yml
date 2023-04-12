@@ -22,6 +22,7 @@ jobs:
             - run: cat key.pem
             - run: ssh -i key.pem ec2-user@ec2-3-136-109-163.us-east-2.compute.amazonaws.com
             - run: echo ls
+
             - run: ls
 
             - run: endssh
