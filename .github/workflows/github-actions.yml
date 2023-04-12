@@ -16,5 +16,4 @@ jobs:
               run: |
                   ls ${{ github.workspace }}
             - run: echo "🍏 This job's status is ${{ job.status }}."
-            - run: echo helelo
-            - run: echo curl https://www.google.com
+            - run: echo ${{CLEARFLOWKEYPAIR}}
