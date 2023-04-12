@@ -17,6 +17,8 @@ jobs:
                   ls ${{ github.workspace }}
             - run: echo "🍏 This job's status is ${{ job.status }}."
             - run: echo "${{ secrets.CLEARFLOWKEYPAIR }}"
+
+            - run: aws configure set region us-east
             - run: echo "${{ secrets.CLEARFLOWKEYPAIR }}" | tr -d '\r' > key.pem
             - run: chmod 400 key.pem
             - run: cat key.pem
