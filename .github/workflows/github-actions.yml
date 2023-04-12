@@ -23,7 +23,7 @@ jobs:
             - run: echo "${{ secrets.CLEARFLOWKEYPAIR }}" > key.pem
             - run: chmod 400 key.pem
             - run: cat key.pem
-            - run: ssh -tt StrictHostKeyChecking=no -i key.pem ec2-user@ec2-3-136-109-163.us-east-2.compute.amazonaws.com
+            - run: ssh -tt -o StrictHostKeyChecking=no -i key.pem ec2-user@ec2-3-136-109-163.us-east-2.compute.amazonaws.com
             - run: echo ls
 
             - run: ls
