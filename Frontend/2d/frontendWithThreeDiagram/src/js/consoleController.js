@@ -12,6 +12,27 @@ const queryUrl = `${domain}/ts/${db}/query/`;
 
 const consoleHeader = document.getElementById("databaseTitle")
 consoleHeader.innerHTML = db
+let styleColor = ""
+switch(db) {
+    case "Mongo" :
+        styleColor = "#07ab4f"
+        break;
+    case "Postgres" :
+        styleColor = "#2db2ff"
+        break;
+    case "MySQL" :
+        styleColor = "#e48e00"
+        break;
+}
+consoleHeader.style.color = styleColor;
+const buttons = document.getElementsByClassName('formButtons');
+console.log("wrapper", buttons)
+for(let i = 0; i < buttons.length; i++) {
+    console.log(buttons[i])
+    // if (buttons[i].hasOwnProperty(i)) {
+        buttons[i].style.backgroundColor = styleColor;
+    // }
+}
 
 
 let userid = ""
