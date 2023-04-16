@@ -10,7 +10,7 @@ jobs:
               DBSERVERURL: ${{ secrets.DBSERVERURL }}
               UPDATEPORT: ${{ secrets.UPDATEPORT }}
 
-            - run: curl "$MAINSERVERURL":"$UPDATEPORT"/update
-            - run: curl "$DBSERVERURL":"$UPDATEPORT"/update
+            - run: curl "$env:MAINSERVERURL":"$Uenv:PDATEPORT"/update
+            - run: curl "$env:DBSERVERURL":"$env:UPDATEPORT"/update
 
             - run: echo "🍏 This job's status is ${{ job.status }}."
