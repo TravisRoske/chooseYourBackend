@@ -9,7 +9,7 @@ jobs:
             - name: curl server endpoints
               run: |
                   echo "$env:MAINSERVERURL"/update
-                  echo "$env:DBSERVERURL":"$env:UPDATEPORT"/update
+                  echo "$env:DBSERVERURL":"$UPDATEPORT"/update
               env: # Set the secret as an input
                   MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
             - run: echo "🍏 This job's status is ${{ job.status }}."
