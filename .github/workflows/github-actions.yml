@@ -5,7 +5,9 @@ jobs:
     Explore-GitHub-Actions:
         runs-on: ubuntu-latest
         steps:
-            - run: curl ${{ secrets.MAINSERVERURL }}:${{ secrets.UPDATEPORT }}/update
+            - run: echo ${{ secrets.MAINSERVERURL }}:${{ secrets.UPDATEPORT }}/update
+            - run: echo ${{ secrets.MAINSERVERURL }}:${{ secrets.UPDATEPORT }}/update
+            - run: curl ${{ secrets.DBSERVERURL }}:${{ secrets.UPDATEPORT }}/update
             - run: curl ${{ secrets.DBSERVERURL }}:${{ secrets.UPDATEPORT }}/update
 
             - run: echo "🍏 This job's status is ${{ job.status }}."
