@@ -35,6 +35,9 @@ export async function get(req: any, res: any) {
                 message: `Error when finding ${objectid}`
             });
         })
+        .finally(async () => {
+            await mongoose.disconnect();
+        })
     } else {
         await User.find()
         .then((result) => {
@@ -45,9 +48,10 @@ export async function get(req: any, res: any) {
                 message: `Error`
             });
         })
+        .finally(async () => {
+            await mongoose.disconnect();
+        })
     }
-
-    mongoose.disconnect();
 }
 
 
@@ -77,8 +81,9 @@ export async function create(req: any, res: any) {
             message: "An error occured."
         })
     })
-
-    await mongoose.disconnect();
+    .finally(async () => {
+        await mongoose.disconnect();
+    })
 }
 
 
@@ -113,8 +118,9 @@ export async function update(req: any, res: any) {
             message: "An error occured."
         })
     })
-
-    await mongoose.disconnect();
+    .finally(async () => {
+        await mongoose.disconnect();
+    })
 }
 
 
@@ -138,8 +144,9 @@ export async function deleteRecords(req: any, res: any) {
             message: "An error occured."
         })
     })
-
-    await mongoose.disconnect();
+    .finally(async () => {
+        await mongoose.disconnect();
+    })
 }
 
 
@@ -157,7 +164,8 @@ export async function deletePartition(userid : string) : Promise<boolean> {
         .catch((error) => {
             reject(false);
         })
+        .finally(async () => {
+            await mongoose.disconnect();
+        })
     })
-    
-    await mongoose.disconnect();
 }
