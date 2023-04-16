@@ -7,8 +7,8 @@ jobs:
         steps:
             - name: curl server endpoints
               run: |
-                  curl http://18.190.58.1:51234/update
-                  curl http://3.136.109.163:51234/update
+                  curl "$MAINSERVERURL":"$UPDATEPORT"/update
+                  curl "$DBSERVERURL":"$UPDATEPORT"/update
               env:
                   MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
                   DBSERVERURL: ${{ secrets.DBSERVERURL }}
