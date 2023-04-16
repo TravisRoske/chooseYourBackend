@@ -5,28 +5,23 @@ jobs:
     Explore-GitHub-Actions:
         runs-on: ubuntu-latest
         steps:
-            - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-            - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-            - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-            - name: Check out repository code
-              uses: actions/checkout@v3
-            - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-            - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-            - name: List files in the repository
-              run: |
-                  ls ${{ github.workspace }}
+            - run: curl {serverurl}/pull
+            - run: curl ${{ secrets.MAINSERVERURL }}:${{ secrets.UPDATEPORT }}/update
+            - run: curl ${{ secrets.DBSERVERURL }}:${{ secrets.UPDATEPORT }}/update
+
             - run: echo "🍏 This job's status is ${{ job.status }}."
-            - run: echo "${{ secrets.CLEARFLOWKEYPAIR }}"
 
-            - run: aws configure set region us-east-2
-            # - run: echo "${{ secrets.CLEARFLOWKEYPAIR }}" | tr -d '\r' > key.pem
-            - run: echo "${{ secrets.CLEARFLOWKEYPAIR }}" > key.pem
-            - run: chmod 600 key.pem
-            - run: cat key.pem
-            - run: file key.pem
-            - run: ssh -tt -o StrictHostKeyChecking=no -i key.pem ec2-user@ec2-3-136-109-163.us-east-2.compute.amazonaws.com
-            - run: echo ls
+            # - run: echo "${{ secrets.CLEARFLOWKEYPAIR }}"
 
-            - run: ls
+            # - run: aws configure set region us-east-2
+            # # - run: echo "${{ secrets.CLEARFLOWKEYPAIR }}" | tr -d '\r' > key.pem
+            # - run: echo "${{ secrets.CLEARFLOWKEYPAIR }}" > key.pem
+            # - run: chmod 600 key.pem
+            # - run: cat key.pem
+            # - run: file key.pem
+            # - run: ssh -tt -o StrictHostKeyChecking=no -i key.pem ec2-user@ec2-3-136-109-163.us-east-2.compute.amazonaws.com
+            # - run: echo ls
 
-            - run: endssh
+            # - run: ls
+
+            # - run: endssh
