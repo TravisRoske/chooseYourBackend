@@ -11,4 +11,6 @@ jobs:
                   echo "$env:DBSERVERURL":"$UPDATEPORT"/update
               env: # Set the secret as an input
                   MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
+                  DBSERVERURL: ${{ secrets.DBSERVERURL }}
+                  UPDATEPORT: ${{ secrets.UPDATEPORT }}
             - run: echo "🍏 This job's status is ${{ job.status }}."
