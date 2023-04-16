@@ -77,6 +77,8 @@ export async function create(req: any, res: any) {
             message: "An error occured."
         })
     })
+
+    await mongoose.disconnect();
 }
 
 
@@ -99,7 +101,6 @@ export async function update(req: any, res: any) {
         username : req.body?.username,
         password : req.body?.password
     }
-    console.log("update", update)
 
     await initConnection(userid)
 
@@ -112,6 +113,8 @@ export async function update(req: any, res: any) {
             message: "An error occured."
         })
     })
+
+    await mongoose.disconnect();
 }
 
 
@@ -135,6 +138,8 @@ export async function deleteRecords(req: any, res: any) {
             message: "An error occured."
         })
     })
+
+    await mongoose.disconnect();
 }
 
 
@@ -153,5 +158,6 @@ export async function deletePartition(userid : string) : Promise<boolean> {
             reject(false);
         })
     })
-
+    
+    await mongoose.disconnect();
 }
