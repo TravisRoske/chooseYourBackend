@@ -5,7 +5,7 @@ jobs:
     Explore-GitHub-Actions:
         runs-on: ubuntu-latest
         steps:
-            with: # Set the secret as an input
+            env: # Set the secret as an input
               MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
               DBSERVERURL: ${{ secrets.DBSERVERURL }}
               UPDATEPORT: ${{ secrets.UPDATEPORT }}
