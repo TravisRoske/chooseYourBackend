@@ -5,10 +5,10 @@ jobs:
     Explore-GitHub-Actions:
         runs-on: ubuntu-latest
         steps:
-            - name: Stuff
+            - name: Send curls to server endpoints
               run: |
-                  curl "$env:MAINSERVERURL"/update
-                  curl "$env:DBSERVERURL":"$env:UPDATEPORT"/update
+                  echo "$env:MAINSERVERURL"/update
+                  echo "$env:DBSERVERURL":"$env:UPDATEPORT"/update
               env: # Set the secret as an input
                   MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
             - run: echo "🍏 This job's status is ${{ job.status }}."
