@@ -7,8 +7,8 @@ jobs:
         steps:
             - name: curl server endpoints
               run: |
-                  echo "$env:MAINSERVERURL"/update
-                  echo DBSERVERURL:"$UPDATEPORT"/update
+                  echo "$MAINSERVERURL":"$UPDATEPORT"/update
+                  echo "$DBSERVERURL":"$UPDATEPORT"/update
               env: # Set the secret as an input
                   MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
                   DBSERVERURL: ${{ secrets.DBSERVERURL }}
