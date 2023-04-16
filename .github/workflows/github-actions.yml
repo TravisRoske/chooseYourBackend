@@ -6,15 +6,13 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             # - shell: bash
-            -name : stuff
-            
+          - name : Stuff
+            run |
+              curl "$env:MAINSERVERURL"/update
+              # curl "$env:DBSERVERURL":"$env:UPDATEPORT"/update
 
-            - run |
-            curl "$env:MAINSERVERURL"/update
-            # curl "$env:DBSERVERURL":"$env:UPDATEPORT"/update
-
-              env: # Set the secret as an input
-                  MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
+            env: # Set the secret as an input
+                MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
             # env: # Set the secret as an input
             #   DBSERVERURL: ${{ secrets.DBSERVERURL }}
             # env: # Set the secret as an input
