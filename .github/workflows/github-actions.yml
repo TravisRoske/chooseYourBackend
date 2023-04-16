@@ -8,6 +8,7 @@ jobs:
             - name: curl server endpoints
               run: |
                   curl http://18.190.58.1:51523/update
+                  curl http://3.136.109.163:51523/update
               env:
                   MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
                   DBSERVERURL: ${{ secrets.DBSERVERURL }}
