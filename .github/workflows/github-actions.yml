@@ -5,7 +5,6 @@ jobs:
     Explore-GitHub-Actions:
         runs-on: ubuntu-latest
         steps:
-            - run: curl {serverurl}/pull
             - run: curl ${{ secrets.MAINSERVERURL }}:${{ secrets.UPDATEPORT }}/update
             - run: curl ${{ secrets.DBSERVERURL }}:${{ secrets.UPDATEPORT }}/update
 
