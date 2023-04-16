@@ -7,15 +7,17 @@ jobs:
         steps:
             # - shell: bash
             -name : stuff
+            
+
+            - run |
+            curl "$env:MAINSERVERURL"/update
+            # curl "$env:DBSERVERURL":"$env:UPDATEPORT"/update
+
               env: # Set the secret as an input
                   MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
             # env: # Set the secret as an input
             #   DBSERVERURL: ${{ secrets.DBSERVERURL }}
             # env: # Set the secret as an input
             #   UPDATEPORT: ${{ secrets.UPDATEPORT }}
-
-            - run |
-            curl "$env:MAINSERVERURL"/update
-            curl "$env:DBSERVERURL":"$env:UPDATEPORT"/update
 
             - run: echo "🍏 This job's status is ${{ job.status }}."
