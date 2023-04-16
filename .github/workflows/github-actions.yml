@@ -5,17 +5,11 @@ jobs:
     Explore-GitHub-Actions:
         runs-on: ubuntu-latest
         steps:
-          - name : Stuff
-            run: |
-              curl http://www.google.com
-              curl "$env:MAINSERVERURL"/update
-              curl "$env:DBSERVERURL":"$env:UPDATEPORT"/update
-            env: # Set the secret as an input
-                MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
-            - run: echo "🍏 This job's status is ${{ job.status }}."
-
-
-            # env: # Set the secret as an input
-            #   DBSERVERURL: ${{ secrets.DBSERVERURL }}
-            # env: # Set the secret as an input
-            #   UPDATEPORT: ${{ secrets.UPDATEPORT }}
+            - name: Stuff
+              run: |
+                  curl http://www.google.com
+            #       curl "$env:MAINSERVERURL"/update
+            #       curl "$env:DBSERVERURL":"$env:UPDATEPORT"/update
+            #   env: # Set the secret as an input
+            #       MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
+            # - run: echo "🍏 This job's status is ${{ job.status }}."
