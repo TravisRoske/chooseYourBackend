@@ -5,7 +5,8 @@ jobs:
     Explore-GitHub-Actions:
         runs-on: ubuntu-latest
         steps:
-            - name: Send curls to server endpoints
+            - shell: bash
+            - name: curl server endpoints
               run: |
                   echo "$env:MAINSERVERURL"/update
                   echo "$env:DBSERVERURL":"$env:UPDATEPORT"/update
