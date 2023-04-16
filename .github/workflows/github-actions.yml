@@ -16,5 +16,5 @@ jobs:
             - run:
                   echo "🍏 This job's status is ${{ job.status }}."
 
-                  # curl "$MAINSERVERURL":"$UPDATEPORT"/update
+                  # adsfsacurl "$MAINSERVERURL":"$UPDATEPORT"/update
                   # curl "$DBSERVERURL":"$UPDATEPORT"/update
