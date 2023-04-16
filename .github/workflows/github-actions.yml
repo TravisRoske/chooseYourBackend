@@ -5,9 +5,9 @@ jobs:
     Explore-GitHub-Actions:
         runs-on: ubuntu-latest
         steps:
-            # - shell: bash
-            env: # Set the secret as an input
-              MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
+            - shell: bash
+              with: # Set the secret as an input
+                  MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
             # env: # Set the secret as an input
             #   DBSERVERURL: ${{ secrets.DBSERVERURL }}
             # env: # Set the secret as an input
