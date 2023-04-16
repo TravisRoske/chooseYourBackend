@@ -6,9 +6,9 @@ import path from 'path';
 const cors = require('cors');//////////////
 import rateLimit from 'express-rate-limit';
 
-
-import { postgresForwarder } from './postgres/forwardPostgres.js';
 import { mysqlForwarder } from './mysql/forwardMysql.js';
+import { postgresForwarder } from './postgres/forwardPostgres.js';
+import { mongoForwarder } from './mongo/forwardMongo.js';
 
 const port = process.env.port;
 const dbMasterUrl = process.env.dbMasterUrl;
@@ -65,6 +65,8 @@ app.get("/assignid/:userid", (req, res) => {
 app.use("/ts/mysql/query", mysqlForwarder)
 
 app.use("/ts/postgres/query", postgresForwarder)
+
+app.use("/ts/mongo/query", mongoForwarder)
 
 
 const publicDirectoryPath = path.join(__dirname, '../../../Public/2d')
