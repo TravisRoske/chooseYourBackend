@@ -21,7 +21,6 @@ async function initConnection() {
         user     :  process.env.dbUsersMasterUser,
         password :  process.env.dbUsersMasterPassword,
     }
-    console.log(options)
     const connection = await mysql.createConnection(options);
 
     const dbUsersMaster = "dbUsersMaster"

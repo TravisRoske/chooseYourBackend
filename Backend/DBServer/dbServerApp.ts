@@ -1,6 +1,7 @@
 import express from 'express'
 import { requestLogger } from './middleware/requestLogger.js'
 import { assignUserid } from './manager/assignUserid.js'
+import { mongoRouter } from './Mongo/mongoRouter.js'
 import { mySQLRouter } from './MySQL/mySQLRouter.js'
 import { postgresRouter } from './Postgres/postgresRouter.js';
 import { update } from './manager/dbManager.js'
@@ -36,6 +37,6 @@ app.use('/ts/mysql', mySQLRouter)
 
 app.use('/ts/postgres', postgresRouter)
 
-// //app.use('/ts/mongo', mongoRouter)
+app.use('/ts/mongo', mongoRouter)
 
 export { app }
