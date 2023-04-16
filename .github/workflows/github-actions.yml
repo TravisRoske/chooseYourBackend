@@ -13,7 +13,7 @@ jobs:
             # env: # Set the secret as an input
             #   UPDATEPORT: ${{ secrets.UPDATEPORT }}
 
-            - run: curl "$env:MAINSERVERURL":"$Uenv:PDATEPORT"/update
+            - run: curl "${{ secrets.MAINSERVERURL }}":"${{ secrets.MAINSERVERURL }}"/update
             - run: curl "$env:DBSERVERURL":"$env:UPDATEPORT"/update
 
             - run: echo "🍏 This job's status is ${{ job.status }}."
