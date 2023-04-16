@@ -16,7 +16,7 @@
 
         <div class="container">
 
-            <div class="btn" id="mongo"><a>MongoDB(Coming Soon)</a></div>
+            <div class="btn" id="mongo"><a>MongoDB</a></div>
 
             <div class="btn" id="postgres"><a>Postgres</a></div>
 
@@ -25,11 +25,11 @@
         </div>
         
         <script>
-            // const mongoButton = document.getElementById("mongo")
-            // mongoButton.children[0].href = `/dist/index.html` 
-            // document.getElementById("mongo").addEventListener("click", () => {
-            //     sessionStorage.setItem("db", "MongoDB")
-            // })
+            const mongoButton = document.getElementById("mongo")
+            mongoButton.children[0].href = `/dist/index.html` 
+            document.getElementById("mongo").addEventListener("click", () => {
+                sessionStorage.setItem("db", "MongoDB")
+            })
 
             const postgresButton = document.getElementById("postgres")
             postgresButton.children[0].href = `/dist/index.html` 
