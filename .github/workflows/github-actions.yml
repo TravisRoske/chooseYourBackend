@@ -2,7 +2,7 @@ name: CD on Servers
 run-name: ${{ github.actor }} initiated githubActions sequence.
 on: [push]
 jobs:
-    Explore-GitHub-Actions:
+    Update Servers:
         runs-on: ubuntu-latest
         steps:
             - name: curl server endpoints
