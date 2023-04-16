@@ -7,9 +7,8 @@ jobs:
         steps:
             - name: Stuff
               run: |
-                  curl http://www.google.com
-            #       curl "$env:MAINSERVERURL"/update
-            #       curl "$env:DBSERVERURL":"$env:UPDATEPORT"/update
-            #   env: # Set the secret as an input
-            #       MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
-            # - run: echo "🍏 This job's status is ${{ job.status }}."
+                  curl "$env:MAINSERVERURL"/update
+                  curl "$env:DBSERVERURL":"$env:UPDATEPORT"/update
+              env: # Set the secret as an input
+                  MAINSERVERURL: ${{ secrets.MAINSERVERURL }}
+            - run: echo "🍏 This job's status is ${{ job.status }}."
