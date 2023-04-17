@@ -1,8 +1,8 @@
 import { deleteAllRows, display } from './displayTableController.js';
-import { createHash } from 'crypto';
-import * as bcrypt from 'bcrypt'
-// const { createHash } = require( 'crypto' );
-// const bcrypt = require( 'bcrypt' );
+// import { createHash } from 'crypto';
+// import * as bcrypt from 'bcrypt'
+const { createHash } = require( 'crypto' );
+const bcrypt = require( 'bcrypt' );
 
 
 const domain = 'http://18.190.58.1:8080' ////////////////Change this
