@@ -1,38 +1,39 @@
-import { deleteAllRows, display } from './displayTableController.js'
+import { deleteAllRows, display } from './displayTableController.js';
+// import { createHash } from 'crypto';
+// import * as bcrypt from 'bcrypt'
+const { createHash } = require( 'crypto' );
+const bcrypt = require( 'bcrypt' );
 
 
-let db = sessionStorage.getItem("db")
-if(!db) db = "MySQL"
-
-// const domain = window.location.origin;  // Doesn't work .... http://3.145.88.185:8080/dist/3.145.88.185
 const domain = 'http://18.190.58.1:8080' ////////////////Change this
 
 const queryUrl = `${domain}/ts/${db}/query/`;
 
-
-const consoleHeader = document.getElementById("databaseTitle")
-consoleHeader.innerHTML = db
-let styleColor = ""
-switch(db) {
-    case "Mongo" :
-        styleColor = "#07ab4f"
-        break;
-    case "Postgres" :
-        styleColor = "#2db2ff"
-        break;
-    case "MySQL" :
-        styleColor = "#e48e00"
-        break;
-}
-consoleHeader.style.color = styleColor;
-const buttons = document.getElementsByClassName('formButtons');
-console.log("wrapper", buttons)
-for(let i = 0; i < buttons.length; i++) {
-    console.log(buttons[i])
-    // if (buttons[i].hasOwnProperty(i)) {
+function setStyles(){
+    let db = sessionStorage.getItem("db")
+    if(!db) db = "MySQL"
+    
+    const consoleHeader = document.getElementById("databaseTitle")
+    consoleHeader.innerHTML = db
+    let styleColor = ""
+    switch(db) {
+        case "Mongo" :
+            styleColor = "#07ab4f"
+            break;
+        case "Postgres" :
+            styleColor = "#2db2ff"
+            break;
+        case "MySQL" :
+            styleColor = "#e48e00"
+            break;
+    }
+    consoleHeader.style.color = styleColor;
+    const buttons = document.getElementsByClassName('formButtons');
+    for(let i = 0; i < buttons.length; i++) {
         buttons[i].style.backgroundColor = styleColor;
-    // }
+    }
 }
+setStyles();
 
 
 let userid = ""
@@ -96,7 +97,8 @@ async function createRecord() {
     const firstNameInput = document.querySelector('#firstname').value;
     const lastNameInput = document.querySelector('#lastname').value;
     const usernameInput = document.querySelector('#username').value;
-    const passwordInput = document.querySelector('#password').value;
+    let passwordInput = document.querySelector('#password').value;
+    passwordInput = encryptPassword(passwordInput)
 
     fetch(queryUrl + userid, {
         method: 'POST',
@@ -124,7 +126,9 @@ async function updateRecord() {
     const firstNameInput = document.querySelector('#firstname').value;
     const lastNameInput = document.querySelector('#lastname').value;
     const usernameInput = document.querySelector('#username').value;
-    const passwordInput = document.querySelector('#password').value;
+    let passwordInput = document.querySelector('#password').value;
+    passwordInput = encryptPassword(passwordInput)
+
     const idInput = document.querySelector('#id').value;
     let idString = ''
     if(idInput){
@@ -171,3 +175,28 @@ async function deleteRecord() {
     })
 }
 
+function encryptPassword(password) {
+    let encryption = sessionStorage.getItem("encryption");
+    if(!encryption) encryption = "none";
+
+
+    return password/////////
+    // switch(encryption) {
+    //     case "none" :
+    //         return password;
+    //         break;
+    //     case "sha256" :
+    //         return createHash('sha256').update(string).digest('hex');
+    //         break;
+    //     case "bcrypt" :
+    //         const rounds = 10
+    //         bcrypt.hash(password, rounds, (err, hash) => {
+    //         if (err) {
+    //             console.error(err)
+    //             return
+    //         }
+    //         })
+    //         return bcrypt(password)
+    //         break;
+    // }
+}

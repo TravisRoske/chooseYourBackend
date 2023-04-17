@@ -11,16 +11,14 @@
   </head>
     <body>
         <div>
-            <h1>Choose Your Password Security Policy</h1>
+            <h1>Choose Your Password Encryption Method</h1>
         </div>
 
         <div class="container">
 
-            <div class="btn" id="none"><a>No Encryption</a></div>
+            <div class="btn" id="none"><a>none</a></div>
 
-            <div class="btn" id="sha"><a>sha....</a></div>
-
-            <div class="btn" id="shasalt"><a>sha and salt</a></div>
+            <div class="btn" id="sha256"><a>sha256</a></div>
 
             <div class="btn" id="bcrypt"><a>bcrypt</a></div>
 
@@ -28,22 +26,22 @@
         
 
         <script>
-            const mongoButton = document.getElementById("mongo")
-            mongoButton.children[0].href = `/dist/index.html` 
-            document.getElementById("mongo").addEventListener("click", () => {
-                sessionStorage.setItem("db", "MongoDB")
+            const noneButton = document.getElementById("none")
+            noneButton.children[0].href = `/dist/index.html` 
+            document.getElementById("none").addEventListener("click", () => {
+                sessionStorage.setItem("encryption", "none")
             })
 
-            const postgresButton = document.getElementById("postgres")
-            postgresButton.children[0].href = `/dist/index.html` 
-            document.getElementById("postgres").addEventListener("click", () => {
-                sessionStorage.setItem("db", "Postgres")
+            const sha256Button = document.getElementById("sha256")
+            sha256Button.children[0].href = `/dist/index.html` 
+            document.getElementById("sha256").addEventListener("click", () => {
+                sessionStorage.setItem("encryption", "sha256")
             })
 
-            const mysqlButton = document.getElementById("mysql")
-            mysqlButton.children[0].href = `/dist/index.html`
-            document.getElementById("mysql").addEventListener("click", () => {
-                sessionStorage.setItem("db", "MySQL")
+            const bcryptButton = document.getElementById("bcrypt")
+            bcryptButton.children[0].href = `/dist/index.html`
+            document.getElementById("bcrypt").addEventListener("click", () => {
+                sessionStorage.setItem("encryption", "bcrypt")
             })
         </script>
     </body>
