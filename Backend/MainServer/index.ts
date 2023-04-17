@@ -15,7 +15,6 @@ const dbMasterUrl = process.env.dbMasterUrl;
 
 const app = express();
 
-
 const limiter = rateLimit({
 	windowMs: 10 * 1000, // 10 seconds
 	max: 20, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
