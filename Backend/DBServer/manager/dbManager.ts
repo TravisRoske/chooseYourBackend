@@ -2,6 +2,7 @@ import * as mysql from 'mysql2/promise'
 import * as dotenv from 'dotenv'
 import { deletePartition as mysqlDeletePartition } from '../MySQL/mySQLController';
 import { deletePartition as postgresDeletePartition } from '../Postgres/postgresController';
+import { deletePartition as mongoDeletePartition } from '../Mongo/mongoController';
 
 dotenv.config()
 
@@ -182,7 +183,7 @@ export async function deleteUserPartitions (userid: string, dbsUsed : number, se
         postgresDeletePartition(userid)
     }
     if(dbsUsed & 4){
-        //mongo
+        mongoDeletePartition(userid)
     }
 }
 

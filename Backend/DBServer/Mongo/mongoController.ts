@@ -165,16 +165,25 @@ export async function deletePartition(userid : string) : Promise<boolean> {
         return false;
     }
 
-    return new Promise((resolve, reject) => {
-        mongoose.connection.db.dropCollection(userid)
-        .then((result) => {
-            resolve(true);
-        })
-        .catch((error) => {
-            reject(false);
-        })
-        .finally(async () => {
-            await mongoose.disconnect();
-        })
+    return new Promise(async (resolve, reject) => {
+        // mongoose.connection.dropCollection(userid)
+        // mongoose.connection.db.dropCollection(userid)
+
+///////
+        await mongoose.disconnect();
+        const conn = mongoose.createConnection(`mongodb://127.0.0.1:27017/${userid}`);
+        // Deletes the entire 'mydb' database
+        await conn.dropDatabase();
+///////////
+
+        // .then((result) => {
+        //     resolve(true);
+        // })
+        // .catch((error) => {
+        //     reject(false);
+        // })
+        // .finally(async () => {
+        //     await mongoose.disconnect();
+        // })
     })
 }
