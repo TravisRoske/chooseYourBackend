@@ -1,6 +1,7 @@
 import { deleteAllRows, display } from './displayTableController.js';
 // import { createHash } from 'crypto';
 // import * as bcrypt from 'bcrypt'
+
 const { createHash } = require( 'crypto' );
 const bcrypt = require( 'bcrypt' );
 
