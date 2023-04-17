@@ -7,12 +7,11 @@ import { deleteAllRows, display } from './displayTableController.js';
 
 
 const domain = 'http://18.190.58.1:8080' ////////////////
+let db = sessionStorage.getItem("db")
+if(!db) db = "MySQL"
 
 const queryUrl = `${domain}/ts/${db}/query/`;
 
-
-    let db = sessionStorage.getItem("db")
-    if(!db) db = "MySQL"
     
     const consoleHeader = document.getElementById("databaseTitle")
     consoleHeader.innerHTML = db
