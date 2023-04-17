@@ -11,15 +11,13 @@ const connectionUri = 'mongodb://127.0.0.1:27017/'
 
 
 async function initConnection(userid : string) {
-    console.log("Trying to connect", userid)
     await mongoose.connect(connectionUri + userid)
-    console.log("connected", userid)
 }
 
 export async function get(req: any, res: any) {
 
     const userid : string = req.params.userid;
-    const objectid : string = req.query.objectid;
+    const objectid : Number = parseInt(req.query.objectid);
     if(!userid){
         return res.status(401).send({
             message: `Request doesn't contain the proper information`
@@ -28,7 +26,7 @@ export async function get(req: any, res: any) {
     await initConnection(userid)
 
     if(objectid){
-        await User.find({_id: objectid})
+        await User.find({id: objectid})
         .then((result) => {
             return res.status(200).send(result)
         })
@@ -66,13 +64,20 @@ export async function create(req: any, res: any) {
         });
     }
 
+    await initConnection(userid)
+
     const newUser = new User();
     newUser.firstname = req.body?.firstname;
     newUser.lastname = req.body?.lastname;
     newUser.username = req.body?.username;
     newUser.password = req.body?.password;
-
-    await initConnection(userid)
+    
+    const highestid = await User.find().sort({id:-1}).limit(1);
+    if(highestid[0]?.id){
+        newUser.id = highestid[0].id + 1;
+    } else {
+        newUser.id = 1;
+    }
 
     newUser.save()
     .then((result) => {
@@ -92,7 +97,7 @@ export async function create(req: any, res: any) {
 export async function update(req: any, res: any) {
 
     const userid : string = req.params.userid;
-    const objectid : string = req.query.objectid;
+    const objectid : Number = parseInt(req.query.objectid);
     if(!userid || !objectid || !req.body ){
         return res.status(401).send({
             message: `Request doesn't contain the proper information`
@@ -101,8 +106,9 @@ export async function update(req: any, res: any) {
     
     console.log("updating", objectid)
 
-    const filter = { _id: objectid };
+    const filter = { id: objectid };
     const update : IUser = {
+        id : objectid,
         firstname : req.body?.firstname,
         lastname : req.body?.lastname,
         username : req.body?.username,
@@ -127,8 +133,9 @@ export async function update(req: any, res: any) {
 
 
 export async function deleteRecords(req: any, res: any) {
-    const userid : string = req.params.userid
-    const objectid : string = req.query.objectid
+
+    const userid : string = req.params.userid;
+    const objectid : Number = parseInt(req.query.objectid);
     if(!userid || !objectid){
         return res.status(401).send({
             message: `Request doesn't contain the proper information`
@@ -137,7 +144,7 @@ export async function deleteRecords(req: any, res: any) {
 
     await initConnection(userid)
 
-    await User.deleteOne({ _id : objectid })
+    await User.deleteOne({ id : objectid })
     .then((result) => {
         return res.status(200).send(result);
     })
@@ -151,7 +158,7 @@ export async function deleteRecords(req: any, res: any) {
     })
 }
 
-
+//Haven't tested this yet///////
 export async function deletePartition(userid : string) : Promise<boolean> {
     if(!userid){
         console.log("No valid userid!  userid:", userid);
