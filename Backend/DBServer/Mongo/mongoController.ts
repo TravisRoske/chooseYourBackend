@@ -7,6 +7,7 @@ import { User, IUser } from './UserSchema.js'
 const connectionUri = 'mongodb://127.0.0.1:27017/'  
 // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if database has auth enabled
 
+
 async function initConnection(userid : string) {
     await mongoose.connect(connectionUri + userid)
 }
