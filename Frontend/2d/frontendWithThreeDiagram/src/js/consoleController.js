@@ -10,7 +10,7 @@ const domain = 'http://18.190.58.1:8080' ////////////////Change this
 
 const queryUrl = `${domain}/ts/${db}/query/`;
 
-function setStyles(){
+
     let db = sessionStorage.getItem("db")
     if(!db) db = "MySQL"
     
@@ -33,8 +33,6 @@ function setStyles(){
     for(let i = 0; i < buttons.length; i++) {
         buttons[i].style.backgroundColor = styleColor;
     }
-}
-setStyles();
 
 
 let userid = ""
@@ -65,8 +63,6 @@ function getUserid() {
     })
     return prom
 }
-
-
 
 document.getElementById('buttonGet').addEventListener('click', getRecord)
 document.getElementById('buttonCreate').addEventListener('click', createRecord)
@@ -182,22 +178,5 @@ function encryptPassword(password) {
 
 
     return password/////////
-    // switch(encryption) {
-    //     case "none" :
-    //         return password;
-    //         break;
-    //     case "sha256" :
-    //         return crypto.createHash('sha256').update(string).digest('hex');
-    //         break;
-    //     case "bcrypt" :
-    //         const rounds = 10
-    //         bcrypt.hash(password, rounds, (err, hash) => {
-    //         if (err) {
-    //             console.error(err)
-    //             return
-    //         }
-    //         })
-    //         return bcrypt(password)
-    //         break;
-    // }
+
 }
