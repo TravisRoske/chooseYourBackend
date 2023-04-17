@@ -1,6 +1,6 @@
 import { deleteAllRows, display } from './displayTableController.js';
-import { createHash } from 'crypto';
-import * as bcrypt from 'bcrypt'
+// import * as crypto from 'crypto';
+// import * as bcrypt from 'bcrypt'
 
 // const { createHash } = require( 'crypto' );
 // const bcrypt = require( 'bcrypt' );
@@ -187,7 +187,7 @@ function encryptPassword(password) {
     //         return password;
     //         break;
     //     case "sha256" :
-    //         return createHash('sha256').update(string).digest('hex');
+    //         return crypto.createHash('sha256').update(string).digest('hex');
     //         break;
     //     case "bcrypt" :
     //         const rounds = 10

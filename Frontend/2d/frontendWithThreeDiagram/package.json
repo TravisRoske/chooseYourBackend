@@ -2,10 +2,10 @@
   "name": "threetest",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "buildMove": "tsc && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
@@ -14,8 +14,6 @@
     "vite": "^4.1.0"
   },
   "dependencies": {
-    "bcrypt": "^5.1.0",
-    "crypto": "^1.0.1",
-    "three": "^0.150.1"
+    "three": "^0.151.3"
   }
 }
