@@ -14,7 +14,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npx tsc && node ./build/dbServer.js",
-    "build": "npmx tsc",
+    "build": "npx tsc",
     "test": "npx tsc && jest --verbose"
   },
   "keywords": [],
