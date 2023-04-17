@@ -6,6 +6,8 @@ import path from 'path';
 const cors = require('cors');//////////////
 import rateLimit from 'express-rate-limit';
 
+// import { passwordEncrypter } from './passwordEncrypter.js'
+
 import { mysqlForwarder } from './mysql/forwardMysql.js';
 import { postgresForwarder } from './postgres/forwardPostgres.js';
 import { mongoForwarder } from './mongo/forwardMongo.js';
@@ -30,7 +32,7 @@ const limiter = rateLimit({
 // })
 
 // Apply the rate limiting middleware to all requests
-app.use(limiter)
+app.use(limiter);
 // app.use(limiter2)
 
 //I'll have to change this later because this just allows everything/////////
@@ -61,17 +63,19 @@ app.get("/assignid/:userid", (req, res) => {
     })
 })
 
-app.use("/ts/mysql/query", mysqlForwarder)
+// app.use("*", passwordEncrypter);
 
-app.use("/ts/postgres/query", postgresForwarder)
+app.use("/ts/mysql/query", mysqlForwarder);
 
-app.use("/ts/mongo/query", mongoForwarder)
+app.use("/ts/postgres/query", postgresForwarder);
+
+app.use("/ts/mongo/query", mongoForwarder);
 
 
-const publicDirectoryPath = path.join(__dirname, '../../../Public/2d')
-app.use(express.static(publicDirectoryPath))
+const publicDirectoryPath = path.join(__dirname, '../../../Public/2d');
+app.use(express.static(publicDirectoryPath));
 
 
 app.listen(port, () => {
-    console.log(`Main Server Listening on port ${port}`)
+    console.log(`Main Server Listening on port ${port}`);
 })
