@@ -6,7 +6,7 @@ import { deleteAllRows, display } from './displayTableController.js';
 // const bcrypt = require( 'bcrypt' );
 
 
-const domain = 'http://18.190.58.1:8080' ////////////////Change this
+const domain = 'http://18.190.58.1:8080' ////////////////
 
 const queryUrl = `${domain}/ts/${db}/query/`;
 
@@ -95,7 +95,7 @@ async function createRecord() {
     const lastNameInput = document.querySelector('#lastname').value;
     const usernameInput = document.querySelector('#username').value;
     let passwordInput = document.querySelector('#password').value;
-    passwordInput = encryptPassword(passwordInput)
+    // passwordInput = encryptPassword(passwordInput)
 
     fetch(queryUrl + userid, {
         method: 'POST',
@@ -124,7 +124,7 @@ async function updateRecord() {
     const lastNameInput = document.querySelector('#lastname').value;
     const usernameInput = document.querySelector('#username').value;
     let passwordInput = document.querySelector('#password').value;
-    passwordInput = encryptPassword(passwordInput)
+    // passwordInput = encryptPassword(passwordInput)
 
     const idInput = document.querySelector('#id').value;
     let idString = ''
@@ -172,11 +172,11 @@ async function deleteRecord() {
     })
 }
 
-function encryptPassword(password) {
-    let encryption = sessionStorage.getItem("encryption");
-    if(!encryption) encryption = "none";
+// function encryptPassword(password) {
+//     let encryption = sessionStorage.getItem("encryption");
+//     if(!encryption) encryption = "none";
 
 
-    return password/////////
+//     return password/////////
 
-}
+// }
