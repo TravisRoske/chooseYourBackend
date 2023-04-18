@@ -5,6 +5,7 @@ import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import { Label } from "./Classes/Label";
 import { LinkLine } from "./Classes/LinkLine";
 
+import { initComposer } from './Scene/initComposer.js'
 
 
 
@@ -23,7 +24,7 @@ const renderer = new THREE.WebGLRenderer({
 	canvas: canvas,
   	antialias: true
 })
-
+renderer.shadowMap.enabled = true;
 renderer.setSize(width, height);
 
 const mainCam = new THREE.PerspectiveCamera(
@@ -79,7 +80,7 @@ createBackground()
 
 
 function makeDiagram() {
-	////////make an object factory that creates and loads new display nodes, and adds them to the scene when loaded
+	////////Need to make an object factory that creates and loads new display nodes, and adds them to the scene when loaded
 	
 	const client = new DisplayNodeTest( new THREE.Vector3(-9, 0, 0), 
 		new Label(
@@ -139,10 +140,10 @@ function makeDiagram() {
 	}
 
 	setTimeout(() => {/////////////////////////////
-		mainServer.object.scale.addScalar(2)
-		dbServer.object.scale.addScalar(2)
+		mainServer.object.scale.addScalar(1.7)
+		dbServer.object.scale.addScalar(1.7)
 		client.object.rotateY(THREE.MathUtils.degToRad(-30))
-		client.object.scale.multiply(new THREE.Vector3(1.8,1.8,1.8))
+		client.object.scale.multiply(new THREE.Vector3(2,2,2))
 
 		let line0 = new LinkLine(client.object.position, mainServer.object.position)
 		let line = new LinkLine(mainServer.object.position, dbServer.object.position)
@@ -165,39 +166,39 @@ makeDiagram()
 
 
 function addLights(){
-    const light = new THREE.PointLight(0xffffff, 3)
-    scene.add(light)
-    light.position.set(-15, 20, 12)
-    const light2 = new THREE.PointLight(0xffffff, 3)
-    scene.add(light2)
-    light2.position.set(10, 2, 20)
-    const light3 = new THREE.PointLight(0xffffff, 3)
-    scene.add(light3)
-    light3.position.set(-5, 20, -12)
-	const ambientLight = new THREE.AmbientLight(0xaaffaa, 2.5)
+	const lights = [];
+
+    lights.push(new THREE.PointLight(0xffffff, .8));
+    lights[0].position.set(0, 10, 7)
+
+    lights.push(new THREE.PointLight(0xffffff, .8));
+    lights[1].position.set(-5, 10, 5)
+
+    lights.push(new THREE.PointLight(0xffffff, .8));
+    lights[2].position.set(5, 10, -5)
+
+	for( let i = 0; i < lights.length; i++ ){
+		scene.add(lights[i])
+		lights[i].castShadow = true;
+		lights[i].shadow.camera.near = 0.1;
+		lights[i].shadow.camera.far = 20;
+	}
+
+	const ambientLight = new THREE.AmbientLight(0xaaffaa, 0.3)
 	scene.add(ambientLight)
 }
 addLights()
 
 
-
-
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer"
-import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass"
-import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass"
-
-
-const bloomComposer = new EffectComposer( renderer );
-
-const renderScene1 = new RenderPass( scene, mainCam);
-bloomComposer.addPass( renderScene1 );
-const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), .5, 0.8, 0.2 );
-bloomComposer.addPass( bloomPass );
+var mesh = new THREE.Mesh( new THREE.PlaneGeometry( 100, 100 ), new THREE.MeshStandardMaterial( { color: 0x999999 } ) );
+mesh.rotation.x = - Math.PI / 2;
+mesh.receiveShadow = true;
+mesh.position.y = -5;
+scene.add( mesh );
 
 
 
-
-
+const bloomComposer = initComposer( renderer, scene, mainCam );
 
 function animate() {
 	
@@ -206,6 +207,7 @@ function animate() {
 	controls.update();
 
 	bloomComposer.render()
+	// renderer.render( scene, mainCam )
 
 	cssrenderer.render( scene, mainCam );
 }

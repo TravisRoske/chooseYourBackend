@@ -44,14 +44,18 @@ export class DisplayNodeTest {
 
                 texture.wrapS = THREE.RepeatWrapping;
                 texture.wrapT = THREE.RepeatWrapping;
-                texture.repeat.set( 20, 20 );
+                texture.repeat.set( 25, 25 );
 
                 //setting material property
                 const mesh = this.object.children[0] as THREE.Mesh
                 const material = mesh.material as THREE.MeshStandardMaterial
                 material.bumpMap = texture;
-                material.bumpScale = .01
-                material.roughness = .45
+                material.bumpScale = .01;
+                material.roughness = .1;
+                material.metalness = .2;
+
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
             })
         }
 
