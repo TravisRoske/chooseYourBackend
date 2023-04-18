@@ -13,8 +13,6 @@ dotenv.config()
 // dbsUsed (binary format:  00000001 = mysql, 00000010 = postgres, 00000100 = mongo)
 // serverid : text
 
-
-////////this should use a totally different database, only on the dbmaster server
 async function initConnection() {
     const options = {
         host     :  process.env.dbUsersMasterUrl,
@@ -46,41 +44,34 @@ async function initConnection() {
     return connection;
 }
 
-//functions
-    //get all
-    //get one by userid
-    //post new
-    //update
-    //delete
-    //get outdated
 
-
-//probably can be normal functions
-export async function get(req: any, res: any, next : any) {
-
-    const userid : string = req.params.userid
+export async function get(userid : String) {
     
     const connection = await initConnection()
 
-    //////////add error handling to all routes like this
-    const [ rows ] = await connection.execute('SELECT * FROM users WHERE userid = ?;', [userid])
-    
-    await connection.end()
-
-    next()
+    try {
+        let [ rows ] = await connection.execute('SELECT * FROM users WHERE userid = ?;', [userid])
+        await connection.end()
+        return rows;
+    } catch {
+        await connection.end()
+        return []
+    }
 }
 
-//probably can be normal functions
+
 export async function getAll(req: any, res: any, next : any) {
-    
+
     const connection = await initConnection()
 
-    const [ rows ] = await connection.execute('SELECT * FROM users;')
-    // res.json(rows)
-
-    await connection.end()
-
-    next()
+    try {
+        let [ rows ] = await connection.execute('SELECT * FROM users;')
+        await connection.end()
+        return rows;
+    } catch {
+        await connection.end()
+        return []
+    }
 }
 
 export async function getExpired(){
@@ -100,7 +91,6 @@ export async function create(req: any, res: any, next : any) {
 
     console.log("creating", req.params.userid, Math.floor(new Date().getTime() / 1000))
 
-
     const userid : string = req.params.userid
     let dbcode : number = getdbCode(req)
 
@@ -115,9 +105,9 @@ export async function create(req: any, res: any, next : any) {
     try {
         const [ rows ] = await connection.execute('INSERT INTO users (userid, lastTimestamp, dbsUsed) VALUES (?, ?, ?)'
                     , [userid, Math.floor(new Date().getTime() / 1000), dbcode])
-        // res.json(rows)
+        res.sendStatus(200)
     } catch {
-        // res.sendStatus(400)
+        res.sendStatus(400)
     }
 
 
@@ -127,11 +117,10 @@ export async function create(req: any, res: any, next : any) {
     next()
 }
 
-///////update will normally be called, but if user doesn't exists this will call create/////
+//update will usually be called, but if user doesn't exist this calls create
 export async function update(req: any, res: any, next : any) {
 
     console.log("updating", req.params.userid, Math.floor(new Date().getTime() / 1000))
-
 
     const userid : string = req.params.userid
     let dbcode : number = getdbCode(req)
@@ -152,10 +141,9 @@ export async function update(req: any, res: any, next : any) {
 
         //if user doesn't exist
         if(!rows[0]) {
-            // res.sendStatus(404)
             await create(req, res, next)
             return
-            //idk if i need to call next here or return or what
+            ////////idk if i need to call next here
         }
 
         //update the db code based with bitwise OR
@@ -176,13 +164,13 @@ export async function update(req: any, res: any, next : any) {
 
 
 export async function deleteUserPartitions (userid: string, dbsUsed : number, serverid : string) {
-    if(dbsUsed & 1){
+    if(dbsUsed & 1) {
         mysqlDeletePartition(userid)
     }
-    if(dbsUsed & 2){
+    if(dbsUsed & 2) {
         postgresDeletePartition(userid)
     }
-    if(dbsUsed & 4){
+    if(dbsUsed & 4) {
         mongoDeletePartition(userid)
     }
 }
@@ -204,12 +192,13 @@ export async function deleteUser(userid : string) {
 
 
 function getdbCode(req : any) {
-    let dbString = req.originalUrl.split('/')[2]
+    //gets the database string from url, e.g. hostname/ts/mongo/uid...
+    const dbString : String = req.originalUrl.split('/')[2]
 
     let dbcode : number;
     switch(dbString){
         case 'mysql' :
-            dbcode = 1; ////use enums???
+            dbcode = 1;
             break;
         case 'postgres' :
             dbcode = 2;

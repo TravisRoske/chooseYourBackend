@@ -8,14 +8,11 @@ import { update } from './manager/dbManager.js'
 import { deletingProcess } from './manager/deletingProcess.js'
 import { validateUserid } from './middleware/validateUserid.js';
 
-
+const app = express();
 const cors = require('cors');/////////
 
 
 deletingProcess()
-
-
-const app = express();
 
 
 //I'll have to change this later because this just allows everything//////

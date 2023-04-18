@@ -4,9 +4,7 @@ dotenv.config()
 
 import { User, IUser } from './UserSchema.js'
 
-const connectionUri = 'mongodb://127.0.0.1:27017/'  
-// const connectionUri = 'mongodb://localhost:27017/'  
-// const connectionUri = 'mongodb://0.0.0.0:27017/'  
+const connectionUri = 'mongodb://127.0.0.1:27017/'
 // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if database has auth enabled
 
 
@@ -103,8 +101,6 @@ export async function update(req: any, res: any) {
             message: `Request doesn't contain the proper information`
         });
     }    
-    
-    console.log("updating", objectid)
 
     const filter = { id: objectid };
     const update : IUser = {
@@ -158,32 +154,17 @@ export async function deleteRecords(req: any, res: any) {
     })
 }
 
-//Haven't tested this yet///////
+
 export async function deletePartition(userid : string) : Promise<boolean> {
-    if(!userid){
-        console.log("No valid userid!  userid:", userid);
-        return false;
-    }
-
     return new Promise(async (resolve, reject) => {
-        // mongoose.connection.dropCollection(userid)
-        // mongoose.connection.db.dropCollection(userid)
-
-///////
+        if(!userid){
+            console.log("No valid userid!  userid:", userid);
+            reject(false);
+        }
         await mongoose.disconnect();
         const conn = mongoose.createConnection(`mongodb://127.0.0.1:27017/${userid}`);
-        // Deletes the entire 'mydb' database
         await conn.dropDatabase();
-///////////
 
-        // .then((result) => {
-        //     resolve(true);
-        // })
-        // .catch((error) => {
-        //     reject(false);
-        // })
-        // .finally(async () => {
-        //     await mongoose.disconnect();
-        // })
+        resolve(true);
     })
 }
