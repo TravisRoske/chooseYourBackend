@@ -79,7 +79,7 @@ createBackground()
 
 
 function makeDiagram() {
-	////////make an object factory that creates and loads new display nodes, and adds them to the scene when loaded!!!!!!
+	////////make an object factory that creates and loads new display nodes, and adds them to the scene when loaded
 	
 	const client = new DisplayNodeTest( new THREE.Vector3(-9, 0, 0), 
 		new Label(
@@ -92,8 +92,8 @@ function makeDiagram() {
 
 	const mainServer = new DisplayNodeTest( new THREE.Vector3(-3, 0, 0), 
 		new Label(
-			"<h1>Main Server</h1>",
-			`<h1>Main Server</h1>
+			"<h1>Web Server</h1>",
+			`<h1>Web Server</h1>
 			<p>You are currently being served HTML, CSS, and JavaScript files from this server.  It also communicates with the database server, acting as a middle-man for each of your database requests.</p>`
 			),
 			"server.gltf"
@@ -141,8 +141,8 @@ function makeDiagram() {
 	setTimeout(() => {/////////////////////////////
 		mainServer.object.scale.addScalar(2)
 		dbServer.object.scale.addScalar(2)
-		client.object.rotateY(-45)
-		client.object.scale.multiply(new THREE.Vector3(2,2,2))
+		client.object.rotateY(THREE.MathUtils.degToRad(-30))
+		client.object.scale.multiply(new THREE.Vector3(1.8,1.8,1.8))
 
 		let line0 = new LinkLine(client.object.position, mainServer.object.position)
 		let line = new LinkLine(mainServer.object.position, dbServer.object.position)
@@ -155,7 +155,7 @@ function makeDiagram() {
 		scene.add(line2)
 		scene.add(line3)
 		scene.add(line4)
-	}, 1500);///////////////////////////
+	}, 1000);///////////////////////////
 
 
 

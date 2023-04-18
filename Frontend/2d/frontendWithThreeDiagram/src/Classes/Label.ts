@@ -19,7 +19,7 @@ export class Label extends CSS2DObject {
         
         //label style
         this.element.style.backgroundColor = "#EEEEEE";
-        this.element.style.opacity = ".4";
+        this.element.style.opacity = ".6";
         this.element.style.border = "2px solid grey";
         this.element.style.borderRadius = "10px";
         this.element.style.maxWidth = "400px"

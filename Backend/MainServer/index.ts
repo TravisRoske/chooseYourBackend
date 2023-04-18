@@ -1,10 +1,9 @@
 import express from 'express';
 import axios from 'axios';
-
 import path from 'path';
+import rateLimit from 'express-rate-limit';
 
 const cors = require('cors');//////////////
-import rateLimit from 'express-rate-limit';
 
 // import { passwordEncrypter } from './passwordEncrypter.js'
 
@@ -19,21 +18,12 @@ const app = express();
 
 const limiter = rateLimit({
 	windowMs: 10 * 1000, // 10 seconds
-	max: 20, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	max: 15, // Limit each IP to 15 requests per `window`
 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
-
-// const limiter2 = rateLimit({
-// 	windowMs: 15 * 60 * 1000, // 15 minutes
-// 	max: 2000, // Limit each IP to 2000 requests per `window` (here, per 15 minutes)
-// 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-// 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-// })
-
-// Apply the rate limiting middleware to all requests
 app.use(limiter);
-// app.use(limiter2)
+
 
 //I'll have to change this later because this just allows everything/////////
 app.use(cors());
@@ -63,7 +53,7 @@ app.get("/assignid/:userid", (req, res) => {
     })
 })
 
-// app.use("*", passwordEncrypter);
+// app.use("*", passwordEncrypter);/////middleware?
 
 app.use("/ts/mysql/query", mysqlForwarder);
 
