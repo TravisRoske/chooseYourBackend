@@ -16,12 +16,10 @@ async function initConnection(userid : string) {
 
     const [ rows ] = await connection.execute(`SHOW DATABASES LIKE '${userid}';`)
 
-    if(!rows.toString()) { //this was the only way I could find to see if the query found a database
+    if(!rows.toString()) { 
 
-        //warning prepared statements DO NOT work here!!!!!!!!!!!!//////////////
         await connection.execute(`CREATE DATABASE IF NOT EXISTS ${userid}`)
 
-        //warning prepared statements DO NOT work here!!!!!!!//////////////
         await connection.query(`USE ${userid}`)
 
         await connection.execute(
@@ -84,8 +82,6 @@ export async function create(req: any, res: any) {
     queryQuestionMarks = queryQuestionMarks.join(', ')
     const queryString = `INSERT INTO tbl (${queryFields}) VALUES (${queryQuestionMarks})`
 
-    // console.log(queryString, queryValues)
-
     const [ rows ] = await connection.execute(queryString, queryValues)
     res.json(rows)
 
@@ -106,7 +102,6 @@ export async function update(req: any, res: any) {
 
     const connection = await initConnection(userid)
    
-
     //change all strings to dynamically change with the schema...
     let setStrings : any = []
     let queryValues = []
@@ -122,8 +117,6 @@ export async function update(req: any, res: any) {
     const queryString = `UPDATE tbl 
         SET ${setStrings}
         WHERE id = ?`
-
-    console.log(queryString, queryValues)
 
     const [ rows ] = await connection.execute(queryString, [...queryValues, objectid])
 
@@ -172,7 +165,7 @@ export async function deletePartition(userid : string) : Promise<boolean> {
 
     const [ rows ] = await connection.execute(`SHOW DATABASES LIKE '${userid}';`)
 
-    if(rows.toString()) { //this was the only way I could find to see if the query found a database
+    if(rows.toString()) { 
         await connection.query(`DROP DATABASE ${userid}`)
     }
 

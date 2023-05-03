@@ -80,7 +80,7 @@ createBackground()
 
 
 function makeDiagram() {
-	////////Need to make an object factory that creates and loads new display nodes, and adds them to the scene when loaded
+	//////Need to make an object factory that creates and loads new display nodes, and adds them to the scene when loaded
 	
 	const client = new DisplayNodeTest( new THREE.Vector3(-9, 0, 0), 
 		new Label(
@@ -139,7 +139,8 @@ function makeDiagram() {
 		n.addToScene(scene)
 	}
 
-	setTimeout(() => {/////////////////////////////
+	//////This can be removed when I have an object factor
+	setTimeout(() => {
 		mainServer.object.scale.addScalar(1.7)
 		dbServer.object.scale.addScalar(1.7)
 		client.object.rotateY(THREE.MathUtils.degToRad(-30))
@@ -156,7 +157,7 @@ function makeDiagram() {
 		scene.add(line2)
 		scene.add(line3)
 		scene.add(line4)
-	}, 1000);///////////////////////////
+	}, 1000);
 
 
 
@@ -284,7 +285,7 @@ function onMouseDown(event : any){
 }
 
 
-/////////////////////causes some crash
+
 window.addEventListener('resize', onWindowResize, false)
 function onWindowResize() {
 	width = window.innerWidth * .85;

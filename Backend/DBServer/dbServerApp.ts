@@ -1,5 +1,5 @@
 import express from 'express'
-import { requestLogger } from './middleware/requestLogger.js'
+// import { requestLogger } from './middleware/requestLogger.js'
 import { assignUserid } from './manager/assignUserid.js'
 import { mongoRouter } from './Mongo/mongoRouter.js'
 import { mySQLRouter } from './MySQL/mySQLRouter.js'
@@ -9,13 +9,13 @@ import { deletingProcess } from './manager/deletingProcess.js'
 import { validateUserid } from './middleware/validateUserid.js';
 
 const app = express();
-const cors = require('cors');/////////
+const cors = require('cors');
 
 
 deletingProcess()
 
 
-//I'll have to change this later because this just allows everything//////
+//change this later //////
 app.use(cors());
 
 app.use(express.json())

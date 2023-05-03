@@ -6,13 +6,12 @@ import { deleteAllRows, display } from './displayTableController.js';
 // const bcrypt = require( 'bcrypt' );
 
 
-const domain = 'http://18.190.58.1:8080' ////////////////
+// const domain = 'http://18.190.58.1:8080' 
+const domain = 'http://localhost:8080' //////
 let db = sessionStorage.getItem("db")
 if(!db) db = "MySQL"
 
 const queryUrl = `${domain}/ts/${db}/query/`;
-
-    
     const consoleHeader = document.getElementById("databaseTitle")
     consoleHeader.innerHTML = db
     let styleColor = ""
@@ -93,10 +92,11 @@ async function createRecord() {
     const firstNameInput = document.querySelector('#firstname').value;
     const lastNameInput = document.querySelector('#lastname').value;
     const usernameInput = document.querySelector('#username').value;
-    let passwordInput = document.querySelector('#password').value;
-    // passwordInput = encryptPassword(passwordInput)
+    const passwordInput = document.querySelector('#password').value;
 
-    fetch(queryUrl + userid, {
+    const encryptQuery = getEncryptQuery();
+
+    fetch(queryUrl + userid + encryptQuery, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -122,16 +122,16 @@ async function updateRecord() {
     const firstNameInput = document.querySelector('#firstname').value;
     const lastNameInput = document.querySelector('#lastname').value;
     const usernameInput = document.querySelector('#username').value;
-    let passwordInput = document.querySelector('#password').value;
-    // passwordInput = encryptPassword(passwordInput)
+    const passwordInput = document.querySelector('#password').value;
 
     const idInput = document.querySelector('#id').value;
     let idString = ''
     if(idInput){
         idString = '?objectid=' + idInput
     }
+    const encryptQuery = getEncryptQuery();
 
-    fetch(queryUrl + userid + idString, {
+    fetch(queryUrl + userid + idString + encryptQuery, {
         method: 'PUT',
         headers: {
             "Content-Type": "application/json"
@@ -171,11 +171,8 @@ async function deleteRecord() {
     })
 }
 
-// function encryptPassword(password) {
-//     let encryption = sessionStorage.getItem("encryption");
-//     if(!encryption) encryption = "none";
-
-
-//     return password/////////
-
-// }
+function getEncryptQuery() {
+    let encryption = sessionStorage.getItem("encryption");
+    if(!encryption) return "";
+    return `?encryption=${encryption}`;
+}

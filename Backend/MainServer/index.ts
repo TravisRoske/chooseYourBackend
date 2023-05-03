@@ -5,7 +5,7 @@ import rateLimit from 'express-rate-limit';
 
 const cors = require('cors');//////////////
 
-// import { passwordEncrypter } from './passwordEncrypter.js'
+import { passwordEncrypter } from './passwordEncrypter.js'
 
 import { mysqlForwarder } from './mysql/forwardMysql.js';
 import { postgresForwarder } from './postgres/forwardPostgres.js';
@@ -25,14 +25,14 @@ const limiter = rateLimit({
 app.use(limiter);
 
 
-//I'll have to change this later because this just allows everything/////////
+//////change this later
 app.use(cors());
 
 app.use(express.json());
 
 
 //app.get("/assignid" .....)
-////////make this a forwarder function
+/////make this a forwarder function
 app.get("/assignid/:userid", (req, res) => {
     const options = {
         url: dbMasterUrl + '/assignid/' + req.params.userid,
@@ -53,7 +53,7 @@ app.get("/assignid/:userid", (req, res) => {
     })
 })
 
-// app.use("*", passwordEncrypter);/////middleware?
+app.use("*", passwordEncrypter);
 
 app.use("/ts/mysql/query", mysqlForwarder);
 

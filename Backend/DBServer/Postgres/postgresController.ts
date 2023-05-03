@@ -5,13 +5,12 @@ dotenv.config()
 import ObjectSchema from './ObjectSchema.js'
 
 
-/////////////////
+/////////
 //sometimes it throws this error
 // duplicate key value violates unique constraint "pg_database_datname_index"
-//////////////
+////////
 
 
-//this function could also save a timestamp to know when to delete the db
 async function initConnection(userid : string) : Promise<Client> {
 
     const withDatabase = {
@@ -23,13 +22,11 @@ async function initConnection(userid : string) : Promise<Client> {
     }
     let client = new Client(withDatabase)
 
-    //try to connect to db of userid
     try {
         await client.connect()
-        //this could error for other reasons......../////////////
+        //////Extend this try block to include other reasons for exceptions
     } catch {
         //if not exists, create new db
-        console.log("no postgres db found")
         const noDatabase = {
             host: process.env.postgresUrl,
             port: Number(process.env.postgresPort),
@@ -39,9 +36,7 @@ async function initConnection(userid : string) : Promise<Client> {
         client = new Client(noDatabase)
         await client.connect()
         
-        //Prepared statements do not work here!!!//////////
         await client.query(`CREATE DATABASE ${userid}`)
-        //this STILL has to check if db exists first.....///////////because it can get here if the connection fails for another reason.
 
         await client.end()
 
@@ -122,8 +117,6 @@ export async function create(req: any, res: any) {
     queryInsertNumbers = queryInsertNumbers.join(',')
     const queryString = `INSERT INTO tbl (${queryFields}) VALUES (${queryInsertNumbers})`
 
-    // console.log(queryString, queryValues)
-
     const queryResults = await client.query({
         name: "create",
         text: queryString,
@@ -147,9 +140,8 @@ export async function update(req: any, res: any) {
     }
 
     const client = await initConnection(userid)
-   
 
-    //change all strings to dynamically change with the schema...
+    //change all strings to dynamically change with the schema.
     let setStrings : any = []
     let queryValues = []
     let num = 1;
@@ -165,8 +157,6 @@ export async function update(req: any, res: any) {
         SET ${setStrings}
         WHERE id = $${num}`
     queryValues.push(objectid)
-
-    // console.log(queryString, queryValues)
 
     const queryResults = await client.query({
         name: "create",
@@ -222,7 +212,6 @@ export async function deletePartition(userid : string) : Promise<boolean> {
     const client = new Client(noDatabase)
     await client.connect()
     
-    //Prepared statements do not work here!!!//////////
     try{
         await client.query(`DROP DATABASE ${userid}`)
     } finally {

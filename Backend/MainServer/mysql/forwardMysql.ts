@@ -11,7 +11,7 @@ mysqlForwarder.route('/:userid')
 
 
 mysqlForwarder.route('/')
-    .all(() => console.log("no userid!!!"))//////////////
+    .all(() => console.log("no userid!!!"))//////
 
 
 const dbMasterUrl = process.env.dbMasterUrl

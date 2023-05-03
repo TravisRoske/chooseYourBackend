@@ -1,31 +1,30 @@
-import crypto from 'crypto'
+import { createHash } from 'node:crypto'
 import bcrypt from 'bcrypt'
 
 
-async function forward(req: any, res: any, next: any) {
+export async function passwordEncrypter(req: any, res: any, next: any) {
     if(req?.body?.password){
-        req.body.password = encrypt(req.body.password, req.query.encryption)
+        req.body.password = await encrypt(req.body.password, req.query.encryption)
     }
+    next()
 }
 
 
-function encrypt( password : string, encryption : string ) : string {
+async function encrypt( password : string, encryption : string ) {
 
     switch(encryption) {
         case "none" :
             return password;
             break;
         case "sha256" :
-
+            return createHash('sha256').update(password).digest('hex');
             break;
         case "bcrypt" :
-            bcrypt.genSalt(10, (err, salt) => {
-                bcrypt.hash(password, salt, function(err, hash) {
-                    return hash;
-                });
-            })
+            const salt = await bcrypt.genSalt(10);
+            const hash = await bcrypt.hash(password, salt);
+            return hash;
             break;
+        default :
+            return password;
     }
-    return ""
-
 }
